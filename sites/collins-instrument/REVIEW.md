@@ -50,3 +50,24 @@ Switched to the complete mobile navigation at intermediate widths and made sibli
 The menu closes by button and Escape, and Tab reaches its first link. The sibling navigation accessibility snapshot has separate list items; body text checks and generated HTML show no joined adjacent links. Both forms rejected empty submissions and generated mailto navigation with the expected recipient, subject and entered values. The valve tables fit on desktop and scroll within their labelled regions on mobile. Four sampled old paths returned 301. A desktop link pass exercised 149 links; the off-screen skip link cannot be pointer-clicked until focused. The mobile link pass reached every page but its script timed out on the final form click; a separate browser test successfully submitted that form. No email was sent.
 
 Remaining: original photos and drawings are small and soft; machining and trim images in particular cannot be made much larger without quality loss. Wide specification tables require horizontal scrolling on phones, and mailto forms depend on an email application.
+
+## Round 3
+
+### Initial critique
+
+- P1: On desktop, product pages repeat all six product links immediately below the same links in the header, adding navigation before the actual product information. `/workspace/shots/rev2/collins-instrument/initial3-1440-4.png`.
+- P2: The home title block repeats the company name directly below the header. `/workspace/shots/rev2/collins-instrument/initial3-1440-0.png`.
+- P2: On phones, the six sibling links occupy a substantial part of the first screen; they remain useful with the main navigation collapsed, but need to stay compact. `/workspace/shots/rev2/collins-instrument/initial3-390-4.png`.
+- P3: Original product photos and drawings remain small and soft, and the longer specification tables require horizontal scrolling on mobile. `/workspace/shots/rev2/collins-instrument/initial3-390-3.png`.
+
+### Round 3 Loop 1
+
+Removed the repeated desktop sibling row while preserving the product return link and the compact mobile sibling links. Removed the repeated company name from the home title block. Rebuilt, passed the static checker and deployed. Live viewport checks at 1440 and 390 revisited all eight pages and the 404; visible images loaded, widths fit, and no browser errors were reported. The menu opened and closed with its button and Escape. See `/workspace/shots/rev2/collins-instrument/round3loop1-1440-sheet.jpg` and `/workspace/shots/rev2/collins-instrument/round3loop1-390-sheet.jpg`. The 404 still shows a product-specific back link, and the home phone is repeated on desktop.
+
+### Round 3 Loop 2
+
+Removed the product back link from the 404, which already has a direct home action, and removed the duplicate desktop home phone while retaining the visible header phone and the mobile title-block number. Rebuilt, passed `src/check.py`, and deployed. Live screenshots at both widths show the changes and the unchanged product pages: `/workspace/shots/rev2/collins-instrument/round3loop2-1440-sheet.jpg`, `/workspace/shots/rev2/collins-instrument/round3loop2-390-sheet.jpg`. Detailed views of drawings, machining photos and tables are in `/workspace/shots/rev2/collins-instrument/round3loop2-1440-models.png`, `/workspace/shots/rev2/collins-instrument/round3loop2-390-models.png`, `/workspace/shots/rev2/collins-instrument/round3loop2-1440-flange-table.png`, `/workspace/shots/rev2/collins-instrument/round3loop2-390-valve-table.png`, and the corresponding machining screenshots.
+
+All pages and the 404 were revisited at both widths; visible images loaded, no page overflow or browser errors were found, and each had one h1. All seven main navigation links were followed at both widths. A separate pointer pass clicked visible links with navigation intercepted to inspect targets, including footer, phone, email, documents and mobile submenu links. The menu opened and closed by button and Escape, and Tab reached its navigation. The accessibility snapshot and body text showed separated navigation labels; generated HTML has no adjacent anchor/anchor or anchor/button sequences. Both forms rejected empty submission and produced the correct mailto recipient, subject and entered data. Tables fit at desktop and scroll inside labelled regions on mobile. Four sampled old paths returned 301. No email was sent.
+
+Remaining: the original machining and trim photos are small and soft, and mobile tables require horizontal scrolling. Mailto requires an email application. The detailed link pass intercepted navigation, so it verified clickable targets rather than following every document and image link to completion.
