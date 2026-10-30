@@ -54,3 +54,19 @@ Replaced the automation placeholder and unrelated historical thumbnail with the 
 Moved the power-head introduction below its first machine and made the selected variant link follow the URL fragment. Rebuilt, passed the static checker and deployed. Final live screenshots: `/workspace/shots/rev2/grant-riveters/round3-loop2-{1440,390}-*.png`. The original colored backgrounds and the small impact image remain limitations of the source photography.
 
 Final browser checks: visited all 20 page views at both widths, including the 404 and both forms. Desktop and mobile main-navigation links were clicked, the mobile menu was exercised with keyboard, button and Escape, and the hydraulic anchor's active state was confirmed after the hash change. Both populated forms generated mailto URLs to sales@grantriveters.com with the expected subject and entered name and email; Chromium aborted those URLs because no mail application is installed. Two old product paths returned 301. The browser checks did not individually click every product, footer and document link; the static checker verified local link targets instead. No document overflow, broken images or JavaScript page errors were reported in the page sweep.
+
+# Round 4
+
+## Initial review
+
+- **P1 — Adjacent actions lack textual boundaries.** Header phone and quote, navigation links, variant links and footer links are emitted without whitespace, so text extraction can join distinct labels. The desktop layout hides this defect: `/workspace/shots/rev2/grant-riveters/r4-initial-1440.png`.
+- **P2 — Mobile menu actions depend entirely on visual layout for separation.** The menu looks spaced, but its links also share the same markup defect: `/workspace/shots/rev2/grant-riveters/r4-initial-menu.png`.
+- **P3 — Hero actions are visually distinct but need a text boundary.** Their button and secondary link have a visible gap at both sizes; their HTML joins them: `/workspace/shots/rev2/grant-riveters/r4-initial-390.png`.
+
+## Loop 1
+
+Added whitespace between adjacent links and buttons throughout generated HTML. Live text and accessibility snapshots were collected for all 20 pages at both widths, with no overflow, image-load failures or page errors reported. The menu opened and closed with its button and Escape. The header, hero, menu and variant tabs retained their layout and active underline: `/workspace/shots/rev2/grant-riveters/r4-loop1-1440-hero.png`, `r4-loop1-390-hero.png`, `r4-loop1-390-menu.png`, `r4-loop1-1440-variant.png`, `r4-loop1-390-variant.png`. The secondary hero and service links could still use larger tap areas.
+
+## Loop 2
+
+Expanded the hit area of the hero and home service secondary links to 44px, and added a static check for adjacent link/button markup. Rebuilt, passed the checker and deployed. Live browser revisited all 20 pages at both widths and saved body text and accessibility snapshots under `/workspace/shots/rev2/grant-riveters/r4-loop2-*-text.txt`; no broken images, document overflow or page errors were reported. Reviewed `/workspace/shots/rev2/grant-riveters/r4-loop2-1440-hero.png`, `r4-loop2-390-hero.png`, `r4-loop2-390-menu.png`, `r4-loop2-1440-variant.png`, and `r4-loop2-390-variant.png`. Navigation links were clicked at both widths; the mobile menu button, Escape and initial keyboard tab worked. Both forms rejected empty input and showed their mail application status after valid input. Two old paths returned 301. The existing small source photography remains a limitation. This pass did not independently click every product and document link or capture the resulting mailto URL; earlier rounds record broader checks.

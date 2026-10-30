@@ -4,7 +4,9 @@ from bs4 import BeautifulSoup
 import csv,re
 root=Path(__file__).resolve().parent.parent; site=root/'site'; errors=[]; pages=list(site.rglob('*.html'))
 for p in pages:
- s=BeautifulSoup(p.read_text(),'html.parser')
+ html=p.read_text()
+ if re.search(r'</a><(?:a|button)\b', html): errors.append(f'{p}: adjacent actions lack whitespace')
+ s=BeautifulSoup(html,'html.parser')
  if len(s.find_all('h1'))!=1: errors.append(f'{p}: h1 count')
  for im in s.find_all('img'):
   if any(not im.has_attr(x) for x in ['alt','width','height']): errors.append(f'{p}: image attributes')

@@ -21,3 +21,6 @@ table{font-size:16px;width:100%;min-width:850px}th,td{min-width:0;padding:12px 1
 .page-hero{padding:28px 0}.content.section{padding-top:40px}.content p,.content li{font-size:19px;line-height:1.6;color:#202326}.content>p,.content>section>p,.product-intro{max-width:68ch}.anchors a[aria-current="location"]{border-bottom-color:var(--red)}
 .image-automation{padding:0;overflow:hidden;background:var(--aluminum)}.image-automation img{width:100%!important;height:100%;max-width:none;max-height:none;object-fit:cover}.image-orbitfeed img{object-fit:contain;background:#8b171b}.image-double img,.image-squeeze img{object-fit:contain;background:var(--aluminum)}
 @media(max-width:700px){.page-hero{padding:22px 0}.content.section{padding-top:28px}.content p,.content li{font-size:18px}.anchors{gap:18px}.anchors a{font-size:16px}}
+
+/* Keep secondary actions easy to select without changing their visual weight. */
+.text-action,.home-services a{display:inline-flex;align-items:center;min-height:44px}
