@@ -1,6 +1,6 @@
 # Website revamps
 
-Speculative redesign previews of outdated small-manufacturer websites. Each site lives in `sites/<slug>/` (`site/` static output, `src/` build scripts, `wrangler.jsonc`, `README.md`) and deploys as its own Cloudflare Worker (`<slug>-redesign`) on workers.dev. All previews are `noindex`; old `.html` paths 301 to the new pages; contact forms use `mailto:`.
+Redesign previews for small-manufacturer websites. Each site lives in `sites/<slug>/` (`site/` static output, `src/` build scripts, `wrangler.jsonc`, `README.md`) and deploys as its own Cloudflare Worker (`<slug>-redesign`) on workers.dev. All previews are `noindex`; old `.html` paths 301 to the new pages; contact forms use `mailto:`.
 
 | Company | Original site | Preview | Contact email |
 |---|---|---|---|

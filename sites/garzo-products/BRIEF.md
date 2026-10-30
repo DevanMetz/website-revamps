@@ -1,4 +1,4 @@
-# Build brief (common rules): speculative redesign of an outdated small-manufacturer website
+# Build brief (common rules): redesign of a small-manufacturer website
 
 You are building a modern static redesign of the company's current website (named in the SITE section below). It is a
 speculative pitch: the finished site must look like a credible, finished replacement that the owner could launch as-is.
