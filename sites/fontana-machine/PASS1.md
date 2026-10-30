@@ -1,0 +1,8 @@
+# PASS 1 review (screenshots at 1440 and 390)
+Keep all BRIEF.md rules; rebuild and make src/check.py pass. Do not ask questions.
+1. Hero: cut the subline (it repeats the h1). Make the h1 "Heavy machining and fabrication for aerospace and industry" (their words), no trailing period. Add a compact emergency strip directly under the hero on every page: "24/7 emergency repairs · Pager 909-322-1616" (tel link) and "Business hours 909-823-0657" - one line, high contrast, no extra helper text.
+2. Header: show 909-823-0657 tel link at the right of the nav on desktop; on mobile put a tel icon-button labelled "Call" beside Menu.
+3. Stat row: drop the secondary labels (Machining / Plant / Facility / Equipped). Use self-explaining values: "Parts up to 50 tons", "30,000+ sq ft plant", "5 acres", "CNC equipped". On mobile make it a 2x2 grid with values at ~20px so "30,000+ sq ft plant" does not break mid-phrase (use white-space: nowrap per value or smaller size).
+4. The three feature sections show tiny photos (110-190px) floating in big empty grey panels - it looks broken. Replace the split layout with: text column + a small framed figure (photo at native size, max 1.25x, with a thin border and a short real caption from the image alt text), aligned to the top of the text, no large grey panel. Alternatively a 3-column card row on desktop where each card has the photo at native size on top. Pick one, keep it tight.
+5. Contact page: cut the hero subline "Fontana Machine & Engineering Co.". Rename the form field label "Part/size/weight" to "Part size and weight". Display the email as info@FontanaMachine.com (keep), mailto lowercase is fine.
+6. Footer: add the fax 909-823-0619 and pager line.
