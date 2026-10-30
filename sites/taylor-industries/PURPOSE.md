@@ -10,4 +10,11 @@ The live ECG and TENS catalogs put filters, sorting, comparison and repeated act
 
 Keep the product data, anchors, reference guide, machine photos and video, and contact forms. Show product specifications directly, remove catalog controls and repeated actions, and offer one category inquiry. Keep machine and contact paths direct.
 
-Images: 47 white-background product and machine images converted to transparent PNG after review on pale, checkerboard and dark backgrounds. The existing transparent electrode collage and scene/video imagery remain unchanged. Originals are retained in img-originals/.
+
+## Images
+
+- 46 used images are transparent conversions from white: 45 product and machine images, plus the logo (color-to-alpha, logo-transparent.png).
+- 1 image is transparent in the source: the electrode collage.
+- 0 product, drawing or logo images remain on a white box.
+- 1 image is the video thumbnail, a photograph.
+- Originals are retained in img-originals/.

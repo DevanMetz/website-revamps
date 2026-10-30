@@ -1,6 +1,6 @@
 const toggle=document.querySelector('.menu-toggle');
 const nav=document.querySelector('#nav');
-function setMenu(open){toggle.setAttribute('aria-expanded',String(open));toggle.querySelector('.menu-label').textContent=open?'Close':'Menu';toggle.querySelector('.menu-icon').textContent=open?'✕':'☰';nav.classList.toggle('open',open)}
+function setMenu(open){toggle.setAttribute('aria-expanded',String(open));toggle.querySelector('.menu-label').textContent=open?'Close':'Menu';nav.classList.toggle('open',open)}
 toggle?.addEventListener('click',()=>setMenu(toggle.getAttribute('aria-expanded')!=='true'));
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&toggle?.getAttribute('aria-expanded')==='true'){setMenu(false);toggle.focus()}});
 document.querySelectorAll('.video-load').forEach(button=>button.addEventListener('click',()=>{const frame=document.createElement('iframe');frame.src='https://www.youtube-nocookie.com/embed/lV67T6aLGC0?autoplay=1';frame.title='ECG Electrode Production Machine';frame.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';frame.allowFullscreen=true;button.replaceWith(frame)}));
