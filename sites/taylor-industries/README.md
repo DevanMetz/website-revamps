@@ -25,3 +25,7 @@ Light edits to source wording include:
 - Introductory and machine copy is lightly trimmed or combined from the referenced sentences, including the home custom-electrode and production-machine paragraphs and the ECG machine description.
 
 The 2009-era “17 years” and “fourteen years” experience claims were omitted pending confirmation. The © year was dropped. The forms are mailto fallbacks. Remove the preview `noindex` tags at launch. Hosting uses `npx wrangler deploy` with the Worker and static assets configured in `wrangler.jsonc`.
+
+Electrode category pages show all products and specifications directly, with stable part-number anchors and a category-level quote or samples link. Product data remains in `src/data.py`; transparent image variants are selected by the build when available, with originals backed up in `img-originals/`.
+
+Catalog products use open, aligned image wells with two columns on mobile; the ECG options follow the product list. Category tiles share a compact layout on home and the electrode index, where the reference guide sits alongside the categories.
