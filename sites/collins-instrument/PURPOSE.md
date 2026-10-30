@@ -10,4 +10,4 @@ Keep the product pages, complete tables, brochure, inquiry questions and contact
 
 ## Images
 
-Six white-background technical drawings converted to transparency: mv_001–mv_005 and flangedraw. Originals are retained in img-originals. Product and machining photographs have scene or dark backgrounds and remain unchanged. Drawings were checked against the pale page background; natural-size limits remain in place.
+The site uses 15 distinct images: six technical drawings converted from white backgrounds to transparency (mv_001–mv_005 and flangedraw), zero images transparent in the source, and nine photographs. No product, drawing or logo images remain on white backgrounds. The photographs retain their scene or studio backgrounds; the original drawings are retained in img-originals.
