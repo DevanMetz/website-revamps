@@ -70,3 +70,16 @@ Added whitespace between adjacent links and buttons throughout generated HTML. L
 ## Loop 2
 
 Expanded the hit area of the hero and home service secondary links to 44px, and added a static check for adjacent link/button markup. Rebuilt, passed the checker and deployed. Live browser revisited all 20 pages at both widths and saved body text and accessibility snapshots under `/workspace/shots/rev2/grant-riveters/r4-loop2-*-text.txt`; no broken images, document overflow or page errors were reported. Reviewed `/workspace/shots/rev2/grant-riveters/r4-loop2-1440-hero.png`, `r4-loop2-390-hero.png`, `r4-loop2-390-menu.png`, `r4-loop2-1440-variant.png`, and `r4-loop2-390-variant.png`. Navigation links were clicked at both widths; the mobile menu button, Escape and initial keyboard tab worked. Both forms rejected empty input and showed their mail application status after valid input. Two old paths returned 301. The existing small source photography remains a limitation. This pass did not independently click every product and document link or capture the resulting mailto URL; earlier rounds record broader checks.
+
+# Follow-up
+
+- **P2 — Logo asset has excess transparent padding.** The existing Grant source logo is already a wordmark, with no subtitle, and no letters were visibly clipped at 1440 or 390 (`/workspace/shots/rev2/grant-riveters/baseline-1440.png`, `/workspace/shots/rev2/grant-riveters/baseline-390.png`). Its loose bounds made its actual size less predictable. This site has no sticky or compact header; the header scrolls away (`baseline-sticky-1440.png`, `baseline-sticky-390.png`).
+- **P3 — Source photography remains uneven.** The small impact image and colored photographic backgrounds still limit the catalog (`baseline-sticky-1440.png`). This was outside the approved narrow follow-up.
+
+## Loop 1
+
+Generated a new tightly bounded wordmark from the original, keeping a transparent margin around every letter, and adjusted display widths to retain the established visual scale. Built, passed the static checker and deployed. Reviewed live `/workspace/shots/rev2/grant-riveters/followup1-1440.png`, `followup1-390.png` and `followup1-menu-390.png`; the full wordmark is visible and the mobile menu opens and closes by button and Escape. A 20-page sweep at both widths found no document overflow or page errors. The initial image check counted offscreen lazy images before they loaded, so it was repeated in loop 2.
+
+## Loop 2
+
+Removed the unused old logo output, rebuilt, passed the checker and redeployed. Reviewed live `/workspace/shots/rev2/grant-riveters/followup2-1440.png` and `followup2-390.png`. Visited 20 views at both widths and forced lazy images to load: no broken images, document overflow or page errors appeared. Both forms rejected empty required fields and showed their mail application status with populated required fields; the resulting mailto URL was not independently captured in this follow-up. Two old product paths returned 301. This narrow pass did not click every product, document and footer link; the static checker covered local targets. Source imagery remains the main visual limitation. Taylor Industries is a different site and its category switcher was not changed.
