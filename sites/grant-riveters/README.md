@@ -1,6 +1,8 @@
 # Grant Riveters redesign preview
 
-Preview: https://grant-riveters-redesign.metzdevan.workers.dev (Cloudflare Worker `grant-riveters-redesign`, static assets from `site/`, configured in `wrangler.jsonc`). Deploy with `npx wrangler deploy` from this folder; the local `package.json` keeps wrangler's cache inside this folder.
+Preview: https://grant-riveters-redesign.metzdevan.workers.dev (Cloudflare Worker `grant-riveters-redesign`, static assets from `site/`, configured in `wrangler.jsonc`). Deploy with `npx wrangler deploy` from this folder; the deployable output is in `site/`.
+
+Home links directly to the machine family grid, with a compact mobile hero, uniformly padded product image wells and linked product tiles. Riveting methods sit alongside services and history. Orbital variant pages group shared features above the variant sections, provide segmented jump links, and keep specification row labels visible while scrolling on mobile. Product and service pages link to the quote form; contact details are in the footer and contact page. Transparent product image variants are stored alongside the source-derived assets, with backups in `img-originals/`.
 
 Pages: home; riveters overview; bench-top and power-head orbital riveters; Orbitfeed; double-ended; impact; hydraulic squeeze; presses and cylinders; riveting kits; automation; Process Inspector; riveting methods; services; literature; history; sales representatives; contact; request a quote; and a 404 page. Used equipment has no individual listings in the source, and the old video files are not available as embeddable assets, so those pages are omitted.
 

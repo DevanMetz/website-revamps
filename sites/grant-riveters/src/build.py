@@ -10,7 +10,11 @@ ROOT=Path(__file__).resolve().parent.parent; SITE=ROOT/'site'; REF=ROOT/'referen
 for key,path in IMAGES.items():
  im=Image.open(REF/'img'/path); im.seek(0); im=im.convert('RGB' if im.format=='JPEG' else 'RGBA'); out=SITE/'assets/img'/f'{key}.png'; im.save(out,optimize=True)
 def img(key,alt):
- im=Image.open(SITE/'assets/img'/f'{key}.png'); return f'<img src="/assets/img/{key}.png" alt="{escape(alt)}" width="{im.width}" height="{im.height}" loading="lazy">'
+ name=f'{key}-transparent.png' if key in {'bench','impact','inspector','kit','power','press','servo'} else f'{key}.png'; im=Image.open(SITE/'assets/img'/name); return f'<img src="/assets/img/{name}" alt="{escape(alt)}" width="{im.width}" height="{im.height}" loading="lazy">'
+def tile_img(key,alt):
+ name=f'{key}-transparent.png' if key in {'bench','impact','inspector','kit','power','press','servo'} else f'{key}.png'
+ im=Image.open(SITE/'assets/img'/name)
+ return img(key,alt).replace('<img ', f'<img style="width:{im.width * 1.25:g}px" ')
 def link(label,url): return f'<a href="{url}">{escape(label)} <span aria-hidden="true">→</span></a>'
 def cards(items): return '<div class="cards">'+''.join(f'<a class="card" href="{u}"><span>{escape(t)}</span><b aria-hidden="true">→</b></a>' for t,u in items)+'</div>'
 nav=[('Riveters','/riveters/'),('Presses','/presses/'),('Riveting kits','/riveting-kits/'),('Automation','/automation/'),('Services','/services/'),('Literature','/literature/')]
@@ -143,17 +147,19 @@ def product_body(path):
  if path.startswith('riveters/orbital/'):
   bench=path.endswith('bench-top')
   out+='<nav class="anchors" aria-label="Riveter variants"><a href="#pneumatic">Pneumatic</a><a href="#hydraulic">Hydraulic</a><a href="#servo-electric">Servo-electric</a></nav>'
-  if bench: out+=''.join('<p>'+escape(p)+'</p>' for p in ORBITAL_INTRO)+'<p>We offer a standard two-year factory warranty.</p>'
+  if bench: out+='<div class="product-intro"><p>'+' '.join(escape(p) for p in ORBITAL_INTRO)+' We offer a standard two-year factory warranty.</p>'
   else: out+='<p>Power-head riveters offer Orbital, Twin-Spin, Multi-Spin and Spin-Press forming techniques. Typical cycle time is 0.5 to 1.5 seconds for most applications.</p>'
+  out+='<p>The riveters have a modular design and support Orbital, Twin-Spin, Multi-Spin and Spin-Press forming. Pneumatic and hydraulic models are available with adjustable stroke and multi-process tooling.</p>'
+  if bench: out+='</div>'
   for label,anchor,key,data in [('Pneumatic','pneumatic','bench' if bench else 'power',PNEUMATIC),('Hydraulic','hydraulic','hydraulic',HYDRAULIC),('Servo-electric','servo-electric','servo',SERVO)]:
    models=data['models'] if bench or anchor!='pneumatic' else ['G003','G005','G008','G012','G016']
    caps=list(data['capacity'])
    if bench and anchor=='hydraulic': caps[-1]='1.250" DIA. (38 mm)'
-   benefits=['Modular design','Orbital, Twin-Spin, Multi-Spin and Spin-Press forming']
+   benefits=[]
    if anchor=='pneumatic': benefits+=['Precision micrometer stroke adjustment','Festo pneumatics, Siemens electrical components and SKF bearings']
    elif anchor=='hydraulic': benefits+=['Precision micrometer stroke adjustment','Bearings lubricated for life','Tempo-Sonic III and servo or proportional valve upgrades available']
    else: benefits+=['Programmable stroke and profile','Real-time inspection','Emerson servo components']
-   out+='<section id="'+anchor+'"><h2>'+label+'</h2><div class="variant-layout"><div class="product-photo">'+img(key,label+' riveter')+'</div><div><p>'+('The servo-electric riveter is programmable in spindle stroke velocity, profile, forming pressure and depth.' if anchor=='servo-electric' else 'The riveter is available with adjustable stroke and multi-process tooling.')+'</p><h3>Key benefits</h3><ul>'+''.join('<li>'+escape(b)+'</li>' for b in benefits)+'</ul>'
+   out+='<section id="'+anchor+'"><h2>'+label+'</h2><div class="variant-layout"><div class="product-photo">'+img(key,label+' riveter')+'</div><div>'+('<p>The servo-electric riveter is programmable in spindle stroke velocity, profile, forming pressure and depth.</p>' if anchor=='servo-electric' else '')+'<h3>Features</h3><ul>'+''.join('<li>'+escape(b)+'</li>' for b in benefits)+'</ul>'
    out+='</div></div>'+orbital_table(anchor.replace('-electric','')+('bt' if bench else 'ph'))
    out+='<p>'+('These riveters are backed with a two-year warranty and are 100% guaranteed.' if anchor=='pneumatic' else 'These riveters are backed with a three-year warranty and are 100% guaranteed.')+'</p></section>'
   return out
@@ -170,7 +176,7 @@ def product_body(path):
   out+='</section>'
  return out
 family=[('Bench-top orbital riveters','/riveters/orbital/bench-top/','bench'),('Power-head orbital riveters','/riveters/orbital/power-head/','power'),('Orbitfeed','/riveters/orbitfeed/','orbitfeed'),('Double-ended riveters','/riveters/double-ended/','double'),('Impact riveters','/riveters/impact/','impact'),('Hydraulic squeeze riveters','/riveters/squeeze/','squeeze'),('Pneumatic presses & cylinders','/presses/','press'),('Riveting kits','/riveting-kits/','kit'),('Automation','/automation/','automation'),('Process Inspector','/process-inspector/','inspector')]
-home='<section class="hero"><div class="wrap hero-inner"><div><h1>Orbital, impact and squeeze riveting machines</h1><div class="actions"><a class="button" href="/riveters/">Explore riveters</a><a class="button outline" href="/request-a-quote/">Request a quote</a></div></div></div></section><section class="section wrap"><div class="section-head"><h2>Riveting machines</h2><a href="/riveters/">All riveters →</a></div><div class="product-grid">'+''.join(f'<a class="product" href="{u}"><div class="image-well">{img(k,t)}</div><h3>{t}</h3><span aria-hidden="true">→</span></a>' for t,u,k in family)+'</div></section><section class="fact-row"><div class="wrap">Over 230,000 riveting systems installed worldwide</div></section><section class="methods"><div class="wrap"><h2>Riveting methods</h2><ul class="method-links">'+''.join(f'<li><a href="/riveting-methods/">{x}</a></li>' for x in ['Orbital','Twin-Spin','Multi-Spin','Spin-Press'])+'</ul></div></section><section class="section wrap split"><div><h2>Contract riveting services</h2><p>Grant Riveters offers contract riveting, prototyping and consulting for product design, rivets and riveting process selection.</p>'+link('Our services','/services/')+'</div><div><h2>Company history</h2><p>Grant Manufacturing and Machine Company’s first invention was in 1860.</p>'+link('Our history','/history/')+'</div></section><section class="contact-band"><div class="wrap"><h2>Request a quote</h2><a href="tel:8002272150">800-227-2150</a><a class="button" href="/request-a-quote/">Request a quote</a></div></section>'
+home='<section class="hero"><div class="wrap hero-inner"><div><h1>Orbital, impact and squeeze riveting machines</h1><div class="actions"><a class="button" href="#machines">Explore machines</a><a class="button outline" href="/request-a-quote/">Request a quote</a></div></div></div></section><section class="section wrap" id="machines"><div class="section-head"><h2>Riveting machines</h2></div><div class="product-grid">'+''.join(f'<a class="product" href="{u}"><div class="image-well">{tile_img(k,t)}</div><h3>{t}</h3></a>' for t,u,k in family)+'</div></section><section class="fact-row"><div class="wrap">Over 230,000 riveting systems installed worldwide</div></section><section class="section wrap split"><div><h2>Contract riveting services</h2><p>Grant Riveters offers contract riveting, prototyping and consulting for product design, rivets and riveting process selection.</p>'+link('Our services','/services/')+'</div><div><h2>Riveting methods</h2><p>Orbital, Twin-Spin, Multi-Spin and Spin-Press</p>'+link('Explore methods','/riveting-methods/')+'</div><div><h2>Company history</h2><p>Grant Manufacturing and Machine Company’s first invention was in 1860.</p>'+link('Our history','/history/')+'</div></section><section class="contact-band"><div class="wrap"><h2>Request a quote</h2><a href="tel:8002272150">800-227-2150</a><a class="button" href="/request-a-quote/">Request a quote</a></div></section>'
 def write(path,title,desc,body):
  out=SITE/path/'index.html' if path else SITE/'index.html';out.parent.mkdir(parents=True,exist_ok=True);out.write_text(layout(title,desc,body,path))
 write('','Riveting machines and assembly systems','Orbital, spin, impact and squeeze riveting machines, presses and automated systems.',home)
@@ -188,7 +194,8 @@ for path,(title,desc,files,items) in PAGES.items():
   body+=source_content(files)
  if path in LITERATURE:
   body+='<h2>Literature</h2><ul>'+''.join(f'<li><a href="/assets/docs/{quote(name)}">{escape(doc_label(name))}</a></li>' for name in LITERATURE[path])+'</ul>'
- body+='<p class="cta-link">'+link('Request a quote','/request-a-quote/')+'</p></section>'
+ if path in PRODUCTS or path.startswith('riveters/orbital/') or path in ('process-inspector','services'): body+='<p class="cta-link">'+link('Request a quote','/request-a-quote/')+'</p>'
+ body+='</section>'
  write(path,title,desc,body)
 for path,title in [('contact','Contact'),('request-a-quote','Request a quote')]:
  body=hero(title,'Contact Grant Riveters about your application.')+'<section class="section wrap contact-layout"><div><h2>Grant Riveters</h2><p>90 Silliman Avenue<br>P.O. Box 3350<br>Bridgeport, Connecticut 06605, USA</p><p><a href="tel:8002272150">800-227-2150</a> (sales: ext. 101)<br><a href="tel:2033664557">203-366-4557</a><br>Fax 203-366-0370<br><a href="mailto:sales@grantriveters.com">sales@grantriveters.com</a></p></div><div>'+fields(path=='request-a-quote')+'</div></section>'
