@@ -5,8 +5,10 @@ function setMenu(open) {
   nav.classList.toggle('open', open);
   header.classList.toggle('menu-open', open);
   toggle.setAttribute('aria-expanded', String(open));
-  toggle.textContent = open ? 'Close' : 'Menu';
+  toggle.textContent = open ? 'Close' : (matchMedia('(min-width: 1201px)').matches ? 'More' : 'Menu');
 }
+setMenu(false);
+window.addEventListener('resize', () => { if (toggle.getAttribute('aria-expanded') === 'false') setMenu(false); });
 toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
@@ -21,7 +23,3 @@ if (form) form.addEventListener('submit', event => {
   document.querySelector('#form-status').textContent = 'Your email application will open with your inquiry.';
   window.location.href = 'mailto:andrew.kwong@heattransfersys.com?subject=' + encodeURIComponent('Website inquiry') + '&body=' + encodeURIComponent(body);
 });
-const hero = document.querySelector('.hero');
-if (hero && 'IntersectionObserver' in window) {
-  new IntersectionObserver(([entry]) => header.classList.toggle('scrolled', !entry.isIntersecting), {threshold: 0}).observe(hero);
-}

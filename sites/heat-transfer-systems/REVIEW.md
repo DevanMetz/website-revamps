@@ -53,3 +53,23 @@
 - Restored the original ASME Section VIII and Section I, TEMA, and customer specification construction list on the heat exchanger page. Rebuilt, passed the static checker, and deployed.
 - Revisited all pages live at 1440 and 390, including the 404; no broken images, horizontal overflow, page errors or failed requests. The restored list is visible in `/workspace/shots/rev2/heat-transfer-systems/r2loop3-1440-heat-exchangers.png` and `/workspace/shots/rev2/heat-transfer-systems/r2loop3-390-heat-exchangers.png`. The other first screens are in `/workspace/shots/rev2/heat-transfer-systems/r2loop3-1440-montage.jpg` and `/workspace/shots/rev2/heat-transfer-systems/r2loop3-390-montage.jpg`.
 - Remaining: Better original photographs would allow a truly large, sharp photo-led hero and gallery. The static inquiry requires an email application.
+
+## Round 3
+
+- P1: The home hero's banner is stranded above the headline at desktop and leaves a large empty band on mobile; the small source image cannot support a large hero. Screenshots: `/workspace/shots/rev2/heat-transfer-systems/r3initial-1440-home.png`, `/workspace/shots/rev2/heat-transfer-systems/r3initial-390-home.png`.
+- P2: The heat exchanger subtitle simply repeats the heading, while the waste heat subtitle delays the useful list on mobile. Screenshots: `/workspace/shots/rev2/heat-transfer-systems/r3initial-390-heat-exchangers.png`, `/workspace/shots/rev2/heat-transfer-systems/r3initial-390-waste-heat-recovery.png`.
+- P2: At desktop the Menu repeats the visible equipment links, making its additional destinations less obvious. Screenshot: `/workspace/shots/rev2/heat-transfer-systems/r3initial-1440-home.png`.
+- P3: Gallery photographs are very shallow composite strips; the original material limits their clarity. Screenshot: `/workspace/shots/rev2/heat-transfer-systems/r3initial-390-photos.png`.
+
+### Round 3 Loop 1
+
+- Replaced the composite hero strip and its empty dark band with a compact typographic hero; removed the repeated heat-exchanger subtitle, moved the waste-heat detail into its content, and limited desktop More to destinations not already in the primary bar.
+- Built, passed the static checker, deployed, and viewed every route at 1440 and 390. Screenshots: `/workspace/shots/rev2/heat-transfer-systems/r3loop1-1440-montage.jpg`, `/workspace/shots/rev2/heat-transfer-systems/r3loop1-390-montage.jpg`, `/workspace/shots/rev2/heat-transfer-systems/r3loop1-390-home.png`, and the corresponding full-page montages. The mobile menu, close button and Escape worked; empty inquiry validation blocked submission, and a completed inquiry generated the expected mailto. No broken images, overflow, page errors or failed HTTP requests were observed.
+- Remaining: Clients repeats its page title immediately as a section heading. The gallery is still constrained by the original shallow composite photographs; mailto requires an email application.
+
+### Round 3 Loop 2
+
+- Removed the repeated Clients heading and unused hero image/observer code. Rebuilt, passed all static checks, and deployed.
+- Revisited all pages including the 404 at 1440 and 390, checked full-page and viewport screenshots, clicked the primary and menu destinations, and checked the menu with keyboard, close and Escape. Screenshots: `/workspace/shots/rev2/heat-transfer-systems/r3loop2-1440-montage.jpg`, `/workspace/shots/rev2/heat-transfer-systems/r3loop2-390-montage.jpg`, `/workspace/shots/rev2/heat-transfer-systems/r3loop2-390-clients.png`, and the corresponding full-page montages. No overflow, broken images, page errors or failed HTTP resources were reported. Body text and header accessibility snapshots show distinct labels; the generated HTML has no adjacent link/button pairs.
+- Empty inquiry validation and completed mailto were checked again at both widths. The facilities PDF returned 200; TEMA, WHRU and cutting redirects returned 301 and noindex. The original phone formatting was checked against the crawl.
+- Remaining: Gallery photos are small composite strips from the original site, and inquiries require an email application. An additional automated attempt to click every content and footer link was interrupted by a navigation abort, so that particular exhaustive click pass was not completed; the route and menu passes succeeded.
