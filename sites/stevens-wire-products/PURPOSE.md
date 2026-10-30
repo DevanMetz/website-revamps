@@ -12,4 +12,8 @@ Keep the product galleries, capability details, contact options and careers info
 
 ## Images
 
-Reviewed 30 deployed images. One white-background candidate was tested for transparency; its enclosed white areas remained conspicuous against the page background, so the original was retained. Transparent replacements: 0. The remaining assets have photographic or non-white backgrounds. Existing fixed gallery frames retain natural image dimensions and avoid upscaling.
+- 1 used image was converted from white to transparency: the medical wire form (color-to-alpha, source in src/transparent/, original in img-originals/medical/).
+- 0 used images were transparent in the source.
+- 0 product, drawing or logo images remain on a white box.
+- 29 images are studio or scene photographs with grey, textured or real-world backgrounds (some with the original framed drop shadow) and are left as photographs.
+- Gallery frames retain natural image dimensions and avoid upscaling.
