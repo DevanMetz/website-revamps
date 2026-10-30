@@ -1,0 +1,21 @@
+# Grant Riveters redesign preview
+
+Preview: https://grant-riveters-redesign.metzdevan.workers.dev (Cloudflare Worker `grant-riveters-redesign`, static assets from `site/`, configured in `wrangler.jsonc`). Deploy with `npx wrangler deploy` from this folder; the local `package.json` keeps wrangler's cache inside this folder.
+
+Pages: home; riveters overview; bench-top and power-head orbital riveters; Orbitfeed; double-ended; impact; hydraulic squeeze; presses and cylinders; riveting kits; automation; Process Inspector; riveting methods; services; literature; history; sales representatives; contact; request a quote; and a 404 page. Used equipment has no individual listings in the source, and the old video files are not available as embeddable assets, so those pages are omitted.
+
+Edit page definitions in `src/data.py` and templates and content in `src/build.py`, then run `python3 src/build.py`. Run `python3 src/check.py` to check links, image attributes, headings, redirects and asset sizes. Python requires Pillow and Beautiful Soup.
+
+For hosting, configure a Cloudflare Worker with static assets pointing to `site/` in your own `wrangler.jsonc`, then run `npx wrangler deploy`. No deployment configuration is included in this preview. Forms use a mailto fallback; for production, replace it with a Cloudflare Worker or Pages Function, Formspree, or the company's existing form handler if available. Remove the `noindex` meta tags and header and update `robots.txt` at launch.
+
+## Content sources
+
+Content is drawn from the files under `reference/`, particularly the product, process, service, history and contact pages. Introductory descriptions and the home hero lightly combine source product and service names. The following sentences were lightly edited or combined: “Grant Riveters offers contract riveting, prototyping and consulting for product design, rivets and riveting process selection”; “Grant Manufacturing and Machine Company’s first invention was in 1860”; “Grant Riveters’ ‘Tailor-Made’ system fits the machine to the job”; “The product line includes orbital, spin riveting, impact, squeeze, blind and press type riveting”; “Grant Riveters has implemented the Process Inspector controller in its riveter product line”; “The controller provides real-time force and distance data and alerts the operator to non-conforming parts”; “The PLC/HMI features a color touch-screen control with a digital readout for setting force and distance triggers”; “Programs are generated from high and low distance and force data and saved under a preferred name”; “Grant Riveters provides contract riveting services and can assist with product design, rivets and riveting process selection”; “Grant Riveters offers prototyping and product development services”; “Grant Riveters reviews product designs and existing riveting requirements and samples products using a variety of techniques to determine a suitable process.” Product variant summaries combine the respective source pages. Source tables are reproduced from the rendered HTML; contradictory figures remain as printed in their respective sources.
+
+Omitted dated claims include the 1904–2011 anniversary, old prices and sale prices, copyright and last-modified years, dated news and podcast items, time-relative years-in-business claims, and historic delivery and quotation-time promises. The sales representative page directs inquiries to Grant using the specified company contact details; personal email addresses are omitted.
+
+The crawl reported missing `_derived/index.htm_txt_GrantAO3T_small.gif` and `images/Servo.jpg`, along with failed counter and advertising resources and HTTP-only Yahoo and third-party CSS requests. These are not used.
+
+### Pass 2 product content
+
+Product sections are authored in `src/content/products.py`; `src/build.py` renders their model tables and variant sections. Product copy was trimmed and organized from the corresponding source pages, with promotional comparisons, old prices, delivery estimates, and duplicated form text omitted. The hydraulic bench-top source lists the HGS-032 capacity as both 1.250 inch and 38 mm; those source values are retained together. Other orbital pages list that model as 1.250 inch and 32 mm. Product warranty wording remains specific to the source family and variant.
