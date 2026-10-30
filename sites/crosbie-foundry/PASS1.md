@@ -1,0 +1,9 @@
+# PASS 1 review (screenshots at 1440 and 390)
+Keep all BRIEF.md rules; rebuild and make src/check.py pass. Do not ask questions.
+1. Remove the decorative "CF / Elkhart, Indiana / Est. 1956" seal in the hero - it is invented brand art. Put the strongest real casting photo there instead (golf plaque "187" or the valve castings), native size max 1.25x, framed on the dark band; or make the hero text-only.
+2. Design rule - cut taglines/helper text: remove the hero subline (move "Working exclusively with nonferrous metals..." into the first section body), cut the inner-page hero sublines (e.g. Products "Brass, bronze, and aluminum castings for a wide range of applications."), cut "Our typical production flask sizes are shown here. Contact us to discuss your casting requirements." and the CTA band subline.
+3. Invented slogans: rename "Made at Crosbie Foundry" -> "Since 1956", "Built for your part" -> "Flask sizes", "Have a casting project?" -> "Request a quote". Put "Quote requests are directed to John Crosbie, Operations Manager." on the contact page form intro only (it is real copy).
+4. Products -> Applications list: the source list has many more items than shown (it ends at "bronze yardage markers" but the source continues with railroad keys, aluminum, nickel silver items etc.). Include EVERY item from products.html exactly once, alphabetised, grouped under Aluminum / Brass / Bronze / Other subheadings by first word; 3 columns desktop, 1 column mobile.
+5. Product cards: consistent 4:3 contain media boxes on a neutral panel; product names without trailing arrows clutter is fine but keep one arrow style site-wide.
+6. Header desktop: add 800-419-0402 tel link at the right of the nav.
+7. Check every product gallery page shows all images from the corresponding old numbered pages (golf1-12 etc.) with real captions only; each image links to its full-size file.
