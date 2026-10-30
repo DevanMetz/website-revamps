@@ -1,0 +1,5 @@
+Crawled https://collinsinst.com/ on 2026-10-29 with headless Chromium (all same-host links followed) plus wget over HTTPS.
+Requests that failed or were blocked (HTTP-only/mixed content or dead third parties):
+
+Asset downloads that failed:
+

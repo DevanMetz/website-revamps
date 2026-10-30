@@ -1,0 +1,9 @@
+# PASS 1 review (screenshots at 1440 and 390)
+Keep all BRIEF.md rules; rebuild and make src/check.py pass. Do not ask questions.
+1. Design rule: remove the hero right-hand box ("COLLINS INSTRUMENT COMPANY, INC. / Precision parts. Industrial applications. / ANGLETON, TEXAS") - it is an invented tagline. Use that space for the best real product photo (isolating flanges or control valves) at native size max, on a light panel; or let the hero be text-only full width.
+2. Remove the helper line "Specialized products for chemical and process industries." next to "Products & services", and remove the one-line helper descriptions under each product card (keep just image + name + arrow). Remove page-hero sublines on inner pages (e.g. "Ground out unwanted signals in lined pipe.") unless they are the page's only description.
+3. "Made to your specifications." is an invented slogan: rename that section "Capabilities". Rename the green band "Discuss your requirements with Collins." to "Contact" with phone (979) 849-8266 as a tel link plus the button.
+4. Control valves: reproduce the specification and selection tables from reference/pcv.pdf.txt as accessible HTML tables (exact values; if a table's text extraction is ambiguous, run `pdftotext -layout` on site/assets/docs/pcv.pdf to read it properly). Only leave a table in the PDF if it genuinely cannot be reconstructed, and say which in README.
+5. Product card images: the Control Valves and Fittings & Valves cards use the same photo - use a distinct real photo for each where the source has one (check assets.tsv by page); consistent 4:3 contain media boxes, no upscaling beyond 1.25x.
+6. Tables on mobile: scroll region (tabindex=0, role=region, aria-label), sticky first column, right-edge fade cue, min 14px text.
+7. Header desktop: add (979) 849-8266 tel link at the right of the nav.
