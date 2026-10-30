@@ -12,4 +12,8 @@ Keep the direct contact and directions links, capability facts, emergency strip,
 
 ## Images
 
-0 made transparent. The three home images are photographs, including people and machinery; the map has a non-white border and the transparency tool rejected it. Retained originals. The three home photographs and map display at no more than their natural size.
+- 0 images were converted from white and 0 are transparent in the source.
+- 0 product, drawing or logo images remain on a white box. The portable-machining photo's baked-in white mat and shadow are trimmed in src/build.py.
+- 4 images are used: three photographs and one map. The map keeps its own paper.
+- The source photos are very small (114–192px wide), so they are shown as framed prints at no more than about 2x native size and are never repeated.
+- Originals are in img-originals/.
