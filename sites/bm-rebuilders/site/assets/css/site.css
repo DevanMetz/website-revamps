@@ -4,3 +4,12 @@
 .hero{padding:72px 0 78px}.hero h1{max-width:1000px}.service-content{padding-top:48px}.intro{max-width:850px;margin-bottom:36px}.intro:empty{display:none}.gallery{grid-template-columns:repeat(4,minmax(0,1fr));gap:32px 20px}.gallery figure{margin:0;min-width:0}.gallery-image{aspect-ratio:4/3;background:#edf1ee;display:flex;align-items:center;justify-content:center;padding:12px}.gallery-image img{width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain}.gallery figcaption{font-size:15px;font-weight:400;line-height:1.4;margin-top:10px}.card-image img{width:auto;height:auto}.service-cta{border-top:1px solid var(--line);margin-top:60px}@media(max-width:800px){.gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.gallery{grid-template-columns:1fr}.gallery-image{max-width:360px;max-height:360px}}
 
 .shop-copy{max-width:720px}
+
+.service-contact{margin-top:30px}
+
+/* Compact photo grids */
+.cards{grid-template-columns:repeat(4,minmax(0,220px));gap:20px}.card-image{height:auto;aspect-ratio:4/3;padding:0;background:none}.card-image img{display:block;width:100%;height:100%;object-fit:cover}.card-title{min-height:0}.gallery{grid-template-columns:repeat(auto-fill,minmax(200px,220px));gap:28px 20px}.gallery-image{padding:0;background:none;display:block;aspect-ratio:4/3}.gallery-image img{width:100%;height:100%;max-width:none;max-height:none;object-fit:cover}.gallery figcaption{font-size:13px;line-height:1.4;margin-top:7px}.intro p{margin:0 0 8px}.intro p:last-child{margin-bottom:0}.shop-band .wrap{max-width:784px}.shop-copy{max-width:none}@media(max-width:520px){.cards,.gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 10px}.card-image{height:auto;padding:0}.gallery-image{max-width:none;max-height:none}}
+.card-image{position:relative;flex:none;overflow:hidden}.card-image img{position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;object-fit:cover}
+
+/* Service reading and contact */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}.intro p{font-size:1rem;line-height:1.6}.intro h2{font-size:1rem;line-height:1.6;letter-spacing:normal;margin:12px 0 8px}.gallery figcaption{font-size:15px;line-height:1.4}.service-cta{padding-top:24px;margin-top:40px;justify-content:flex-start;gap:24px;flex-direction:row;align-items:center;flex-wrap:wrap}.service-cta>a:not(.button){font-weight:700}

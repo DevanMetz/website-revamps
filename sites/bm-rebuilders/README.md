@@ -4,7 +4,7 @@ Preview: https://bm-rebuilders-redesign.metzdevan.workers.dev (Cloudflare Worker
 
 ## Pages
 
-Home, shop, contact, eight service pages, and a 404 page. The services cover fastener equipment rebuilding, upgrades and electrical upgrades; thread rolling and tapping; precision machining and new parts; wire drawers and compactors; press rebuilding; and tool room and production machine rebuilding.
+Home, shop, contact, eight service pages, and a 404 page. The services cover fastener equipment rebuilding, upgrades and electrical upgrades; thread rolling and tapping; precision machining and new parts; wire drawers and compactors; press rebuilding; and tool room and production machine rebuilding. Each service page has a direct contact link above its original machine photo gallery and a compact phone and contact row below it.
 
 ## Editing and hosting
 
@@ -18,7 +18,7 @@ The preview uses noindex meta tags and an `X-Robots-Tag` header, and `robots.txt
 
 ## Content sources
 
-Content and imagery come from the archived pages in `reference/`. The service pages merge the numbered original pages; original technical language, models, specifications, and warranty statements are retained. Gallery images are grouped by original page and given descriptive service-level alt text; original captions remain in the accompanying text.
+Content and imagery come from the archived pages in `reference/`. The service pages merge the numbered original pages; original technical language, models, specifications, and warranty statements are retained. Gallery images are grouped by original page and given descriptive service-level alt text; original captions appear below the photos, with consecutive identical captions shown once.
 
 Light edits and adaptations:
 

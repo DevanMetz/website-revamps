@@ -58,9 +58,10 @@ def intro(olds):
   soup=BeautifulSoup((ROOT/'reference/html/fastupgrade2.html.html').read_text(errors='ignore'),'html.parser')
   cell=soup.find('img',src=re.compile('020')).find_parent('td')
   paragraphs.append(re.sub(r'\s+',' ',' '.join(cell.stripped_strings)).replace('| HOME |','').strip())
- return '<div class="intro">'+''.join(f'<p>{escape(t)}</p>' for t in paragraphs)+'</div>'
+ return '<div class="intro">'+''.join(f'<h2>{escape(t)}</h2>' if t.startswith('Acme-Gridley 1" RAC') else f'<p>{escape(t)}</p>' for t in paragraphs)+'</div>'
 def gallery(olds,title):
  result=[]
+ previous_caption=None
  for old in olds:
   soup=BeautifulSoup((ROOT/f'reference/html/{old}.html.html').read_text(errors='ignore'),'html.parser')
   for img in soup.find_all('img'):
@@ -72,7 +73,9 @@ def gallery(olds,title):
    if detail and detail not in caption: caption=(caption+' '+detail).strip()
    rendered=image(name,caption or title)
    output=Path(name).stem.lower()+('.png' if Path(name).suffix.lower() in ('.gif','.png') else '.jpg')
-   result.append(f'<figure><a class="gallery-image" href="/assets/img/{output}">{rendered}</a>'+ (f'<figcaption>{escape(caption)}</figcaption>' if caption else '')+'</figure>')
+   show_caption=caption and caption != previous_caption
+   result.append(f'<figure><a class="gallery-image" href="/assets/img/{output}">{rendered}</a>'+ (f'<figcaption>{escape(caption)}</figcaption>' if show_caption else '')+'</figure>')
+   previous_caption=caption
  return '<div class="gallery">'+''.join(result)+'</div>'
 def page(title,body,description,active=''):
  nav=''.join(f'<a href="{url}"'+(' aria-current="page"' if active==key else '')+f'>{label}</a>' for key,url,label in [('home','/','Home'),('services','/#services','Services'),('shop','/shop/','Shop'),('contact','/contact/','Contact')])
@@ -84,20 +87,20 @@ cards=''
 for slug,title,olds in SERVICES:
  soup=BeautifulSoup((ROOT/f'reference/html/{olds[0]}.html.html').read_text(errors='ignore'),'html.parser')
  name=next(Path(i['src']).name for i in soup.find_all('img') if Path(i.get('src','')).name not in ('logo.gif','point.gif','pointleft.gif'))
- cards+=f'<a class="card" href="/services/{slug}/"><div class="card-image">{image(name,title)}</div><div class="card-title"><h3>{title}</h3><span aria-hidden="true">→</span></div></a>'
-home=f'''<section class="hero"><div class="wrap"><h1>Cold forming and wire drawing machinery rebuilding</h1><p>B.M. Rebuilders, Inc. is a family-owned business, established in 1981 for rebuilding and repairing machinery used in the cold forming and wire drawing industry.</p><div class="actions"><a class="button" href="/#services">Explore services</a><a class="button outline" href="/contact/">Contact us</a></div></div></section><section class="section wrap" id="services"><div class="section-heading"><h2>Services</h2></div><div class="cards">{cards}</div></section><section class="shop-band"><div class="wrap"><div class="shop-copy"><h2>Shop</h2><p>Our 20,000 square foot facility under crane has a fully equipped machine shop with horizontal boring mills up to 5" spindle, and lathes up to 30" diameter by 120" long.</p><p>We also have four stake bed trucks, each equipped with its own toolbox, fully loaded to handle the smallest repair to a mini or full rebuild on your floor.</p><a class="text-link" href="/shop/">Shop →</a></div></div></section><section class="call"><div class="wrap call-inner"><h2>Machine down?</h2><a href="tel:8886866237">Call 1-888-686-6237</a></div></section><section class="section wrap contact-band"><h2>Contact</h2><a class="button dark" href="/contact/">Contact us</a></section>'''
+ cards+=f'<a class="card" href="/services/{slug}/"><div class="card-image">{image(name,title)}</div><div class="card-title"><h3>{title}</h3></div></a>'
+home=f'''<section class="hero"><div class="wrap"><h1>Cold forming and wire drawing machinery rebuilding</h1><p>B.M. Rebuilders, Inc. is a family-owned business, established in 1981 for rebuilding and repairing machinery used in the cold forming and wire drawing industry.</p><div class="actions"><a class="button" href="/#services">Explore services</a><a class="button outline" href="/contact/">Contact us</a></div></div></section><section class="section wrap" id="services"><div class="section-heading"><h2>Services</h2></div><div class="cards">{cards}</div></section><section class="shop-band"><div class="wrap"><div class="shop-copy"><h2>Shop</h2><p>Our 20,000 square foot facility under crane has a fully equipped machine shop with horizontal boring mills up to 5" spindle, and lathes up to 30" diameter by 120" long.</p><p>We also have four stake bed trucks, each equipped with its own toolbox, fully loaded to handle the smallest repair to a mini or full rebuild on your floor.</p><a class="text-link" href="/shop/">Shop</a></div></div></section>'''
 write('',page('Machinery rebuilding',home,'Rebuilding and repairing machinery used in the cold forming and wire drawing industry.','home'))
 for slug,title,olds in SERVICES:
- parts=intro(olds)+gallery(olds,title)
- body=f'<section class="page-hero"><div class="wrap"><a class="back" href="/#services">← All services</a><h1>{title}</h1></div></section><div class="wrap service-content">{parts}<div class="service-cta"><h2>Contact</h2><a class="button dark" href="/contact/">Contact us</a></div></div>'
+ parts=intro(olds)+gallery(olds,title)+'<div class="service-cta"><a href="tel:8886866237">888-686-6237</a><a class="button dark" href="/contact/">Contact us</a></div>'
+ body=f'<section class="page-hero"><div class="wrap"><a class="back" href="/#services">All services</a><h1>{title}</h1><a class="button service-contact" href="/contact/">Contact us</a></div></section><div class="wrap service-content">{parts}</div>'
  write('services/'+slug,page(title,body,title+' from B.M. Rebuilders, Inc.','services'))
-shop='''<section class="page-hero"><div class="wrap"><h1>Shop</h1></div></section><section class="section wrap shop-layout"><div><h2>Machine shop</h2><p>Our 20,000 square foot facility under crane has a fully equipped machine shop with horizontal boring mills up to 5" spindle, and lathes up to 30" diameter by 120" long.</p></div><div><h2>Field service</h2><p>We have four stake bed trucks, each equipped with its own toolbox, to handle repairs and mini or full rebuilds on your floor.</p><a class="text-link" href="/contact/">Contact us →</a></div></section>'''
+shop='''<section class="page-hero"><div class="wrap"><h1>Shop</h1></div></section><section class="section wrap shop-layout"><div><h2>Machine shop</h2><p>Our 20,000 square foot facility under crane has a fully equipped machine shop with horizontal boring mills up to 5" spindle, and lathes up to 30" diameter by 120" long.</p></div><div><h2>Field service</h2><p>We have four stake bed trucks, each equipped with its own toolbox, to handle repairs and mini or full rebuilds on your floor.</p><a class="text-link" href="/contact/">Contact us</a></div></section>'''
 write('shop',page('Our shop',shop,'Our fully equipped machine shop and field service trucks.','shop'))
 fields=[('name','Name','text','name',True),('company','Company','text','organization',False),('phone','Phone','tel','tel',False),('email','Email','email','email',True),('machine','Machine make/model','text','off',False),('service','Service needed','text','off',False)]
 inputs=''.join(f'<label for="{i}">{label}<input id="{i}" name="{label}" type="{typ}" autocomplete="{auto}"'+(' required' if req else '')+'></label>' for i,label,typ,auto,req in fields)
 contact=f'''<section class="page-hero"><div class="wrap"><h1>Contact</h1><p>B.M. Rebuilders, Inc. · Elyria, Ohio</p></div></section><section class="section wrap contact-layout"><div class="contact-details"><h2>Get in touch</h2><p>Toll free<br><a href="tel:8886866237">888-686-6237</a></p><p>Phone<br><a href="tel:4403652300">440-365-2300</a></p><p>Fax<br>440-366-9868</p><p>Email<br><a href="mailto:bmrebuild@aol.com">bmrebuild@aol.com</a></p></div><div><h2>Send an inquiry</h2><!-- Replace the mailto handler with a production form endpoint here. --><form id="inquiry"><div class="form-grid">{inputs}</div><label for="message">Message<textarea id="message" name="Message" rows="6" required></textarea></label><button class="button dark" type="submit">Send inquiry</button><p id="status" role="status"></p></form></div></section>'''
 write('contact',page('Contact',contact,'Contact B.M. Rebuilders, Inc. in Elyria, Ohio.','contact'))
-(SITE/'404.html').write_text(page('Page not found','<section class="page-hero"><div class="wrap"><h1>Page not found</h1><p><a href="/">Return home →</a></p></div></section>','Page not found.'))
+(SITE/'404.html').write_text(page('Page not found','<section class="page-hero"><div class="wrap"><h1>Page not found</h1><p><a href="/">Return home</a></p></div></section>','Page not found.'))
 (SITE/'assets/img/favicon.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#182c2a"/><text x="32" y="42" text-anchor="middle" font-family="sans-serif" font-size="25" font-weight="bold" fill="white">BM</text></svg>')
 redirects=['/index.html / 301']
 for slug,title,olds in SERVICES:
