@@ -18,4 +18,7 @@ Visitors maintain or operate cold forming, fastener and wire drawing machinery. 
 
 ## Images
 
-- 0 images made transparent. The deployed service images are photographs of machines in workshop settings, including the GIF-sourced images; removing their backgrounds would damage the scenes. Compact 4:3 frames show the original machine photographs near their native size, with full captions retained.
+- 0 images converted from white to transparency.
+- 1 used image is transparent from the source: the company logo, preserved as a PNG from the original GIF.
+- 0 product, drawing or logo images remain on white boxes. The logo retains its original interior artwork.
+- 92 unique machine and workshop photographs are used. Their backgrounds are part of the scenes, so removing them would damage the images. Original captions are retained in the service galleries.
