@@ -25,3 +25,12 @@ nav ul{list-style:none;display:flex;align-items:center;gap:32px;margin:0;padding
 /* Keep the company name readable on small screens and focus visible on both surfaces. */
 :focus-visible{outline-color:#7b0c12}.header :focus-visible,.hero :focus-visible,.page-head :focus-visible,.inner-back :focus-visible,.location :focus-visible,footer :focus-visible{outline-color:#d4a7a2}
 @media(max-width:760px){.brand span{font-size:14px}}
+
+/* Original banner and wordmark, kept together as one identity. */
+:root{--red:#660000;--navy:#000033}
+.brand{flex:0 1 500px;padding:12px 0;min-width:0}
+.brand img{width:100%;height:auto}
+.brand span{margin:0;background:var(--navy);color:#fff;padding:5px 8px;font:700 23px/1.15 Arial,Helvetica,sans-serif;letter-spacing:0;white-space:nowrap}
+@media(max-width:760px){.brand{flex:0 1 280px}.brand span{font-size:16px;padding:5px 4px}.header-inner{gap:8px}}
+@media(max-width:760px){.brand{flex:1 1 0}.header-actions{flex:none}}
+.brand img{background:#ccc}
