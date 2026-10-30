@@ -5,3 +5,26 @@
 @media(prefers-reduced-motion:reduce){a,button{transition:none}}
 
 .product dl{margin:0 0 4px;font-size:.9rem;line-height:1.45}.product dt{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.product dd{margin:0}
+
+.catalog-inquiry{margin:20px 0 32px}.catalog-image img{width:130px}.catalog-image:has(img+img) img{width:auto}.product p,.product dl{font-size:1rem}
+@media(max-width:600px){.catalog-image img{width:120px}.product p,.product dl{font-size:.95rem}.catalog-inquiry{margin:16px 0 24px}}
+
+.page-head + .section:not(.catalog){padding-top:64px}
+@media(max-width:600px){.page-head + .section:not(.catalog){padding-top:40px}}
+/* Compact reference-sheet catalog: images stay near their native size. */
+.catalog{padding-top:40px}.catalog-toolbar{display:flex;align-items:center;gap:24px;margin-bottom:20px}.catalog-note{margin:0 0 24px;color:var(--muted);font-size:.95rem}.catalog-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:36px 20px}.catalog-image{height:140px;padding:10px;margin-bottom:10px}.catalog-image img{width:120px;max-height:120px}.product h3{font-size:1.1rem;font-variant-numeric:tabular-nums}.category-image{height:150px;padding:12px}.category-image img{max-height:125px;max-width:150px}.logo img{width:260px}.home-features .split{align-items:start}.home-machines{align-items:start}.machine-card img,.machine-photo img{height:280px}.hero-grid{padding:64px 0}
+@media(max-width:1000px){.logo img{width:190px}.catalog-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:600px){.logo img{width:175px}.hero-grid{padding:40px 0;gap:24px}.hero-tray{min-height:210px;padding:12px}.hero-image{max-height:220px}.catalog{padding-top:28px}.catalog-toolbar{gap:12px;flex-wrap:wrap;margin-bottom:16px}.catalog-note{font-size:.9rem}.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 16px}.catalog-image{height:130px;padding:8px}.category-image{height:125px;padding:8px}.category-image img{max-height:110px}.machine-card img,.machine-photo img{height:220px}}
+.logo{display:block;overflow:hidden}.logo img{clip-path:inset(0 0 20% 0)}
+@media(max-width:600px){.catalog-toolbar{align-items:flex-start}.catalog-toolbar .text-link{min-height:44px}}
+
+/* Round 3: make dimensions and primary category routes easier to scan. */
+.metric-size{display:block;white-space:nowrap}
+.section-heading h2{margin-bottom:24px}
+.category-card{font-size:1.125rem;line-height:1.3}
+.category-image{height:180px}
+.category-image img{max-width:130px;max-height:130px}
+.home-features .split{grid-template-columns:minmax(260px, .65fr) 1fr;gap:48px}
+@media(max-width:600px){.category-image{height:150px}.category-image img{max-width:120px;max-height:120px}.home-features .split{grid-template-columns:1fr;gap:20px}.section-heading h2{margin-bottom:20px}}
+
+.category-image img{width:120px;height:120px;object-fit:contain}
