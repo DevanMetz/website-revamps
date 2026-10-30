@@ -41,3 +41,28 @@
 - Revisited all seven pages at 1440 and 390; screenshots are `/workspace/shots/rev2/has-mor-industries/round2-loop2-1440-*.png` and `round2-loop2-390-*.png`. Inspected the size and installation tables in `round2-loop2-1440-sizes.png`, `round2-loop2-390-sizes.png`, and `round2-loop2-390-installation.png`. The desktop index remains at 96px from the top when scrolling; the size table fits at both widths and wider installation tables scroll within their wrappers with a visible cue.
 - Clicked desktop and mobile navigation, including nested links, and exercised the mobile close button, Tab and Escape. Checked internal links and anchor destinations, documents, footer contact links, 404, and all seven legacy paths for 301 responses. Both forms reject empty submission and generate mailto URLs with the intended address, subjects and entered fields. The expected mailto handoff is reported as a failed request by headless Chromium because it has no email application. The page sweep otherwise found no failed requests, browser errors, broken images or document overflow. The product index accessibility snapshot has separate link names and generated HTML has no adjacent anchor/button sequences.
 - Remaining: the source photographs and diagrams are low-resolution, and the original ring photograph itself cuts off rings at its right edge. The long technical page retains the original detail. Sending a form depends on the visitor having an email app configured.
+
+## Round 3
+
+- P1: The desktop hero crops the rings into an ellipse, cutting the photograph's edges, and isolates it in an unnecessarily broad empty right column. See `/workspace/shots/rev2/has-mor-industries/round3-baseline-1440-home-viewport.png`.
+- P2: The mobile home hero is readable and the quote is immediately available, but its source photo is inherently small and already cuts rings at its right edge. See `/workspace/shots/rev2/has-mor-industries/round3-baseline-390-home-viewport.png`.
+- P3: The product page retains a long technical specification, requiring substantial scrolling on mobile; its section index and return links make that manageable. See `/workspace/shots/rev2/has-mor-industries/round3-baseline-390-product-information-viewport.png`.
+
+### Round 3 Loop 1
+
+- Removed the desktop oval mask and unused oversized hero rules; placed the uncropped image beside the headline at 320px wide, under 1.5 times the original. The image has high fetch priority and no opacity or reveal effect.
+- Built, passed `src/check.py`, deployed, and revisited all seven pages at 1440 and 390. Screenshots: `/workspace/shots/rev2/has-mor-industries/round3-loop1-1440-*.png` and `round3-loop1-390-*.png`. No broken images, page errors, failed requests, or document overflow appeared in the sweep.
+- Remaining: mobile Contact places phone and email after the whole form; inner quote bands repeat the persistent header action and the same heading and button.
+
+### Round 3 Loop 2
+
+- Moved phone and email above the contact form on mobile, and removed repeated quote bands from the inner pages; the persistent header action remains available.
+- Built, passed `src/check.py`, deployed, and revisited all seven pages at both widths. Screenshots: `/workspace/shots/rev2/has-mor-industries/round3-loop2-1440-*.png` and `round3-loop2-390-*.png`. No broken images, browser errors, failed requests, or page-level overflow appeared in the sweep.
+- Remaining: the scroll cue before the surface-roughness table crowds the following paragraph, especially visible in the full product-page screenshot. Fixing that in a third pass.
+
+### Round 3 Loop 3
+
+- Removed the negative margin that made the surface-roughness scroll cue collide with its following paragraph. Rebuilt, passed `src/check.py`, and deployed.
+- Revisited all seven pages at 1440 and 390; screenshots: `/workspace/shots/rev2/has-mor-industries/round3-final-1440-*.png` and `round3-final-390-*.png`. The table spacing is visible in `round3-final-1440-roughness.png` and `round3-final-390-roughness.png`. No broken images, page errors, failed requests or document overflow were detected in the final sweep.
+- Exercised desktop navigation, mobile navigation and nested links, close button, Tab and Escape; checked internal link and anchor destinations, PDFs, footer contact targets, 404, and all seven legacy page redirects. Both forms reject empty submissions and generate the expected mailto address, subjects and entered fields at both widths. The wide tables scroll inside their wrappers on mobile, and the size table fits. The generated HTML has zero adjacent anchor/anchor or anchor/button sequences; accessibility snapshots and body text show separate link names.
+- Remaining: source photography and diagrams are low-resolution; the original ring photo itself cuts off rings at the right edge. The technical page remains long, and mailto submissions require an email app.
