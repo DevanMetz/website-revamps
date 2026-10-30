@@ -67,7 +67,7 @@ def build_keep(site_dir, url):
   '<ul class="keep-choices">'
   '<li class="keep-choice">'+ICONS['code']+'<h2>Do it yourself</h2><p class="keep-price">Free</p>'
   '<p>Take the full source code for free, then set it up and manage it yourself.</p>'
-  '<a href="'+esc(KEEP_CODE_URL)+'">Get the code</a></li>'
+  '<a href="'+esc(KEEP_CODE_URL)+'" target="_blank" rel="noopener" aria-label="Get the code (opens in a new tab)">Get the code</a></li>'
   '<li class="keep-choice is-rec"><span class="keep-tag">Recommended</span>'+ICONS['care']+'<h2>I’ll take care of everything</h2><p class="keep-price">$20/month</p>'
   '<p>Hosting, management, and any changes you ask for, free. Cancel anytime.</p>'
   '<a href="#keep-how">See the 3 steps</a></li>'
