@@ -5,3 +5,15 @@
 
 /* Keep specification text readable within scrollable tables. */
 .table-wrap td{white-space:normal;min-width:16ch;overflow-wrap:anywhere}.photo-row{width:min(1240px,calc(100% - 64px));margin-left:auto;margin-right:auto}.photo-row a{display:block}.photo-row img{display:block;box-sizing:border-box;padding:0}@media(max-width:760px){.photo-row{width:calc(100% - 40px)}}
+/* Bring product choices and inquiries within easy reach. */
+.hero{padding:72px 0}.section{padding:72px 0}.card-image{aspect-ratio:2/1}.model-grid article{background:transparent}.model-img img{mix-blend-mode:multiply}@media(max-width:460px){.hero{padding:48px 0}.cards{grid-template-columns:1fr 1fr;gap:10px}.card-image{aspect-ratio:4/3;padding:10px}.card-copy{padding:14px}.card h3{font-size:1rem;gap:5px}.section{padding:50px 0}}
+
+/* Compact content sections and accessible specification navigation. */
+.narrow{max-width:900px}.jump-links{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:flex-start;margin:0 0 48px}.jump-links a{font-size:1rem;color:var(--green);text-decoration:underline}.series{margin-top:55px}.series h2{font-size:clamp(1.7rem,3vw,2.5rem)}.series h3{margin-top:36px}.card:hover,.card:focus-visible{border-color:var(--green);box-shadow:0 0 0 2px var(--green)}.card-image{height:200px;aspect-ratio:auto}.card-image img{width:100%;height:100%;object-fit:contain}.table-wrap th:first-child{min-width:110px;max-width:180px;overflow-wrap:normal}.table-wrap td{min-width:12ch}@media(max-width:460px){.card-image{height:140px;aspect-ratio:auto}.table-wrap th:first-child{min-width:90px;max-width:120px}.table-wrap th,.table-wrap td{padding:8px}}
+
+@media(max-width:760px){nav.jump-links{display:flex;flex-direction:row;align-items:center;width:auto;justify-content:flex-start;gap:12px 20px}nav.jump-links a{padding:0;border:0;font-size:.95rem;white-space:normal}}
+
+/* Product photography sits directly on the page. */
+.split>div>img,.photo-row img{background:none;padding:0;box-sizing:border-box;max-width:min(100%,360px)}
+.card-image img{width:auto;height:100%}
+.narrow .fine{margin-top:20px}

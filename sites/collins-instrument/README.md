@@ -2,7 +2,7 @@
 
 A speculative redesign preview of https://collinsinst.com/. Pages: home, control valves, fittings and valves, isolating flanges, grounding rings, valve parts and trim, custom machining, and contact.
 
-Edit content in `src/data.py` and templates and page copy in `src/build.py`, and control valve tables in `src/valve_tables.py`, then run `python3 src/build.py`. Pillow is required. Run `python3 src/check.py` to check the generated site. The complete static output is in `site/`.
+Edit content in `src/data.py` and templates and page copy in `src/build.py`, and control valve tables in `src/valve_tables.py`, then run `python3 src/build.py`. Pillow is required. Run `python3 src/check.py` to check the generated site. The complete static output is in `site/`. The home page links directly to the six product and service pages; the control valve page links to each specification series, its inquiry, and brochure. Other product and service pages link to the contact page for inquiries. Technical drawings use transparent PNGs, with originals retained in `img-originals/`.
 
 Preview: https://collins-instrument-redesign.metzdevan.workers.dev (Cloudflare Worker `collins-instrument-redesign`, static assets from `site/`, configured in `wrangler.jsonc`). Deploy with `npx wrangler deploy` from this folder; the local `package.json` keeps wrangler's cache inside this folder.
 

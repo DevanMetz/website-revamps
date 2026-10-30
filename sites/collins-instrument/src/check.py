@@ -16,7 +16,10 @@ class Check(HTMLParser):
     target=site/u.path.lstrip('/'); target=target/'index.html' if u.path.endswith('/') else target
     if not target.is_file(): errors.append(f'{self.p}: missing {v}')
 for p in site.rglob('*.html'):
- c=Check(p); c.feed(p.read_text());
+ html=p.read_text()
+ for pattern in (r'\+\s*img\s*\(', r'\{\{', r'[\"\']\s*\+\s*(?:[\"\']|[a-zA-Z_]\w*\s*\()', r'\+\s*[\"\']'):
+  if re.search(pattern, html): errors.append(f'{p}: leaked template code ({pattern})')
+ c=Check(p); c.feed(html);
  if c.h1!=1: errors.append(f'{p}: {c.h1} h1s')
 css=(site/'assets/css/site.css').read_text(); js=(site/'assets/js/site.js').read_text()
 if re.search(r'url\(["\']?https?://|@import',css): errors.append('external CSS request')
