@@ -9,4 +9,4 @@ def source(path):
             lines=[re.sub(r'\s+', ' ',x).strip() for x in s.splitlines()]
             return [x for x in lines if x and x not in ('Quality at every level.','Image Soon','Coming Soon!')]
     return []
-products=[('Oil level regulator 101','/products/oil-level-regulators/101/','101op.jpg'),('Oil level regulator 108','/products/oil-level-regulators/108/','108op.jpg'),('Low flow meters','/products/low-flow-meters/','300bfront.jpg'),('Lubricator box controls','/products/lubricator-box-controls/211/','211sm.jpg'),('Linear diaphragm operators','/products/linear-diaphragm-operators/','501sm.jpg')]
+products=[('Oil level regulator 101','/products/oil-level-regulators/101/','101b.jpg'),('Oil level regulator 108','/products/oil-level-regulators/108/','108b.jpg'),('Low flow meters','/products/low-flow-meters/','300b.jpg'),('Lubricator box controls','/products/lubricator-box-controls/211/','211sm.jpg'),('Linear diaphragm operators','/products/linear-diaphragm-operators/','501gp.jpg')]
