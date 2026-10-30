@@ -1,0 +1,6 @@
+Crawled https://has-mor.com/ on 2026-10-29 with headless Chromium (all same-host links followed) plus wget over HTTPS.
+Requests that failed or were blocked (HTTP-only/mixed content or dead third parties):
+  http://services.webestools.com/translator/22764-1-nyyyyyyyy.js mixed-content
+  http://has-mor.com/includes/Style.CSS mixed-content
+Asset downloads that failed:
+

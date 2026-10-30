@@ -1,0 +1,8 @@
+# PASS 2 review (screenshots at 1440 and 390)
+Keep all BRIEF.md rules; rebuild and make src/check.py pass. Do not ask questions.
+1. Home "Materials" band: the sentence "FEP and PFA jackets combine chemical resistance with the elasticity of an elastomer core." is not in the source - remove it. Either use a real sentence from the materials copy (e.g. the first sentence of the materials section on the product information page) or just list the material names (FEP, PFA, Viton®, Silicone ...) as links to their anchors.
+2. Home "Products" cards: five tall boxes with only a title (and one with a small drawing) look empty and uneven. Make it a clean compact list/row of five items with equal height, no images except: use custom-rings.png only if every card gets an image - otherwise drop it. Each item links to the matching anchor on /product-information/ (or ordering-information) with → .
+3. Home "Advantages" list text is small at 1440 - use the normal body size (17px) and a two-column check list.
+4. Product information page: the inline image pair (mechanical seal / valve stem) sits small and left - put them in a 2-up figure grid at full content width, with the original captions ("Typical Mechanical Seal", "Typical Valve Stem") as figcaptions, and remove the captions baked into the images only if they are separate text (do not edit image files).
+5. Sticky side nav on /product-information/ at desktop is fine; make sure "Download product PDF" uses ↗ only if it opens a PDF.
+6. Check every page for invented sentences one more time against reference/crawl-page-text.txt; remove anything not in the source except headings, nav labels, form labels and button text.
