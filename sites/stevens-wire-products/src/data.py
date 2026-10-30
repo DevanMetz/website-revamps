@@ -11,3 +11,4 @@ WIRE = 'We have the capability of fabricating in a variety of wire sizes and typ
 
 # Preview-only "Keep this site · $20/mo" button (Stripe Payment Link). Set to '' to remove it from every page.
 PREVIEW_SUBSCRIBE_URL = 'https://buy.stripe.com/00waEZ0ECbLVgYAaZA4c80a'
+STRIPE_PORTAL_URL = 'https://billing.stripe.com/p/login/5kQ8wR5YW17hgYAaZA4c800'

@@ -5,3 +5,4 @@ INDUSTRIES = 'Brewing|Chemical|Food Processing|Munitions|Petrochemical|Petroleum
 
 # Preview-only "Keep this site · $20/mo" button (Stripe Payment Link). Set to '' to remove it from every page.
 PREVIEW_SUBSCRIBE_URL = 'https://buy.stripe.com/dRm9AV0EC6rBfUw9Vw4c807'
+STRIPE_PORTAL_URL = 'https://billing.stripe.com/p/login/5kQ8wR5YW17hgYAaZA4c800'

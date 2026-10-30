@@ -12,3 +12,4 @@ FLASKS=['12" x 16"','14" x 16"','16" x 16"','12" x 18"','14" x 18"','15" x 18"',
 
 # Preview-only "Keep this site · $20/mo" button (Stripe Payment Link). Set to '' to remove it from every page.
 PREVIEW_SUBSCRIBE_URL = 'https://buy.stripe.com/00w00l1IG17hgYA2t44c805'
+STRIPE_PORTAL_URL = 'https://billing.stripe.com/p/login/5kQ8wR5YW17hgYAaZA4c800'

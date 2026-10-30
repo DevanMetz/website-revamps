@@ -2,6 +2,7 @@
 # Built from the contact page's header and footer, only while PREVIEW_SUBSCRIBE_URL is set.
 import re, shutil
 from html import escape as esc
+from data import STRIPE_PORTAL_URL
 SITE_CFG = {"name": "Heat Transfer Systems", "domain": "heattransfersys.com", "accent": "var(--carbon)", "ink": "var(--carbon)", "line": "var(--amber)", "surface": "#fff", "radius": "0", "container": "wrap", "slug": "heat-transfer-systems"}
 KEEP_CODE_URL = 'https://github.com/DevanMetz/website-revamps/tree/main/sites/' + SITE_CFG['slug']
 I = lambda d: '<svg class="keep-ico" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>'
@@ -84,7 +85,7 @@ def build_keep(site_dir, url):
   '</section>'
   '<section class="keep-faq" aria-label="Questions">'
   '<div><h3>Will my email break?</h3><p>No. We only point www at the new site.</p></div>'
-  '<div><h3>Can I cancel?</h3><p>Yes, anytime from your Stripe receipt.</p></div>'
+  '<div><h3>Can I cancel?</h3><p>Yes, anytime. <a href="'+esc(STRIPE_PORTAL_URL)+'" target="_blank" rel="noopener" aria-label="Manage or cancel your subscription (opens in a new tab)">Manage or cancel your subscription here</a>.</p></div>'
   '</section>'
   '</div></section></main>')
  html=re.sub(r'<main id="main">.*</main>',lambda m:main,html,count=1,flags=re.S)

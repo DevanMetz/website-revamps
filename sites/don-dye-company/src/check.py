@@ -31,7 +31,7 @@ css=(site/'assets/css/site.css').read_text(); js=(site/'assets/js/site.js').read
 if re.search(r'url\(["\']?https?://|@import',css): errors.append('External CSS resource')
 if len(css.encode())>25000 or len(js.encode())>6000: errors.append('Asset too large')
 # Preview subscribe button: one per page while PREVIEW_SUBSCRIBE_URL is set, none once it is ''.
-from data import PREVIEW_SUBSCRIBE_URL
+from data import PREVIEW_SUBSCRIBE_URL, STRIPE_PORTAL_URL
 from keep import KEEP_CODE_URL
 from html import escape as _escape
 # /keep/ funnel: exists with the exact Stripe link while PREVIEW_SUBSCRIBE_URL is set, absent once it is ''.
@@ -52,7 +52,8 @@ if PREVIEW_SUBSCRIBE_URL:
   if _h.count('href="'+_escape(_code)+'"')!=1 or '<a href="'+_escape(_code)+'" target="_blank" rel="noopener" aria-label="Get the code (opens in a new tab)">Get the code</a>' not in _h: errors.append('/keep/: code link must open in a new tab')
   if '<meta name="robots" content="noindex">' not in _h: errors.append('/keep/: noindex')
   if _h.count('class="keep-step"')!=4 or 'Cancel your old hosting' not in _h: errors.append('/keep/: 4 steps')
-  if _h.count('target="_blank"')!=1: errors.append('/keep/: only the code link may open a new tab')
+  if _h.count('href="'+_escape(STRIPE_PORTAL_URL)+'"')!=1 or '<a href="'+_escape(STRIPE_PORTAL_URL)+'" target="_blank" rel="noopener" aria-label="Manage or cancel your subscription (opens in a new tab)">Manage or cancel your subscription here</a>' not in _h: errors.append('/keep/: Stripe portal link missing')
+  if _h.count('target="_blank"')!=2: errors.append('/keep/: only the code and portal links may open a new tab')
 elif _keep.parent.exists(): errors.append('/keep/ built while PREVIEW_SUBSCRIBE_URL is empty')
 for _x in ('sitemap.xml',):
  if (_keep.parent.parent/_x).exists() and '/keep/' in (_keep.parent.parent/_x).read_text(): errors.append('/keep/ in sitemap')

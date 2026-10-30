@@ -23,3 +23,4 @@ LITERATURE = {'riveters/orbital/bench-top':['Pneumatic_Riveters_2010_sm.pdf','se
 
 # Preview-only "Keep this site · $20/mo" button (Stripe Payment Link). Set to '' to remove it from every page.
 PREVIEW_SUBSCRIBE_URL = 'https://buy.stripe.com/7sYeVf1IGbLVfUw9Vw4c801'
+STRIPE_PORTAL_URL = 'https://billing.stripe.com/p/login/5kQ8wR5YW17hgYAaZA4c800'

@@ -2,7 +2,7 @@ from pathlib import Path
 from html.parser import HTMLParser
 from urllib.parse import urlsplit, unquote
 import csv,re
-from data import PREVIEW_SUBSCRIBE_URL
+from data import PREVIEW_SUBSCRIBE_URL, STRIPE_PORTAL_URL
 from keep import KEEP_CODE_URL
 root=Path(__file__).resolve().parent.parent; site=root/'site'; errors=[]
 class Check(HTMLParser):
@@ -16,7 +16,7 @@ class Check(HTMLParser):
   for k in ('href','src'):
    v=a.get(k,'')
    if not v or v.startswith(('#','mailto:','tel:','data:')): continue
-   if v in (PREVIEW_SUBSCRIBE_URL,KEEP_CODE_URL): continue
+   if v in (PREVIEW_SUBSCRIBE_URL,KEEP_CODE_URL,STRIPE_PORTAL_URL): continue
    if v.startswith(('http:','https:','//')): errors.append(f'{self.path}: external {k} {v}'); continue
    p=unquote(urlsplit(v).path)
    target=site/p.lstrip('/') if p.startswith('/') else self.path.parent/p
@@ -59,7 +59,8 @@ if PREVIEW_SUBSCRIBE_URL:
   if _h.count('href="'+_escape(_code)+'"')!=1 or '<a href="'+_escape(_code)+'" target="_blank" rel="noopener" aria-label="Get the code (opens in a new tab)">Get the code</a>' not in _h: errors.append('/keep/: code link must open in a new tab')
   if '<meta name="robots" content="noindex">' not in _h: errors.append('/keep/: noindex')
   if _h.count('class="keep-step"')!=4 or 'Cancel your old hosting' not in _h: errors.append('/keep/: 4 steps')
-  if _h.count('target="_blank"')!=1: errors.append('/keep/: only the code link may open a new tab')
+  if _h.count('href="'+_escape(STRIPE_PORTAL_URL)+'"')!=1 or '<a href="'+_escape(STRIPE_PORTAL_URL)+'" target="_blank" rel="noopener" aria-label="Manage or cancel your subscription (opens in a new tab)">Manage or cancel your subscription here</a>' not in _h: errors.append('/keep/: Stripe portal link missing')
+  if _h.count('target="_blank"')!=2: errors.append('/keep/: only the code and portal links may open a new tab')
 elif _keep.parent.exists(): errors.append('/keep/ built while PREVIEW_SUBSCRIBE_URL is empty')
 for _x in ('sitemap.xml',):
  if (_keep.parent.parent/_x).exists() and '/keep/' in (_keep.parent.parent/_x).read_text(): errors.append('/keep/ in sitemap')
