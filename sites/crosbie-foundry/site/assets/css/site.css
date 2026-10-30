@@ -34,3 +34,10 @@
 @media(max-width:700px){.header-inner{min-height:90px}.header-phone{display:none}.brand img{width:180px}.header nav{max-height:calc(100vh - 90px)}}
 
 @media(max-width:700px){.brand img{width:196px}}
+
+/* The original identity is a white sans-serif name on grey. */
+.header{background:#626262;border-color:#555;color:#fff}.header-inner{min-height:90px}.brand,.footer-brand{font:700 27px/1.1 Arial,Helvetica,sans-serif;letter-spacing:-.025em;text-decoration:none}.brand{color:#fff;text-shadow:1px 2px 3px #333}.brand:hover,.header a:hover{color:#fff}.header-phone{order:2;color:#fff;margin-left:8px}.header nav{order:1}.header nav a[aria-current]{color:#fff}.header nav .nav-list a[aria-current]{background:transparent}.menu-button{color:#fff;border-color:#fff}.footer-brand{color:#202124}.footer-brand:hover{color:#202f82}
+@media(max-width:1100px){.header nav{order:3}.header-phone{margin-left:auto}.menu-button{order:2;margin-left:0}.header nav .nav-list a[aria-current]{background:#4f4f4f}}
+@media(max-width:700px){.header-inner{min-height:76px}.brand{font-size:23px}.header nav{max-height:calc(100vh - 76px)}}
+.header :focus-visible{outline-color:#fff}
+@media(max-width:700px){.menu-button{margin-left:auto}}
