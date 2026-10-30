@@ -12,3 +12,38 @@
 
 
 .product{min-height:220px;justify-content:space-between}.product-art{height:120px;display:flex;align-items:center;justify-content:center}.product-art svg{width:120px;height:120px;max-width:100%}.product-art img{display:block;width:100%;height:auto;max-height:110px;object-fit:contain}@media(max-width:600px){.product{min-height:200px}.product-art{height:110px}.product-art svg{width:105px;height:105px}}
+/* Navigation and product presentation */
+.header{position:sticky;top:0;z-index:20}.header-inner{min-height:76px}#navigation>ul{display:flex;align-items:center;gap:22px;list-style:none;margin:0;padding:0}#navigation .subnav{display:none}.menu-toggle,.menu-close{display:none}.back{padding-top:16px;font-weight:700}.page-hero{padding-top:36px}.hero-grid img{width:350px;height:322px;object-fit:cover;margin:0 auto;transform:none!important;border-radius:50%}.hero-grid{min-height:500px}.product-grid{grid-template-columns:repeat(5,1fr);gap:0}.product{background:transparent;min-height:0;padding:18px 16px;border-left:1px solid var(--rule);gap:16px;justify-content:flex-start}.product-art{height:80px;justify-content:flex-start}.product-art svg{width:80px;height:80px}.product-art img{max-width:180px;max-height:80px}.content-layout aside nav{top:96px}.content section,.size-types li{scroll-margin-top:100px}.scroll-cue{font-weight:700;margin:20px 0 -16px}.dimensions-layout table{min-width:0}.legal,.note{font-size:1rem}
+@media(max-width:1100px){#navigation>ul{gap:12px}.product-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:800px){.header-inner{min-height:68px;flex-wrap:nowrap;padding:0;gap:10px}.brand{margin:0}.header-quote{margin:0 0 0 auto;font-size:14px;padding:10px}.menu-toggle,.menu-close{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;background:white;border:1px solid var(--ink);color:var(--ink);font:700 16px 'Red Hat Text',sans-serif}.menu-close{margin:0 0 12px auto}#navigation{display:none;position:absolute;top:100%;left:0;width:100%;max-height:calc(100dvh - 68px);overflow:auto;background:white;mask-image:none;padding:16px 20px 24px;border-bottom:1px solid var(--rule);box-shadow:0 8px 12px #13202b18}#navigation.open{display:block}#navigation>ul{display:block}#navigation li{list-style:none}#navigation a{display:flex;align-items:center;min-height:44px;font-size:16px;padding:8px 0;border-bottom:1px solid var(--rule)}#navigation a[aria-current=page]{color:var(--red);border-color:var(--red)}#navigation .subnav{display:block;padding-left:20px}.hero-grid{display:flex;flex-direction:column-reverse;align-items:flex-start}.hero-grid img{position:static;width:235px;height:216px;opacity:1;margin:24px auto 0;transform:none}.hero-grid>div{padding:30px 0 50px}.hero-grid h1{max-width:none}.product-grid{grid-template-columns:repeat(2,1fr)}.product{min-height:0}.product-art{height:80px}.product-art svg{width:80px;height:80px}.content-layout aside nav{position:static}.content section,.size-types li{scroll-margin-top:85px}}
+@media(max-width:600px){.brand{font-size:14px}.brand small{font-size:8px}.mark{width:34px;height:34px}.header-quote{font-size:12px;padding:8px}.menu-toggle{font-size:14px;padding:8px}.product{padding:16px 12px}.product-art{height:70px}.product-art svg{width:70px;height:70px}.back{padding-top:12px}.page-hero{padding-top:24px}.content-layout aside nav{gap:0 16px}.content-layout aside a{font-size:1rem}.scroll-cue{font-size:1rem}}
+@media(min-width:801px){#navigation>ul>li:has(>a[href="/request-a-quote/"]){display:none}.return-sections{display:none}}
+@media(max-width:800px){#section-links{scroll-margin-top:80px}.return-sections{margin-top:32px;font-weight:700}}
+
+/* Round 2: prioritise the quote and make the product forms easier to scan. */
+@media(min-width:801px){
+ #navigation a{font-size:15px}
+ .product-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+ .product{background:white;border:0;padding:20px;min-height:200px}
+ .product-art{height:120px;justify-content:center}
+ .product-art svg{width:120px;height:120px}
+ .product-art img{max-width:100%;max-height:100px}
+ .content-layout aside{align-self:stretch}
+ .content-layout aside nav{position:sticky;top:96px}
+}
+.content section>h2{border-bottom:2px solid var(--rule);padding-bottom:18px;margin-bottom:28px}
+.material{padding:14px 0 22px}.material h3{margin-top:12px}.material li{padding:6px 0}
+@media(max-width:800px){
+ .hero-grid{flex-direction:column;align-items:stretch}
+ .hero-grid>div{padding:48px 0 24px}
+ .hero-grid img{width:235px;height:216px;object-fit:contain;border-radius:0;margin:0 auto 40px}
+ .content-layout aside nav{display:grid;grid-template-columns:1fr 1fr;gap:0 20px}
+ .content-layout aside a{font-size:16px;line-height:1.3}
+}
+@media(max-width:600px){.header-quote{font-size:14px}.brand small{font-size:9px}}
+
+@media(max-width:800px){
+ .product-grid{gap:12px}
+ .product{background:white;border:0;padding:16px;min-height:150px}
+ .product-art{justify-content:center}
+}
