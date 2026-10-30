@@ -6,7 +6,7 @@ Edit content and templates in `src/data.py` and `src/build.py`, then run `python
 
 Preview: https://fontana-machine-redesign.metzdevan.workers.dev (Cloudflare Worker `fontana-machine-redesign`, static assets from `site/`, configured in `wrangler.jsonc`). Deploy with `npx wrangler deploy` from this folder; the local `package.json` keeps wrangler's cache inside this folder.
 
-The inquiry form opens a prefilled email using a mailto fallback. For production, replace it with a Cloudflare Worker or Pages Function, Formspree, or the company's existing form handler if available. Remove the noindex meta tags and `X-Robots-Tag` header and update `robots.txt` at launch.
+Home presents machining capabilities in a responsive three-column grid with native-size photos, direct contact and directions links, and a shared emergency and business-hours strip. Contact places the emergency pager first and, on mobile, the inquiry form before the remaining contact details. Directions retains all five driving routes. The inquiry form opens a prefilled email using a mailto fallback. For production, replace it with a Cloudflare Worker or Pages Function, Formspree, or the company's existing form handler if available. Remove the noindex meta tags and `X-Robots-Tag` header and update `robots.txt` at launch.
 
 ## Content sources
 
