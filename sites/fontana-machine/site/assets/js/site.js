@@ -1,8 +1,8 @@
 const menu = document.querySelector('.menu');
 const nav = document.querySelector('#navigation');
 if (menu && nav) {
-  const close = () => { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); };
-  menu.addEventListener('click', () => { const open = nav.classList.toggle('open'); menu.setAttribute('aria-expanded', String(open)); });
+  const close = () => { nav.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); menu.textContent = 'Menu'; };
+  menu.addEventListener('click', () => { const open = nav.classList.toggle('open'); menu.setAttribute('aria-expanded', String(open)); menu.textContent = open ? 'Close' : 'Menu'; });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') { close(); menu.focus(); } });
 }
 const form = document.querySelector('#inquiry');
