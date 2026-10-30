@@ -1,19 +1,38 @@
-# Has-Mor Industries preview
+# Has-Mor Industries, Inc. website redesign
 
-A speculative static redesign preview of https://has-mor.com/. Pages: Home, About, Product information, Ordering information, Request a quote, Contact, and a 404 page. The home page links directly to product types and the quote form, with compact company and materials sections. Product links lead to the size list; the technical pages retain the specifications, installation tables and ordering call-out; mobile tables keep their first column visible while scrolling.
+A redesigned website for Has-Mor Industries, Inc..
 
-Preview: https://has-mor-industries-redesign.metzdevan.workers.dev (Cloudflare Worker `has-mor-industries-redesign`, static assets from `site/`, configured in `wrangler.jsonc`). Deploy with `npx wrangler deploy` from this folder; the local `package.json` keeps wrangler's cache inside this folder.
+Live preview: https://has-mor-industries-redesign.metzdevan.workers.dev
 
-Forms open the visitor's email application using a mailto fallback. For production, connect a Cloudflare Worker/Pages Function, Formspree, or the company's existing form handler if available. The preview uses noindex metadata, an X-Robots-Tag header, and a disallow rule in robots.txt; remove these at launch.
+## What's in this folder
 
-## Content sources
+- `site/` is the finished website: plain HTML, CSS, images and JavaScript, ready to host as is.
+- `src/` is the build: `data.py` holds the content, `build.py` generates `site/`, and `check.py` checks the result. `src/assets/` holds the original images and text from the current website that the build draws on.
+- `wrangler.jsonc` is the Cloudflare configuration used for the preview.
 
-Content comes from the crawled home page and the Product Information and Ordering Information PDFs. The live About Us, Product Info, Ordering Info and Quote pages returned HTTP 500; Contact rendered empty. The plaque page had no substantive text. The product and ordering PDFs remain linked as original literature.
+## Hosting it yourself
 
-Light edits: the home introduction combines the original manufacturing and engineering sentences and removes “premier” and the relative experience claim; the about page trims the customer care sentence and combines the original company and quality assurance copy. The home materials sentence summarizes the PDF's explanation of the jacket and core. The custom shapes paragraph shortens the PDF's invitation to discuss feasibility and minimum requirements. The temperature note shortens “This means that” to “The”. Headings and list capitalization were standardized; numerical specifications and material codes are retained. The quote band and form labels are functional navigation and fields based on the brief.
+Upload the contents of `site/` to any static web host. No server-side code or database is needed.
 
-Omitted dated claims: “over 34 years,” “more than 34 years,” and © 2007. The old third-party translator script and HTTP-only stylesheet were blocked as mixed content; no image downloads failed. Legacy navigation graphics were omitted from the redesign.
+To host on Cloudflare instead, run `npx wrangler deploy` in this folder. Change `name` in `wrangler.jsonc` first if you want a different Worker name.
 
-## Editing
+While this is a preview, every page carries a `noindex` tag so search engines skip it. That tag should come out before the site goes live on your own domain.
 
-Edit content and templates in `src/data.py` and `src/build.py`, then run `python3 src/build.py` and `python3 src/check.py`. Transparent image assets are kept in `site/assets/img/`; their prior versions are in `img-originals/`.
+## Editing content
+
+Edit `src/data.py`, then run this from the folder:
+
+```
+python3 src/build.py
+python3 src/check.py
+```
+
+This needs Python 3 with Pillow. The updated site is written to `site/`.
+
+## License
+
+The code is MIT licensed; see [LICENSE](../../LICENSE). The company's own text, logo, photos and trademarks remain the property of Has-Mor Industries, Inc..
+
+## Contact
+
+Hosting and ongoing management are available for $20/month. Contact Devan Metz, GitHub [DevanMetz](https://github.com/DevanMetz).

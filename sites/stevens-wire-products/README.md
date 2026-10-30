@@ -1,15 +1,38 @@
-# Stevens Wire Products preview
+# Stevens Wire Products, Inc. website redesign
 
-Preview: https://stevens-wire-products-redesign.metzdevan.workers.dev (Cloudflare Worker `stevens-wire-products-redesign`, static assets from `site/`, configured in `wrangler.jsonc`). Deploy with `npx wrangler deploy` from this folder; the local `package.json` keeps wrangler's cache inside this folder.
+A redesigned website for Stevens Wire Products, Inc..
 
-Pages: home, about, design and prototyping, products, material handling, conveyor, food service, medical, displays, shelving and guards, wire forms, careers, contact, and 404. Product lines show five photo cards in a wide-screen row followed by compact links for lines without photos. Product galleries display examples at their natural size, and quote actions lead to the contact form; on mobile the form appears before the office directory.
+Live preview: https://stevens-wire-products-redesign.metzdevan.workers.dev
 
-Edit product names, descriptions and image selections in `src/data.py`; edit shared templates and other page content in `src/build.py`. Run `python3 src/build.py` to regenerate the HTML and optimized images, then `python3 src/check.py` to check the output. Pillow is required for the build.
+## What's in this folder
 
-For hosting, configure a Cloudflare Worker with static assets pointing at `site/` in your own `wrangler.jsonc`, then run `npx wrangler deploy`. This preview deliberately contains no Wrangler configuration. The contact form opens a mailto draft; production alternatives include a Cloudflare Worker or Pages Function, Formspree, or the company's existing form handler. Remove the `noindex` meta tags and X-Robots-Tag header and update `robots.txt` at launch.
+- `site/` is the finished website: plain HTML, CSS, images and JavaScript, ready to host as is.
+- `src/` is the build: `data.py` holds the content, `build.py` generates `site/`, and `check.py` checks the result. `src/assets/` holds the original images and text from the current website that the build draws on.
+- `wrangler.jsonc` is the Cloudflare configuration used for the preview.
 
-## Content sources
+## Hosting it yourself
 
-Content and photos come from `reference/crawl-page-text.txt`, the rendered HTML, and `reference/assets.tsv`; the brochure is the supplied PDF. Sentences are reproduced from the source. The career application and shift hours retain the source wording with typographic punctuation normalized.
+Upload the contents of `site/` to any static web host. No server-side code or database is needed.
 
-Omitted dated or time-sensitive material: the jobs page's current openings and hourly wages; the old copyright year, page update year, and hiring banner; and “new information is coming soon” on wire forms. The founding year is retained as a fixed fact. The PDF filename contains a year but its link label does not. No failed or HTTP-only assets were listed in `reference/crawl-notes.txt`.
+To host on Cloudflare instead, run `npx wrangler deploy` in this folder. Change `name` in `wrangler.jsonc` first if you want a different Worker name.
+
+While this is a preview, every page carries a `noindex` tag so search engines skip it. That tag should come out before the site goes live on your own domain.
+
+## Editing content
+
+Edit `src/data.py`, then run this from the folder:
+
+```
+python3 src/build.py
+python3 src/check.py
+```
+
+This needs Python 3 with Pillow. The updated site is written to `site/`.
+
+## License
+
+The code is MIT licensed; see [LICENSE](../../LICENSE). The company's own text, logo, photos and trademarks remain the property of Stevens Wire Products, Inc..
+
+## Contact
+
+Hosting and ongoing management are available for $20/month. Contact Devan Metz, GitHub [DevanMetz](https://github.com/DevanMetz).

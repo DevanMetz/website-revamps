@@ -1,15 +1,38 @@
-# Crosbie Foundry preview
+# Crosbie Foundry website redesign
 
-A speculative static redesign preview of https://www.crosbiefoundry.com/. It includes Home, Products, eight product galleries (decorative tiles, golf plaques, corner castings, decorative hardware, clamps, cash register hardware, miscellaneous castings, valves), Services, Alloys, About, History, Contact, and a 404 page.
+A redesigned website for Crosbie Foundry.
 
-Preview: https://crosbie-foundry-redesign.metzdevan.workers.dev (Cloudflare Worker `crosbie-foundry-redesign`, static assets from `site/`). Edit content in `src/data.py` and page templates in `src/build.py`, then run `python3 src/build.py` and `python3 src/check.py`. The home page presents product galleries first, followed by foundry capabilities and flask sizes. Product grids and galleries lead directly to the inquiry form; other quote bands provide the phone number and a link to the form. Contact details and the form are on Contact.
+Live preview: https://crosbie-foundry-redesign.metzdevan.workers.dev
 
-For hosting, configure a `wrangler.jsonc` for a Cloudflare Worker with static assets pointing to `site/`, then run `npx wrangler deploy`. This preview has not been deployed. Forms use a mailto fallback, which requires the visitor to send the composed email in their email app. For production, connect a Cloudflare Worker or Pages Function, Formspree, or the company's existing form handler if available.
+## What's in this folder
 
-The preview sends noindex headers and includes noindex metadata and a disallow rule in robots.txt. Remove those at launch and update the robots policy.
+- `site/` is the finished website: plain HTML, CSS, images and JavaScript, ready to host as is.
+- `src/` is the build: `data.py` holds the content, `build.py` generates `site/`, and `check.py` checks the result. `src/assets/` holds the original images and text from the current website that the build draws on.
+- `wrangler.jsonc` is the Cloudflare configuration used for the preview.
 
-## Content sources
+## Hosting it yourself
 
-Content and product images come from the supplied `reference/` crawl. Light edits include: the home introduction combines the source's nonferrous green-sand casting sentences; the production paragraph combines the short-run and part-weight sentences; the service descriptions combine the listed capabilities, tooling and consultation statements; family introductions condense the corresponding gallery descriptions; the about introduction removes the relative age claim; and the history paragraphs fix capitalization and recast the Obama key as a past fact. Gallery titles describe the source product family rather than asserting a specific identity for each image. The applications and alloy table are retained from the source.
+Upload the contents of `site/` to any static web host. No server-side code or database is needed.
 
-Omitted dated or time-relative material: “For over half of a century,” “many years of experience,” the historical 2–4 week average lead time, “recently” for the Obama key, the 2006 copyright and old site credits. The fixed 1956 founding date, 1991 and 2001 customer relationships, and 2009 British Open remain as past facts. The old site's links directory and navigation instructions were omitted. The crawl notes report no failed or missing image downloads.
+To host on Cloudflare instead, run `npx wrangler deploy` in this folder. Change `name` in `wrangler.jsonc` first if you want a different Worker name.
+
+While this is a preview, every page carries a `noindex` tag so search engines skip it. That tag should come out before the site goes live on your own domain.
+
+## Editing content
+
+Edit `src/data.py`, then run this from the folder:
+
+```
+python3 src/build.py
+python3 src/check.py
+```
+
+This needs Python 3 with Pillow and beautifulsoup4. The updated site is written to `site/`.
+
+## License
+
+The code is MIT licensed; see [LICENSE](../../LICENSE). The company's own text, logo, photos and trademarks remain the property of Crosbie Foundry.
+
+## Contact
+
+Hosting and ongoing management are available for $20/month. Contact Devan Metz, GitHub [DevanMetz](https://github.com/DevanMetz).

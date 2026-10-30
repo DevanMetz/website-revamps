@@ -1,23 +1,27 @@
 # Website revamps
 
-Redesign previews for small-manufacturer websites. Each site lives in `sites/<slug>/` (`site/` static output, `src/` build scripts, `wrangler.jsonc`, `README.md`) and deploys as its own Cloudflare Worker (`<slug>-redesign`) on workers.dev. All previews are `noindex`; old `.html` paths 301 to the new pages; contact forms use `mailto:`.
+Redesigned websites for 11 small manufacturers, one folder per company.
 
-| Company | Original site | Preview | Contact email |
-|---|---|---|---|
-| Grant Riveters | https://www.grantriveters.com/ | https://grant-riveters-redesign.metzdevan.workers.dev | sales@grantriveters.com |
-| Don Dye Company, Inc. | https://dondyeco.com/ | https://don-dye-company-redesign.metzdevan.workers.dev | info@dondyeco.com |
-| Collins Instrument Company, Inc. | https://collinsinst.com/ | https://collins-instrument-redesign.metzdevan.workers.dev | cic@collinsinst.com |
-| Fontana Machine & Engineering Co. | https://www.fontanamachine.com/ | https://fontana-machine-redesign.metzdevan.workers.dev | info@FontanaMachine.com |
-| Crosbie Foundry | https://www.crosbiefoundry.com/ | https://crosbie-foundry-redesign.metzdevan.workers.dev | crosbiefoundry@aol.com |
-| Has-Mor Industries, Inc. | https://has-mor.com/ | https://has-mor-industries-redesign.metzdevan.workers.dev | Info@Has-Mor.com |
-| Heat Transfer Systems, Inc. | https://heattransfersys.com/ | https://heat-transfer-systems-redesign.metzdevan.workers.dev | andrew.kwong@heattransfersys.com |
-| Garzo Products | https://garzoproducts.com/ | https://garzo-products-redesign.metzdevan.workers.dev | info@garzoproducts.com |
-| B.M. Rebuilders, Inc. | https://bmrebuildersinc.com/ | https://bm-rebuilders-redesign.metzdevan.workers.dev | bmrebuild@aol.com |
-| Stevens Wire Products, Inc. | https://stevenswire.com/ | https://stevens-wire-products-redesign.metzdevan.workers.dev | office@stevenswire.com |
-| Taylor Industries Inc. | https://www.taylor-ind.com/ | https://taylor-industries-redesign.metzdevan.workers.dev | sales@taylor-ind.com |
+| Company | Folder | Live preview |
+|---|---|---|
+| B.M. Rebuilders, Inc. | [sites/bm-rebuilders](sites/bm-rebuilders) | https://bm-rebuilders-redesign.metzdevan.workers.dev |
+| Collins Instrument Company, Inc. | [sites/collins-instrument](sites/collins-instrument) | https://collins-instrument-redesign.metzdevan.workers.dev |
+| Crosbie Foundry | [sites/crosbie-foundry](sites/crosbie-foundry) | https://crosbie-foundry-redesign.metzdevan.workers.dev |
+| Don Dye Company, Inc. | [sites/don-dye-company](sites/don-dye-company) | https://don-dye-company-redesign.metzdevan.workers.dev |
+| Fontana Machine & Engineering Co. | [sites/fontana-machine](sites/fontana-machine) | https://fontana-machine-redesign.metzdevan.workers.dev |
+| Garzo Products | [sites/garzo-products](sites/garzo-products) | https://garzo-products-redesign.metzdevan.workers.dev |
+| Grant Riveters | [sites/grant-riveters](sites/grant-riveters) | https://grant-riveters-redesign.metzdevan.workers.dev |
+| Has-Mor Industries, Inc. | [sites/has-mor-industries](sites/has-mor-industries) | https://has-mor-industries-redesign.metzdevan.workers.dev |
+| Heat Transfer Systems, Inc. | [sites/heat-transfer-systems](sites/heat-transfer-systems) | https://heat-transfer-systems-redesign.metzdevan.workers.dev |
+| Stevens Wire Products, Inc. | [sites/stevens-wire-products](sites/stevens-wire-products) | https://stevens-wire-products-redesign.metzdevan.workers.dev |
+| Taylor Industries Inc. | [sites/taylor-industries](sites/taylor-industries) | https://taylor-industries-redesign.metzdevan.workers.dev |
 
-Build a site: `cd sites/<slug> && python3 src/build.py && python3 src/check.py`. Deploy: `npx wrangler deploy` from the site folder.
+## How each folder is built
+
+Each folder in `sites/` is self-contained. `site/` is the finished static website and can be uploaded to any static host. `src/` holds the Python build: `data.py` is the content, `build.py` writes `site/`, and `check.py` checks the output. To rebuild, run `python3 src/build.py` and `python3 src/check.py` from inside the folder. Each preview runs as a Cloudflare Worker serving `site/` as static assets, deployed with `npx wrangler deploy` from the folder.
 
 ## License
 
-The code (build scripts, templates and styles) is MIT licensed; see `LICENSE`. Each company's own text, photos, logos and trademarks remain theirs.
+The code (build scripts, templates and styles) is MIT licensed; see `LICENSE`. Each company's own text, logos, photos and trademarks remain theirs.
+
+Contact: Devan Metz, GitHub [DevanMetz](https://github.com/DevanMetz).

@@ -1,15 +1,38 @@
-# Collins Instrument Company preview
+# Collins Instrument Company, Inc. website redesign
 
-A speculative redesign preview of https://collinsinst.com/. Pages: home, control valves, fittings and valves, isolating flanges, grounding rings, valve parts and trim, custom machining, and contact.
+A redesigned website for Collins Instrument Company, Inc..
 
-Edit content in `src/data.py` and templates and page copy in `src/build.py`, and control valve tables in `src/valve_tables.py`, then run `python3 src/build.py`. Pillow is required. Run `python3 src/check.py` to check the generated site. The complete static output is in `site/`. The home page links directly to the six product and service pages; the control valve page links to each specification series, its inquiry, and brochure. Other product and service pages link to the contact page for inquiries. Technical drawings use transparent PNGs, with originals retained in `img-originals/`.
+Live preview: https://collins-instrument-redesign.metzdevan.workers.dev
 
-Preview: https://collins-instrument-redesign.metzdevan.workers.dev (Cloudflare Worker `collins-instrument-redesign`, static assets from `site/`, configured in `wrangler.jsonc`). Deploy with `npx wrangler deploy` from this folder; the local `package.json` keeps wrangler's cache inside this folder.
+## What's in this folder
 
-Forms compose an email in the visitor's mail application; they do not post data. For production, connect a Cloudflare Worker or Pages Function, Formspree, or the company's existing form handler if available.
+- `site/` is the finished website: plain HTML, CSS, images and JavaScript, ready to host as is.
+- `src/` is the build: `data.py` holds the content, `build.py` generates `site/`, and `check.py` checks the result. `src/assets/` holds the original images and text from the current website that the build draws on.
+- `wrangler.jsonc` is the Cloudflare configuration used for the preview.
 
-## Content sources
+## Hosting it yourself
 
-Content is derived from the crawled pages and `reference/pcv.pdf.txt`. Sentences were lightly edited for grammar, clarity and length, including the home introduction and stock paragraph; product card descriptions; valve configuration and application descriptions; flange insert, stock and application descriptions; grounding ring materials, sizes and stock descriptions; valve trim inventory and finish descriptions; and machining capability, materials and applications descriptions. Trademark notes retain the source wording. The flange table was transcribed from `flangespec.gif`; the original dimensional drawing is also provided. The control valve specification, selection and dimension tables are reproduced as HTML from the brochure; the brochure remains linked for the accompanying drawings and ordering information. No specification or selection table is left exclusively in the PDF.
+Upload the contents of `site/` to any static web host. No server-side code or database is needed.
 
-Omitted dated claims: “Over 50 Years”, “For over 50 years”, “more than 20 years”, the 2003 copyright year, and the live date widget. The old footer lists fax (979) 848-0733, while the header and contact page list (979) 848-0783; this preview uses the latter. The crawl notes report no failed asset downloads. The PDF's historical response-time promise and pricing references were omitted.
+To host on Cloudflare instead, run `npx wrangler deploy` in this folder. Change `name` in `wrangler.jsonc` first if you want a different Worker name.
+
+While this is a preview, every page carries a `noindex` tag so search engines skip it. That tag should come out before the site goes live on your own domain.
+
+## Editing content
+
+Edit `src/data.py`, then run this from the folder:
+
+```
+python3 src/build.py
+python3 src/check.py
+```
+
+This needs Python 3 with Pillow, plus `pdfimages` from poppler-utils. The updated site is written to `site/`.
+
+## License
+
+The code is MIT licensed; see [LICENSE](../../LICENSE). The company's own text, logo, photos and trademarks remain the property of Collins Instrument Company, Inc..
+
+## Contact
+
+Hosting and ongoing management are available for $20/month. Contact Devan Metz, GitHub [DevanMetz](https://github.com/DevanMetz).

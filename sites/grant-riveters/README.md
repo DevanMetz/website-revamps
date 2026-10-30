@@ -1,23 +1,38 @@
-# Grant Riveters redesign preview
+# Grant Riveters website redesign
 
-Preview: https://grant-riveters-redesign.metzdevan.workers.dev (Cloudflare Worker `grant-riveters-redesign`, static assets from `site/`, configured in `wrangler.jsonc`). Deploy with `npx wrangler deploy` from this folder; the deployable output is in `site/`.
+A redesigned website for Grant Riveters.
 
-Home links directly to the machine family grid, with a compact mobile hero, uniformly padded product image wells and linked product tiles. Riveting methods sit alongside services and history. Orbital variant pages group shared features above the variant sections, provide segmented jump links, and keep specification row labels visible while scrolling on mobile. Product and service pages link to the quote form; contact details are in the footer and contact page. Transparent product image variants are stored alongside the source-derived assets, with backups in `img-originals/`.
+Live preview: https://grant-riveters-redesign.metzdevan.workers.dev
 
-Pages: home; riveters overview; bench-top and power-head orbital riveters; Orbitfeed; double-ended; impact; hydraulic squeeze; presses and cylinders; riveting kits; automation; Process Inspector; riveting methods; services; literature; history; sales representatives; contact; request a quote; and a 404 page. Used equipment has no individual listings in the source, and the old video files are not available as embeddable assets, so those pages are omitted.
+## What's in this folder
 
-Edit page definitions in `src/data.py` and templates and content in `src/build.py`, then run `python3 src/build.py`. Run `python3 src/check.py` to check links, image attributes, headings, redirects and asset sizes. Python requires Pillow and Beautiful Soup.
+- `site/` is the finished website: plain HTML, CSS, images and JavaScript, ready to host as is.
+- `src/` is the build: `data.py` holds the content, `build.py` generates `site/`, and `check.py` checks the result. `src/assets/` holds the original images and text from the current website that the build draws on.
+- `wrangler.jsonc` is the Cloudflare configuration used for the preview.
 
-For hosting, configure a Cloudflare Worker with static assets pointing to `site/` in your own `wrangler.jsonc`, then run `npx wrangler deploy`. No deployment configuration is included in this preview. Forms use a mailto fallback; for production, replace it with a Cloudflare Worker or Pages Function, Formspree, or the company's existing form handler if available. Remove the `noindex` meta tags and header and update `robots.txt` at launch.
+## Hosting it yourself
 
-## Content sources
+Upload the contents of `site/` to any static web host. No server-side code or database is needed.
 
-Content is drawn from the files under `reference/`, particularly the product, process, service, history and contact pages. Introductory descriptions and the home hero lightly combine source product and service names. The following sentences were lightly edited or combined: “Grant Riveters offers contract riveting, prototyping and consulting for product design, rivets and riveting process selection”; “Grant Manufacturing and Machine Company’s first invention was in 1860”; “Grant Riveters’ ‘Tailor-Made’ system fits the machine to the job”; “The product line includes orbital, spin riveting, impact, squeeze, blind and press type riveting”; “Grant Riveters has implemented the Process Inspector controller in its riveter product line”; “The controller provides real-time force and distance data and alerts the operator to non-conforming parts”; “The PLC/HMI features a color touch-screen control with a digital readout for setting force and distance triggers”; “Programs are generated from high and low distance and force data and saved under a preferred name”; “Grant Riveters provides contract riveting services and can assist with product design, rivets and riveting process selection”; “Grant Riveters offers prototyping and product development services”; “Grant Riveters reviews product designs and existing riveting requirements and samples products using a variety of techniques to determine a suitable process.” Product variant summaries combine the respective source pages. Source tables are reproduced from the rendered HTML; contradictory figures remain as printed in their respective sources.
+To host on Cloudflare instead, run `npx wrangler deploy` in this folder. Change `name` in `wrangler.jsonc` first if you want a different Worker name.
 
-Omitted dated claims include the 1904–2011 anniversary, old prices and sale prices, copyright and last-modified years, dated news and podcast items, time-relative years-in-business claims, and historic delivery and quotation-time promises. The sales representative page directs inquiries to Grant using the specified company contact details; personal email addresses are omitted.
+While this is a preview, every page carries a `noindex` tag so search engines skip it. That tag should come out before the site goes live on your own domain.
 
-The crawl reported missing `_derived/index.htm_txt_GrantAO3T_small.gif` and `images/Servo.jpg`, along with failed counter and advertising resources and HTTP-only Yahoo and third-party CSS requests. These are not used.
+## Editing content
 
-### Pass 2 product content
+Edit `src/data.py`, then run this from the folder:
 
-Product sections are authored in `src/content/products.py`; `src/build.py` renders their model tables and variant sections. Product copy was trimmed and organized from the corresponding source pages, with promotional comparisons, old prices, delivery estimates, and duplicated form text omitted. The hydraulic bench-top source lists the HGS-032 capacity as both 1.250 inch and 38 mm; those source values are retained together. Other orbital pages list that model as 1.250 inch and 32 mm. Product warranty wording remains specific to the source family and variant.
+```
+python3 src/build.py
+python3 src/check.py
+```
+
+This needs Python 3 with Pillow, beautifulsoup4 and numpy. The updated site is written to `site/`.
+
+## License
+
+The code is MIT licensed; see [LICENSE](../../LICENSE). The company's own text, logo, photos and trademarks remain the property of Grant Riveters.
+
+## Contact
+
+Hosting and ongoing management are available for $20/month. Contact Devan Metz, GitHub [DevanMetz](https://github.com/DevanMetz).
