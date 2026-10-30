@@ -17,3 +17,7 @@ Redesign previews for small-manufacturer websites. Each site lives in `sites/<sl
 | Taylor Industries Inc. | https://www.taylor-ind.com/ | https://taylor-industries-redesign.metzdevan.workers.dev | sales@taylor-ind.com |
 
 Build a site: `cd sites/<slug> && python3 src/build.py && python3 src/check.py`. Deploy: `npx wrangler deploy` from the site folder.
+
+## License
+
+The code (build scripts, templates and styles) is MIT licensed; see `LICENSE`. Each company's own text, photos, logos and trademarks remain theirs.
