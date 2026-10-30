@@ -11,3 +11,10 @@ nav ul{list-style:none;display:flex;align-items:center;gap:32px;margin:0;padding
 @media(max-width:760px){.emergency-strip .wrap{flex-wrap:nowrap}.emergency-strip .wrap span:last-child{display:none}.services{padding:15px 20px 45px}.feature,.feature:nth-child(even),.feature:nth-child(3){margin:0;gap:22px;padding:35px 0}.feature h2{font-size:2.5rem}.hero{padding-bottom:35px}.page-head h1{font-size:3.5rem}.contact-grid{padding-top:30px}.inquiry{order:0}.emergency{order:1}.contact-details{order:2}.map{order:0}}
 
 @media(min-width:761px){.contact-info{grid-column:1;grid-row:1}.inquiry{grid-column:2;grid-row:1}}
+
+/* Round 3: a compact poster followed by one aligned set of shop photographs. */
+.hero{padding-top:42px;padding-bottom:22px}.hero h1{font-size:clamp(5rem,8vw,7.5rem);max-width:1100px}.actions{margin-bottom:28px}
+.feature,.feature:nth-child(even),.feature:nth-child(3){grid-template-columns:minmax(0,1fr) 288px;gap:50px}.feature:nth-child(even) .feature-copy{order:0}.feature-figure,.feature:nth-child(even) .feature-figure{justify-self:start}.feature-figure img{width:192px}.feature:nth-child(2) .feature-figure img{width:122px}.feature:nth-child(3) .feature-figure img{width:114px}
+.contact-details{padding-top:0}.emergency-note{margin:0 0 24px;max-width:430px}.contact-grid .contact-info{display:flex;flex-direction:column}.contact-grid .contact-details{order:-1}.contact-grid .emergency-note{margin:24px 0 0}
+@media(max-width:760px){.hero{padding-top:35px;padding-bottom:20px}.hero h1{font-size:clamp(3.5rem,15vw,5.5rem)}.feature,.feature:nth-child(even),.feature:nth-child(3){display:flex}.contact-grid .contact-info{display:flex;order:0}.inquiry{order:1}.contact-details p{margin-top:12px}.contact-grid .emergency-note{margin-top:20px}}
+@media(max-width:760px){.emergency-strip .wrap span:only-child{display:block}.contact-grid .emergency-note{margin-top:12px}.contact-grid{gap:24px}}

@@ -40,3 +40,22 @@
 - Revisited every page including 404 at 1440 and 390; see `/workspace/shots/rev2/fontana-machine/r2final-home-1440.png`, `/workspace/shots/rev2/fontana-machine/r2final-contact-390.png`, `/workspace/shots/rev2/fontana-machine/r2final-directions-1440.png`, and `/workspace/shots/rev2/fontana-machine/r2final-404-390.png`. No overflow, missing images, failed requests or page errors were found.
 - Clicked all four navigation links at both sizes, checked current markers and the mobile menu's button, tab and Escape behavior, reviewed text and navigation aria snapshots, checked footer/contact link targets and all five redirects (301). No adjacent anchor/button patterns in built HTML. Empty inquiry fails validation; filled inquiry displays its status. The mailto was captured by instrumenting the live handler and verified for address, subject and all six answers; no email was sent.
 - Remaining: original photos and map are small and dated. They cannot be made substantially larger without degrading quality; new photography would materially improve the site. The inquiry requires a configured email app.
+
+## Round 3
+
+- P1: The contact page repeats the business phone in the header, heading, details and footer, and repeats the pager and fax as well. The inquiry separates the heading from the actual contact details on mobile. `/workspace/shots/rev2/fontana-machine/r3initial-contact-390.png`
+- P2: The home headline repeats the first section heading, while a full screen of black typography hides the shop photos. The three pictures alternate positions and sizes, making the services feel scattered. `/workspace/shots/rev2/fontana-machine/r3initial-home-1440.png`
+- P3: The source photographs are small and dated; the smallest has limited detail even at the current size. `/workspace/shots/rev2/fontana-machine/r3initial-home-1440.png`
+
+### Round 3 Loop 1
+
+- Replaced the repeated service heading with the original's production and prototype subject, shortened the poster enough to reveal the first photo, aligned the photos, and consolidated contact numbers. Rebuilt, checked and deployed.
+- Live checks covered all pages at both widths, navigation, current markers, menu controls, empty and filled inquiry, images and overflow; see `/workspace/shots/rev2/fontana-machine/r3loop1-home-1440.png` and `/workspace/shots/rev2/fontana-machine/r3loop1-contact-390.png`.
+- Remaining: the single pager item on the contact page is accidentally hidden by the mobile rule that hid the second strip item. The contact details also take too much vertical space before the form.
+
+### Round 3 Loop 2
+
+- Restored the mobile pager on Contact, compacted the contact details, and made their document order match the visual order. Rebuilt, passed `src/check.py`, and deployed.
+- Revisited all five pages at 1440 and 390, including the 404. The pager, main phone and fax each appear once on Contact; the inquiry begins in the first mobile screen. Screenshots: `/workspace/shots/rev2/fontana-machine/r3loop2-home-1440.png`, `/workspace/shots/rev2/fontana-machine/r3loop2-contact-390.png`, `/workspace/shots/rev2/fontana-machine/r3loop2-directions-1440.png`, and `/workspace/shots/rev2/fontana-machine/r3loop2-sheet-390.png`.
+- Clicked every navigation item at both widths; checked mobile keyboard opening, tab, Escape, close button and current marker. Checked contact and footer targets, the menu's aria snapshot, and visible text. Empty inquiry was blocked; the live handler, instrumented to capture its navigation, produced the expected mailto address, subject and six fields. No email was sent. All five old paths returned 301, and generated HTML has zero adjacent anchor/anchor or anchor/button patterns. No overflow, missing images, failed requests or page errors appeared in the browser checks.
+- Remaining: the original photographs and map are small and dated; new shop photography would make the site stronger. The inquiry still relies on a configured mail app.
