@@ -48,3 +48,27 @@ Deployed the compact, horizontally scrollable mobile sibling row and raised the 
 Simplified the hero wire to one continuous line and placed the current product first in the mobile sibling row. Rebuilt, passed the static checker and deployed. Revisited all 14 page states at 1440 and 390; no horizontal document overflow, broken images or page errors were reported. See `/workspace/shots/rev2/stevens-wire-products/round2-final-1440-home.png`, `round2-final-390-products-wire-forms.png`, and the `round2-final-1440-montage.jpg` and `round2-final-390-montage.jpg` contact sheets.
 
 The interaction pass clicked desktop and mobile navigation and product-page links, exercised mobile close and Escape, and checked empty and populated quote forms at both widths. The populated form requested a mailto with all eight values; Chromium reports the expected aborted request because no email client is installed. Header text and ARIA snapshots show separate labels; generated HTML has no adjacent `</a><a` or `</a><button` sequences. Four old URLs, including the brochure, returned 301 with noindex headers. Remaining limitations: the original images vary in sharpness and backgrounds; the two photo-free product pages have limited source content. The quote form depends on the visitor's email application.
+
+## Round 3
+
+### Initial findings
+
+- **P1 — The quote action is stranded below a large empty gap on photo-free product pages.** On a phone the wire description and button feel like separate sections, delaying the next step. See `/workspace/shots/rev2/stevens-wire-products/round3-initial-390-products-wire-forms.png`.
+- **P2 — The home strip looks like four unrelated grey boxes.** Different baked-in backgrounds, proportions and shadows make the photographs feel mismatched. See `/workspace/shots/rev2/stevens-wire-products/round3-initial-1440-home.png` and `round3-initial-390-home.png`.
+- **P2 — The product list is easy to scan but visually thin.** Nothing in the list helps a buyer distinguish the five photographed lines. See `/workspace/shots/rev2/stevens-wire-products/round3-initial-1440-home.png`.
+- **P2 — Sparse inner pages spread short content across too much vertical space.** The page header, body and separate quote band make the desktop composition feel disconnected. See `/workspace/shots/rev2/stevens-wire-products/round3-initial-1440-products-wire-forms.png`.
+- **P3 — Original gallery photographs still vary in tone and sharpness.** Several have original borders or dark backgrounds. See `/workspace/shots/rev2/stevens-wire-products/round3-initial-390-products-medical.png`.
+
+### Round 3 Loop 1
+
+Rebuilt, checked and deployed the first pass. The home strip now uses cutouts on a shared light ground, and the quote button follows the wire description directly on both photo-free product pages. At both widths all 14 page states loaded without document overflow, broken images or page errors. The action is substantially closer on mobile. See `/workspace/shots/rev2/stevens-wire-products/round3-loop1-1440-home.png`, `round3-loop1-390-home.png`, `round3-loop1-390-products-wire-forms.png`, and the two `round3-loop1-*-montage.jpg` sheets.
+
+Remaining: the home list is still purely textual; the cutout at the end of the strip retains some texture from its original photo. The gallery images remain limited by the supplied originals.
+
+### Round 3 Loop 2
+
+Added compact examples to the five photographed home product lines, keeping the two lines without photos as text. Rebuilt, passed the static checker and deployed. The live home at both widths shows the examples without enlarging the originals; see `/workspace/shots/rev2/stevens-wire-products/round3-loop2-1440-home.png` and `round3-loop2-390-home.png`. The mobile menu is visible in `round3-loop2-390-menu.png`.
+
+At 1440 and 390, checked all 14 page states, navigation and product links, menu close and Escape, keyboard entry, empty form validation and the populated form's mailto address, subject and eight values. All internal destinations checked returned successfully; four old URLs returned 301. No document overflow, broken images, page errors or failed requests were reported. Header text and ARIA snapshots have separate labels; generated HTML has zero adjacent `</a><a` or `</a><button` sequences. No spec tables are present.
+
+A final deployment versioned the CSS URL to avoid an old immutable cached stylesheet. Rechecked all 14 states at both widths with no overflow, broken images or page errors; see `round3-final-1440-montage.jpg`, `round3-final-390-montage.jpg`, `round3-final-390-home.png`, and `round3-final-390-products-wire-forms.png` in the same screenshot directory. Remaining weaknesses: source gallery photographs still vary in sharpness and backgrounds, and the display cutout retains faint texture. The form requires the visitor's email application.
