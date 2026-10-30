@@ -12,7 +12,7 @@ Keep the direct quote and phone links, capabilities, complete applications, gall
 
 ## Images
 
-0 images made transparent: the product images have photographic, colored backgrounds rather than solid white or near-white backgrounds. Originals remain in use. Image frames retain contain sizing and original dimensions; no images were upscaled or re-encoded in this pass.
+The site uses 32 distinct product photographs, all with real photographic backgrounds. None were converted from white, none have source transparency, and no product, drawing or logo images remain on white backgrounds. The photographs remain unchanged in character.
 
 ## Polish pass
 
