@@ -4,7 +4,7 @@ Preview: https://garzo-products-redesign.metzdevan.workers.dev (Cloudflare Worke
 
 ## Pages
 
-- Home and products index
+- Home and products index, with direct links to product families and Model 213
 - Oil level regulators 101B and 108B, including the 108B installation guide
 - Low flow meter 300B
 - Lubricator box controls 211 and 213
@@ -13,7 +13,7 @@ Preview: https://garzo-products-redesign.metzdevan.workers.dev (Cloudflare Worke
 
 ## Editing and hosting
 
-Edit `src/data.py` and `src/build.py`, then run `python3 src/build.py`. The build reads the supplied reference text and images and writes static pages and optimized images to `site/`. Run `python3 src/check.py` to check links, markup, redirects, external requests and asset sizes.
+Edit `src/data.py` and `src/build.py` (transparent line drawings are in `src/transparent/`), then run `python3 src/build.py`. The build reads the supplied reference text and images and writes static pages and optimized images to `site/`. Run `python3 src/check.py` to check links, markup, redirects, external requests and asset sizes.
 
 For Cloudflare Workers static assets, configure a Worker and `wrangler.jsonc` to serve the `site` directory, then deploy with `npx wrangler deploy`. No deployment configuration is included in this preview.
 
@@ -26,3 +26,5 @@ Content and product diagrams come from the supplied crawl and downloaded assets.
 The auto date widget, “Quality Products since 1939” tagline, and © 2000–11 were omitted. The fixed “Since 1939” statement is retained as specified in the brief. The original duplicated 108B sentence and source typography remain in the extracted product text; the installation guide contains an incomplete vent-line dimension in the source, so no dimension was inferred. Product specifications and ordering information embedded in source images remain as images.
 
 The crawl notes report a blocked HTTP Google Analytics script and a missing `images/mount5018.jpg` (404). Neither is used. No product PDFs were supplied in the reference or site assets.
+
+Product details place their existing actions beside the introduction and use the adjacent column for available ordering charts and diagrams. The 501 model sections group each model's images above its specification chart; full-size links appear when charts are reduced to fit.
