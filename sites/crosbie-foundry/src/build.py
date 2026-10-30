@@ -5,7 +5,7 @@ import re, shutil, json, sys
 from PIL import Image
 from bs4 import BeautifulSoup
 from data import FAMILIES, ALLOYS, FLASKS
-ROOT=Path(__file__).resolve().parents[1]; SITE=ROOT/'site'; REF=ROOT/'reference'
+ROOT=Path(__file__).resolve().parents[1]; SITE=ROOT/'site'; REF=ROOT/'src/assets'
 (SITE/'assets/img').mkdir(parents=True,exist_ok=True)
 for p in (SITE/'assets/img').glob('*'): p.unlink()
 def image_for(name):

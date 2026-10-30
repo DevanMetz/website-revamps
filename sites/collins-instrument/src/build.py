@@ -10,7 +10,7 @@ with tempfile.TemporaryDirectory() as tmp:
  subprocess.run(['pdfimages', '-f', '8', '-l', '8', '-png', str(site/'assets/docs/pcv.pdf'), str(Path(tmp)/'valve')], check=True)
  Image.open(Path(tmp)/'valve-000.png').convert('RGB').save(imgs/'control-valve.jpg', quality=82, optimize=True)
 for f in files:
- im=Image.open(root/'reference/img/images'/f).convert('RGB'); im.save(imgs/(Path(f).stem.lower()+('.jpg' if f.endswith('.jpg') else '.png')),quality=82,optimize=True)
+ im=Image.open(root/'src/assets/img/images'/f).convert('RGB'); im.save(imgs/(Path(f).stem.lower()+('.jpg' if f.endswith('.jpg') else '.png')),quality=82,optimize=True)
 def img(f,alt):
  path=imgs/(Path(f).stem.lower()+('.jpg' if f.endswith('.jpg') else '.png')); alpha=path.with_name(path.stem+'-alpha.png'); path=alpha if alpha.exists() else path; im=Image.open(path)
  return f'<img src="/assets/img/{path.name}" alt="{escape(alt)}" width="{im.width}" height="{im.height}" loading="lazy" style="max-width:min(100%, {im.width * 1.25:g}px);max-height:{im.height * 1.25:g}px">'

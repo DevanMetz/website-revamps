@@ -6,13 +6,13 @@ S=Path('site'); I=S/'assets/img'; I.mkdir(parents=True,exist_ok=True)
 used=set()
 fonts=S/'assets/fonts'; fonts.mkdir(parents=True, exist_ok=True)
 for font in Path('src/fonts').glob('*.woff2'): shutil.copyfile(font, fonts/font.name)
-shutil.copyfile('img-originals/logo/garzo.png', I/'garzo-logo.png')
+shutil.copyfile('src/assets/logo/garzo.png', I/'garzo-logo.png')
 used.add('garzo-logo.png')
-shutil.copyfile('img-originals/logo/favicon.png', I/'favicon.png')
+shutil.copyfile('src/assets/logo/favicon.png', I/'favicon.png')
 used.add('favicon.png')
 logo='<img src="/assets/img/garzo-logo.png" alt="Garzo Products" width="900" height="272">'
 def img(name, alt=None):
-    p=Path('reference/img/images')/name
+    p=Path('src/assets/img/images')/name
     if not p.exists(): return ''
     out=re.sub(r'[^a-z0-9.-]','-',name.lower()).rsplit('.',1)[0]+'.png' if name.lower().endswith(('.gif','.png')) else re.sub(r'[^a-z0-9.-]','-',name.lower())
     transparent=Path('src/transparent')/(p.stem.lower()+'.png')
@@ -43,7 +43,7 @@ def checklist(lines, heading='Features'):
 def ordering(name, alt):
     picture=img(name,alt)
     target=(Path('src/transparent')/(Path(name).stem.lower()+'.png')).name if (Path('src/transparent')/(Path(name).stem.lower()+'.png')).exists() else name
-    width=Image.open(Path('reference/img/images')/name).width
+    width=Image.open(Path('src/assets/img/images')/name).width
     return f'<figure class="ordering" style="max-width:{width:g}px"><figcaption><a href="/assets/img/{target}">Open full size</a><span>Scroll chart →</span></figcaption><div class="chart-scroll" tabindex="0" role="region" aria-label="{html.escape(alt)}">{picture}</div></figure>'
 def siblings(current):
     entries=[('101','/products/oil-level-regulators/101/'),('108','/products/oil-level-regulators/108/'),('211','/products/lubricator-box-controls/211/'),('213','/products/lubricator-box-controls/213/'),('Low flow meters','/products/low-flow-meters/'),('Linear diaphragm operators','/products/linear-diaphragm-operators/')]

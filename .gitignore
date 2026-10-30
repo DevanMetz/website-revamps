@@ -1,8 +1,36 @@
+# Dependencies and tool caches
 node_modules/
 .wrangler/
+.dev.vars
 __pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Secrets and local environment
+.env
+.env.*
+*.pem
+*.key
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.log
+
+# Working material kept outside the repo
+sites/*/reference/
+sites/*/img-originals/
+sites/*/deliverables/
+
+# Video is only tracked where the build or site uses it
 *.mp4
 *.webm
-.DS_Store
-sites/*/reference/img/
 !sites/*/site/**/*.mp4
+!sites/*/src/assets/**/*.mp4

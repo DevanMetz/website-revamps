@@ -7,15 +7,15 @@ from data import ROUTES
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'site'
 (OUT / 'assets/fonts').mkdir(parents=True, exist_ok=True)
-for font in (ROOT / 'assets/fonts').glob('*.woff2'):
+for font in (ROOT / 'src/fonts').glob('*.woff2'):
     shutil.copy2(font, OUT / 'assets/fonts' / font.name)
 for source, dest in [('heavyturbine.gif','heavy-turbine.png'),('portablemachining.jpg','portable-machining.jpg'),('heavyclass.gif','heavy-class.png'),('heavyscmap.gif','heavy-map.png')]:
-    im = Image.open(ROOT / 'reference/img/images' / source).convert('RGB')
+    im = Image.open(ROOT / 'src/assets/img/images' / source).convert('RGB')
     if dest == 'portable-machining.jpg':
         im = im.crop((12, 15, 134, 161))  # trim the baked-in white mat and shadow
     im.save(OUT / 'assets/img' / dest, quality=82, optimize=True)
 
-shutil.copy2(ROOT / 'img-originals/logo/original.gif', OUT / 'assets/img/brand-header.gif')
+shutil.copy2(ROOT / 'src/assets/logo/original.gif', OUT / 'assets/img/brand-header.gif')
 
 def image(name, alt, w, h):
     return f'<img src="/assets/img/{name}" alt="{alt}" width="{w}" height="{h}">'

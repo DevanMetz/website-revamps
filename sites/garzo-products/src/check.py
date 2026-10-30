@@ -26,7 +26,7 @@ for line in (root/'_redirects').read_text().splitlines():
  parts=line.split()
  if len(parts)!=3 or parts[2]!='301' or parts[0]==parts[1]: errors.append('Invalid redirect: '+line)
  else: redirects[parts[0]]=parts[1]
-for line in Path('reference/pages.tsv').read_text().splitlines()[1:]:
+for line in Path('src/assets/pages.tsv').read_text().splitlines()[1:]:
  p=line.split('\t')[0]
  if p!='/' and p not in redirects: errors.append('Missing redirect: '+p)
 print(f'{len(list(root.rglob("*.html")))} HTML pages; CSS {len(css.encode())} bytes; JS {len(js.encode())} bytes; {len(redirects)} redirects')

@@ -6,21 +6,21 @@ import re, json
 from data import SERVICES
 ROOT=Path(__file__).resolve().parent.parent
 SITE=ROOT/'site'; IMG=SITE/'assets/img'; IMG.mkdir(parents=True,exist_ok=True)
-source=(ROOT/'reference/crawl-page-text.txt').read_text()
+source=(ROOT/'src/assets/crawl-page-text.txt').read_text()
 sections={}
 for chunk in source.split('='*100):
  m=re.search(r'URL: https://bmrebuildersinc.com/([^\n]*)\nTITLE:.*?\n(.*)',chunk,re.S)
  if m: sections[m.group(1).removesuffix('.html')]=m.group(2)
 
 def image(name,alt,cls=''):
- p=ROOT/'reference/img/images'/name
+ p=ROOT/'src/assets/img/images'/name
  im=Image.open(p); im.seek(0)
  if im.mode not in ('RGB','L'): im=im.convert('RGB')
  out=Path(name).stem.lower()+('.png' if p.suffix.lower() in ('.gif','.png') else '.jpg'); im.save(IMG/out, 'PNG' if out.endswith('.png') else 'JPEG', **({'optimize': True} if out.endswith('.png') else {'quality':82,'optimize':True}))
  w,h=im.size
  return f'<img class="{cls}" src="/assets/img/{out}" width="{w}" height="{h}" alt="{escape(alt)}" loading="lazy">'
 # Preserve the source logo's existing transparency.
-logo = Image.open(ROOT/'img-originals/logo/original.gif').convert('RGBA')
+logo = Image.open(ROOT/'src/assets/logo/original.gif').convert('RGBA')
 logo = logo.resize((300, 177), Image.Resampling.LANCZOS)
 logo.save(IMG/'logo.png')
 
@@ -42,7 +42,7 @@ CAPTIONS = {
 DETAILS = {'006':'Disassembled to Bare Metal','007':'Heading slide requalified','008':'All Cam Rollers Replaced','009':'Complete documented manual','017':'Central location for all pneumatic','019':'Rear of panel shows','021':'This National 3/8-4 die','022':'"Omega" Thermocouplers','044':'A total of 30 Snow','082':'Gearbox,','083':'All machines are requalified','086':'All machines are requalified','093':'All bedways are scraped','095':'Leadscrews can be reground','096':'Leadscrews can be reground'}
 def detail_text(olds, prefix):
  for old in olds:
-  soup=BeautifulSoup((ROOT/f'reference/html/{old}.html.html').read_text(errors='ignore'),'html.parser')
+  soup=BeautifulSoup((ROOT/f'src/assets/html/{old}.html.html').read_text(errors='ignore'),'html.parser')
   for cell in soup.find_all('td'):
    if cell.find('table'): continue
    text=re.sub(r'\s+',' ',' '.join(cell.stripped_strings)).strip()
@@ -51,7 +51,7 @@ def detail_text(olds, prefix):
 def intro(olds):
  paragraphs=[]
  for old in olds:
-  soup=BeautifulSoup((ROOT/f'reference/html/{old}.html.html').read_text(errors='ignore'),'html.parser')
+  soup=BeautifulSoup((ROOT/f'src/assets/html/{old}.html.html').read_text(errors='ignore'),'html.parser')
   for cell in soup.find_all('td'):
    if cell.find('table') or cell.find('img') or cell.find('h1') or cell.find('a'): continue
    text=' '.join(cell.stripped_strings)
@@ -60,7 +60,7 @@ def intro(olds):
    if any(text in c or c in text for c in CAPTIONS.values() if len(c)>20) or any(text.startswith(d) for d in DETAILS.values()): continue
    if text not in paragraphs: paragraphs.append(text)
  if 'fastupgrade2' in olds:
-  soup=BeautifulSoup((ROOT/'reference/html/fastupgrade2.html.html').read_text(errors='ignore'),'html.parser')
+  soup=BeautifulSoup((ROOT/'src/assets/html/fastupgrade2.html.html').read_text(errors='ignore'),'html.parser')
   cell=soup.find('img',src=re.compile('020')).find_parent('td')
   paragraphs.append(re.sub(r'\s+',' ',' '.join(cell.stripped_strings)).replace('| HOME |','').strip())
  return '<div class="intro">'+''.join(f'<h2>{escape(t)}</h2>' if t.startswith('Acme-Gridley 1" RAC') else f'<p>{escape(t)}</p>' for t in paragraphs)+'</div>'
@@ -68,17 +68,17 @@ def gallery(olds,title):
  result=[]
  previous_caption=None
  for old in olds:
-  soup=BeautifulSoup((ROOT/f'reference/html/{old}.html.html').read_text(errors='ignore'),'html.parser')
+  soup=BeautifulSoup((ROOT/f'src/assets/html/{old}.html.html').read_text(errors='ignore'),'html.parser')
   for img in soup.find_all('img'):
    name=Path(img.get('src','')).name
-   if not re.match(r'^\d+\.',name) or not (ROOT/'reference/img/images'/name).exists(): continue
+   if not re.match(r'^\d+\.',name) or not (ROOT/'src/assets/img/images'/name).exists(): continue
    key=Path(name).stem
    caption=CAPTIONS.get(key,'')
    detail=detail_text(olds,DETAILS[key]) if key in DETAILS else ''
    if detail and detail not in caption: caption=(caption+' '+detail).strip()
    rendered=image(name,caption or title)
    show_caption=caption and caption != previous_caption
-   w,h=Image.open(ROOT/'reference/img/images'/name).size
+   w,h=Image.open(ROOT/'src/assets/img/images'/name).size
    result.append(f'<figure style="--photo-width:{w*1.5:g}px"><div class="gallery-image">{rendered}</div>'+ (f'<figcaption>{escape(caption)}</figcaption>' if show_caption else '')+'</figure>')
    previous_caption=caption
  return '<div class="gallery">'+''.join(result)+'</div>'
@@ -93,9 +93,9 @@ def write(path,html):
  p=SITE/path/'index.html' if path else SITE/'index.html'; p.parent.mkdir(parents=True,exist_ok=True); p.write_text(html)
 cards=''
 for slug,title,olds in SERVICES:
- soup=BeautifulSoup((ROOT/f'reference/html/{olds[0]}.html.html').read_text(errors='ignore'),'html.parser')
- names=[Path(i.get('src','')).name for i in soup.find_all('img') if re.match(r'^\d+\.', Path(i.get('src','')).name) and (ROOT/'reference/img/images'/Path(i.get('src','')).name).exists()]
- name=next((n for n in names if Image.open(ROOT/'reference/img/images'/n).width / Image.open(ROOT/'reference/img/images'/n).height > 1.25), names[0])
+ soup=BeautifulSoup((ROOT/f'src/assets/html/{olds[0]}.html.html').read_text(errors='ignore'),'html.parser')
+ names=[Path(i.get('src','')).name for i in soup.find_all('img') if re.match(r'^\d+\.', Path(i.get('src','')).name) and (ROOT/'src/assets/img/images'/Path(i.get('src','')).name).exists()]
+ name=next((n for n in names if Image.open(ROOT/'src/assets/img/images'/n).width / Image.open(ROOT/'src/assets/img/images'/n).height > 1.25), names[0])
  cards+=f'<a class="card" href="/services/{slug}/"><div class="card-image">{image(name,title)}</div><div class="card-title"><h3>{title}</h3></div></a> '
 mosaic=''.join(f'<div class="mosaic-photo mosaic-photo-{i}">{image(name, alt)}</div>' for i,(name,alt) in enumerate([('001.jpg','Carlo Salvi cold header'),('006.jpg','National cold former during rebuilding'),('014.jpg','Broken crankshaft'),('038.jpg','Frame scraping')],1))
 home=f'''<section class="hero"><div class="hero-copy"><h1>Cold forming and wire drawing machinery rebuilding</h1><div class="actions"><a class="button" href="/contact/">Contact us about a machine</a> <a class="hero-link" href="/#services">Services</a></div></div>{mosaic}</section><section class="section wrap" id="services"><div class="section-heading"><h2>Services</h2></div><div class="cards">{cards}</div></section><section class="shop-band"><div class="wrap"><div class="shop-copy"><h2>Shop</h2><p>Our 20,000 square foot facility under crane has a fully equipped machine shop with horizontal boring mills up to 5" spindle, and lathes up to 30" diameter by 120" long.</p><p>We also have four stake bed trucks, each equipped with its own toolbox, fully loaded to handle the smallest repair to a mini or full rebuild on your floor.</p><a class="text-link" href="/shop/">Shop</a></div></div></section>''' 

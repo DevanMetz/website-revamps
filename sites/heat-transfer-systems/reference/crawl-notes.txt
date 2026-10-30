@@ -1,6 +1,0 @@
-Crawled https://heattransfersys.com/ on 2026-10-29 with headless Chromium (all same-host links followed) plus wget over HTTPS.
-Requests that failed or were blocked (HTTP-only/mixed content or dead third parties):
-  http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js mixed-content
-  https://www.adobe.com/images/shared/download_buttons/get_flash_player.gif net::ERR_BLOCKED_BY_ORB
-Asset downloads that failed:
-  https://www.adobe.com/images/shared/download_buttons/get_flash_player.gif 403

@@ -5,9 +5,9 @@ from PIL import Image
 from data import CLIENTS, PRODUCTS, MATERIALS, INDUSTRIES
 ROOT=Path(__file__).resolve().parents[1]; SITE=ROOT/'site'
 (SITE/'assets/img').mkdir(parents=True,exist_ok=True)
-shutil.copytree(ROOT/'assets/fonts', SITE/'assets/fonts', dirs_exist_ok=True)
+shutil.copytree(ROOT/'src/fonts', SITE/'assets/fonts', dirs_exist_ok=True)
 # The original logo is retained in the static assets.
-for media in (ROOT/'reference/media').iterdir():
+for media in (ROOT/'src/assets/media').iterdir():
     if media.suffix in ('.jpg', '.mp4'):
         shutil.copy2(media, SITE/'assets/img'/media.name)
 photo_alts = ['Machinists drilling a tube sheet', 'White vessel on a flatbed trailer', 'Shell section and painting', 'White and black vessels outdoors', 'Welders at work', 'Crane lift and exchanger on a trailer', 'Tube-to-tubesheet welds']
@@ -24,7 +24,7 @@ def listitems(items, cls=''): return '<ul class="'+cls+'">'+''.join('<li>'+escap
 # Individual scenes are extracted from the original composite banners without upscaling.
 scenes = {0:(0,0,204,120), 2:(205,0,605,120), 3:(0,0,267,120), 4:(202,0,400,120), 5:(291,0,605,120), 6:(0,0,200,120), 7:(267,0,605,120)}
 for number, box in scenes.items():
-    Image.open(ROOT/'reference/media'/f'banner-{3 if number == 7 else number}.jpg').crop(box).save(SITE/'assets/img'/f'scene-{number}.jpg', quality=90)
+    Image.open(ROOT/'src/assets/media'/f'banner-{3 if number == 7 else number}.jpg').crop(box).save(SITE/'assets/img'/f'scene-{number}.jpg', quality=90)
 def scene(n):
     box=scenes[n]
     return f'<img src="/assets/img/scene-{n}.jpg" alt="{photo_alts[3 if n == 7 else n]}" width="{box[2]-box[0]}" height="120" style="max-width:{(box[2]-box[0])*1.5}px" loading="lazy">'

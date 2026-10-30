@@ -25,7 +25,7 @@ for line in redirects:
  parts=line.split()
  if len(parts)!=3 or parts[2]!='301' or not parts[0].startswith('/') or not parts[1].startswith('/') or parts[0]==parts[1]: errors.append('bad redirect: '+line)
  else: mapping[parts[0]]=parts[1]
-for line in (root/'reference/pages.tsv').read_text().splitlines()[1:]:
+for line in (root/'src/assets/pages.tsv').read_text().splitlines()[1:]:
  path=line.split('\t')[0]
  if path!='/' and path not in mapping: errors.append('missing redirect '+path)
 for name,content,limit in [('CSS',css,25000),('JS',js,6000)]:

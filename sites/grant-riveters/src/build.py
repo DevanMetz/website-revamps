@@ -6,7 +6,7 @@ from PIL import Image
 import re, json, shutil, csv
 from data import PAGES, IMAGES, PRODUCT_IMAGES, LITERATURE
 from content.products import ORBITAL_INTRO, PNEUMATIC, HYDRAULIC, SERVO, PRODUCTS
-ROOT=Path(__file__).resolve().parent.parent; SITE=ROOT/'site'; REF=ROOT/'reference'
+ROOT=Path(__file__).resolve().parent.parent; SITE=ROOT/'site'; REF=ROOT/'src/assets'
 for key,path in IMAGES.items():
  im=Image.open(REF/'img'/path); im.seek(0); im=im.convert('RGB' if im.format=='JPEG' else 'RGBA'); out=SITE/'assets/img'/f'{key}.png'; im.save(out,optimize=True)
  if key=='orbitfeed':

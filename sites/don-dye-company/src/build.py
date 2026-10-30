@@ -10,7 +10,7 @@ for name,source in imgs.items():
  if name not in ('hero', 'single', 'drive'):
   # Line drawings: color-to-alpha against white so fine dimension lines survive on any page color.
   import numpy as np
-  a=np.asarray(Image.open(ROOT/'reference/img/images'/source).convert('RGBA')).astype(float)
+  a=np.asarray(Image.open(ROOT/'src/assets/img/images'/source).convert('RGBA')).astype(float)
   d=255-a[...,:3]; d=np.where(d<=6,0,(d-6)*255/249); al=d.max(2)/255
   col=np.clip(np.where(al[...,None]>0,255-d/np.maximum(al,1e-6)[...,None],0),0,255)
   Image.fromarray(np.dstack([col,al*a[...,3]]).round().astype('uint8'),'RGBA').save(SITE/'assets/img'/f'{name}-transparent.png',optimize=True)

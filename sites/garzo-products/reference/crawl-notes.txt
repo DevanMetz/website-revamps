@@ -1,5 +1,0 @@
-Crawled https://garzoproducts.com/ on 2026-10-29 with headless Chromium (all same-host links followed) plus wget over HTTPS.
-Requests that failed or were blocked (HTTP-only/mixed content or dead third parties):
-  http://www.google-analytics.com/urchin.js mixed-content
-Asset downloads that failed:
-  https://garzoproducts.com/images/mount5018.jpg 404

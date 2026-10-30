@@ -5,7 +5,7 @@ from data import nav, advantages, materials
 root=Path(__file__).resolve().parents[1]; site=root/'site'
 imgdir=site/'assets/img'; imgdir.mkdir(parents=True,exist_ok=True)
 for source, target in [('1.2.jpg','rings.jpg'),('plaque.jpg','viton-certificate.jpg')]:
-    im=Image.open(root/'reference/img/images'/source)
+    im=Image.open(root/'src/assets/img/images'/source)
     if source=='1.2.jpg': im=im.crop((0,0,235,216))
     im=im.convert('RGB')
     im.save(imgdir/target, quality=82, optimize=True)

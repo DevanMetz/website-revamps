@@ -23,7 +23,7 @@ for line in (site/'_redirects').read_text().splitlines():
  bits=line.split()
  if len(bits)!=3 or bits[2]!='301' or bits[0]==bits[1]: errors.append('bad redirect: '+line)
  else: redirects[bits[0]]=bits[1]
-with (root/'reference/pages.tsv').open() as f:
+with (root/'src/assets/pages.tsv').open() as f:
  for row in csv.DictReader(f,delimiter='\t'):
   if row['old_path']!='/' and row['old_path'] not in redirects: errors.append('missing redirect '+row['old_path'])
 css=(site/'assets/css/site.css').read_text();js=(site/'assets/js/site.js').read_text()

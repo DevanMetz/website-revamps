@@ -1,6 +1,6 @@
 from pathlib import Path
 import re
-text=Path('reference/crawl-page-text.txt').read_text()
+text=Path('src/assets/crawl-page-text.txt').read_text()
 def source(path):
     blocks=text.split('====================================================================================================')
     for b in blocks:

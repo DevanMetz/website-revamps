@@ -23,7 +23,7 @@ for line in (site/'_redirects').read_text().splitlines():
  parts=line.split()
  if len(parts)!=3 or parts[2]!='301' or not parts[0].startswith('/') or not parts[1].startswith('/') or parts[0]==parts[1]: errors.append('Bad redirect: '+line)
  else: redirects[parts[0]]=parts[1]
-for line in (root/'reference/pages.tsv').read_text().splitlines()[1:]:
+for line in (root/'src/assets/pages.tsv').read_text().splitlines()[1:]:
  p=line.split('\t')[0]
  if p!='/' and p not in redirects: errors.append('Missing redirect '+p)
 if '/docs/catalog.pdf' not in redirects: errors.append('Missing PDF redirect')

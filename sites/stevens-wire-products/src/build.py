@@ -7,7 +7,7 @@ IMG.mkdir(parents=True,exist_ok=True)
 (SITE/'assets/logo.png').write_bytes((ROOT/'src/logo.png').read_bytes())
 for p in IMG.iterdir(): p.unlink()
 def image(path, alt, eager=False):
-    source=ROOT/'reference/img/images'/path
+    source=ROOT/'src/assets/img/images'/path
     stem=path.replace('/','-').lower().replace(' ','-').rsplit('.',1)[0]; t=ROOT/'src/transparent'/(stem+'.png')
     if t.exists(): im=Image.open(t); name=stem+'.png'; im.save(IMG/name,optimize=True)
     else: im=Image.open(source).convert('RGB'); name=stem+'.jpg'; im.save(IMG/name,quality=82,optimize=True)
@@ -16,7 +16,7 @@ def image(path, alt, eager=False):
 def strip_image(path, alt):
     # Normalize the light studio backgrounds into transparent, ink-toned cutouts.
     from PIL import ImageFilter, ImageChops, ImageOps
-    source=Image.open(ROOT/'reference/img/images'/path).convert('L')
+    source=Image.open(ROOT/'src/assets/img/images'/path).convert('L')
     background=source.filter(ImageFilter.GaussianBlur(18))
     diff=ImageChops.subtract(background, source)
     alpha=diff.point(lambda x: max(0, min(255, (x-4)*5)))

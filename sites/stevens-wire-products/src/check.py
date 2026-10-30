@@ -30,7 +30,7 @@ for line in (site/'_redirects').read_text().splitlines():
  parts=line.split()
  if len(parts)!=3 or parts[2]!='301' or not parts[0].startswith('/') or not parts[1].startswith('/') or parts[0]==parts[1]: errors.append('bad redirect: '+line)
  else: redirects[parts[0]]=parts[1]
-with (root/'reference/pages.tsv').open() as f:
+with (root/'src/assets/pages.tsv').open() as f:
  for row in csv.DictReader(f,delimiter='\t'):
   if row['old_path']!='/' and row['old_path'] not in redirects: errors.append('missing redirect '+row['old_path'])
 for p,limit in [('assets/css/site.css',25600),('assets/js/site.js',6144)]:
