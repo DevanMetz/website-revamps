@@ -12,4 +12,4 @@ Keep the technical tables, product types, ordering example, contact details and 
 
 ## Images
 
-Six images made transparent: custom-rings, dimensions, static-installation, dynamic-installation, mechanical-seal and valve-stem. Originals are retained in img-originals. Their natural dimensions are preserved. The rings hero is a scene photograph and the certificate is a document, so both retain their original backgrounds.
+Eight images are used: six technical or product images were converted from white to transparency (custom rings, dimensions, static installation, dynamic installation, mechanical seal and valve stem); their originals are retained in img-originals. None were transparent in the source. No product, drawing or logo image remains on a white background. The rings image is one scene photograph and retains its background. The Viton certificate is one document image and retains its white paper background.
