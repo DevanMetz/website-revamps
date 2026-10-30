@@ -2,7 +2,7 @@
 
 A speculative static redesign preview of https://www.crosbiefoundry.com/. It includes Home, Products, eight product galleries (decorative tiles, golf plaques, corner castings, decorative hardware, clamps, cash register hardware, miscellaneous castings, valves), Services, Alloys, About, History, Contact, and a 404 page.
 
-Preview: https://crosbie-foundry-redesign.metzdevan.workers.dev (Cloudflare Worker `crosbie-foundry-redesign`, static assets from `site/`, configured in `wrangler.jsonc`). Deploy with `npx wrangler deploy` from this folder; the local `package.json` keeps wrangler's cache inside this folder.
+Preview: https://crosbie-foundry-redesign.metzdevan.workers.dev (Cloudflare Worker `crosbie-foundry-redesign`, static assets from `site/`). Edit content in `src/data.py` and page templates in `src/build.py`, then run `python3 src/build.py` and `python3 src/check.py`. The home page presents product galleries first, followed by foundry capabilities and flask sizes. Product grids and galleries lead directly to the inquiry form; other quote bands provide the phone number and a link to the form. Contact details and the form are on Contact.
 
 For hosting, configure a `wrangler.jsonc` for a Cloudflare Worker with static assets pointing to `site/`, then run `npx wrangler deploy`. This preview has not been deployed. Forms use a mailto fallback, which requires the visitor to send the composed email in their email app. For production, connect a Cloudflare Worker or Pages Function, Formspree, or the company's existing form handler if available.
 
