@@ -3,6 +3,7 @@ from html.parser import HTMLParser
 from urllib.parse import urlsplit, unquote
 import csv,re
 from data import PREVIEW_SUBSCRIBE_URL
+from keep import KEEP_CODE_URL
 root=Path(__file__).resolve().parent.parent; site=root/'site'; errors=[]
 class Check(HTMLParser):
  def __init__(self,path): super().__init__(); self.path=path; self.h1=0
@@ -15,7 +16,7 @@ class Check(HTMLParser):
   for k in ('href','src'):
    v=a.get(k,'')
    if not v or v.startswith(('#','mailto:','tel:','data:')): continue
-   if v==PREVIEW_SUBSCRIBE_URL: continue
+   if v in (PREVIEW_SUBSCRIBE_URL,KEEP_CODE_URL): continue
    if v.startswith(('http:','https:','//')): errors.append(f'{self.path}: external {k} {v}'); continue
    p=unquote(urlsplit(v).path)
    target=site/p.lstrip('/') if p.startswith('/') else self.path.parent/p
@@ -40,10 +41,27 @@ for p,limit in [('assets/css/site.css',25600),('assets/js/site.js',6144)]:
  if size>limit: errors.append(f'{p} too large: {size}')
 # Preview subscribe button: one per page while PREVIEW_SUBSCRIBE_URL is set, none once it is ''.
 from html import escape as _escape
+# /keep/ funnel: exists with the exact Stripe link while PREVIEW_SUBSCRIBE_URL is set, absent once it is ''.
+from keep import KEEP_CODE_URL as _code
+_keep=Path(__file__).resolve().parent.parent/'site'/'keep'/'index.html'
 for _f in (Path(__file__).resolve().parent.parent/'site').rglob('*.html'):
  _h=_f.read_text(); _n=_h.count('class="preview-subscribe"')
+ if _f==_keep:
+  if _n: errors.append(f'{_f}: preview subscribe button on /keep/')
+  continue
  if _n!=(1 if PREVIEW_SUBSCRIBE_URL else 0): errors.append(f'{_f}: {_n} preview subscribe buttons')
- elif PREVIEW_SUBSCRIBE_URL and f'href="{_escape(PREVIEW_SUBSCRIBE_URL)}" target="_blank" rel="noopener"' not in _h: errors.append(f'{_f}: preview subscribe link')
+ elif PREVIEW_SUBSCRIBE_URL and '<a class="preview-subscribe" href="/keep/" aria-label="Upgrade my website: see how to switch to this new site">Upgrade my website</a>' not in _h: errors.append(f'{_f}: preview subscribe link')
+if PREVIEW_SUBSCRIBE_URL:
+ if not _keep.exists(): errors.append('/keep/ missing')
+ else:
+  _h=_keep.read_text()
+  if _h.count('<a class="button" href="'+_escape(PREVIEW_SUBSCRIBE_URL)+'">Continue to checkout · $20/mo</a>')!=1 or _h.count('buy.stripe.com')!=1: errors.append('/keep/: checkout link')
+  if _h.count('href="'+_escape(_code)+'"')!=1: errors.append('/keep/: code link')
+  if '<meta name="robots" content="noindex">' not in _h: errors.append('/keep/: noindex')
+  if 'target="_blank"' in _h: errors.append('/keep/: new-tab link')
+elif _keep.parent.exists(): errors.append('/keep/ built while PREVIEW_SUBSCRIBE_URL is empty')
+for _x in ('sitemap.xml',):
+ if (_keep.parent.parent/_x).exists() and '/keep/' in (_keep.parent.parent/_x).read_text(): errors.append('/keep/ in sitemap')
 print(f'{len(pages)} HTML pages checked; {len(redirects)} redirects; CSS {(site/"assets/css/site.css").stat().st_size} bytes; JS {(site/"assets/js/site.js").stat().st_size} bytes')
 print('\n'.join(errors) if errors else 'All static checks passed.')
 raise SystemExit(bool(errors))

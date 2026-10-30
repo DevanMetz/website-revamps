@@ -31,11 +31,29 @@ if re.search(r'url\(["\']?(?:https?:)?//|@import',css): errors.append('external 
 if len(css.encode())>25000 or len(js.encode())>6000: errors.append('asset size limit')
 # Preview subscribe button: one per page while PREVIEW_SUBSCRIBE_URL is set, none once it is ''.
 from data import PREVIEW_SUBSCRIBE_URL
+from keep import KEEP_CODE_URL
 from html import escape as _escape
+# /keep/ funnel: exists with the exact Stripe link while PREVIEW_SUBSCRIBE_URL is set, absent once it is ''.
+from keep import KEEP_CODE_URL as _code
+_keep=Path(__file__).resolve().parent.parent/'site'/'keep'/'index.html'
 for _f in (Path(__file__).resolve().parent.parent/'site').rglob('*.html'):
  _h=_f.read_text(); _n=_h.count('class="preview-subscribe"')
+ if _f==_keep:
+  if _n: errors.append(f'{_f}: preview subscribe button on /keep/')
+  continue
  if _n!=(1 if PREVIEW_SUBSCRIBE_URL else 0): errors.append(f'{_f}: {_n} preview subscribe buttons')
- elif PREVIEW_SUBSCRIBE_URL and f'href="{_escape(PREVIEW_SUBSCRIBE_URL)}" target="_blank" rel="noopener"' not in _h: errors.append(f'{_f}: preview subscribe link')
+ elif PREVIEW_SUBSCRIBE_URL and '<a class="preview-subscribe" href="/keep/" aria-label="Upgrade my website: see how to switch to this new site">Upgrade my website</a>' not in _h: errors.append(f'{_f}: preview subscribe link')
+if PREVIEW_SUBSCRIBE_URL:
+ if not _keep.exists(): errors.append('/keep/ missing')
+ else:
+  _h=_keep.read_text()
+  if _h.count('<a class="button" href="'+_escape(PREVIEW_SUBSCRIBE_URL)+'">Continue to checkout · $20/mo</a>')!=1 or _h.count('buy.stripe.com')!=1: errors.append('/keep/: checkout link')
+  if _h.count('href="'+_escape(_code)+'"')!=1: errors.append('/keep/: code link')
+  if '<meta name="robots" content="noindex">' not in _h: errors.append('/keep/: noindex')
+  if 'target="_blank"' in _h: errors.append('/keep/: new-tab link')
+elif _keep.parent.exists(): errors.append('/keep/ built while PREVIEW_SUBSCRIBE_URL is empty')
+for _x in ('sitemap.xml',):
+ if (_keep.parent.parent/_x).exists() and '/keep/' in (_keep.parent.parent/_x).read_text(): errors.append('/keep/ in sitemap')
 print(f'{len(pages)} HTML pages checked; {len(redirects)} redirects; CSS {len(css.encode())} bytes; JS {len(js.encode())} bytes.')
 print('\n'.join(errors) if errors else 'All static checks passed.')
 raise SystemExit(bool(errors))

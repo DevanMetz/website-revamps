@@ -125,19 +125,22 @@ def add_preview_subscribe():
  import re
  from html import escape as esc
  site_dir=Path(__file__).resolve().parent.parent/'site'
- css=("a.preview-subscribe{position:fixed;right:max(20px,calc(env(safe-area-inset-right) + 12px));bottom:max(20px,calc(env(safe-area-inset-bottom) + 12px));z-index:19;display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;background:#000098;color:#fff;font:600 15px/1.1 'Instrument Sans',sans-serif;letter-spacing:.01em;text-transform:none;text-decoration:none;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.22);transition:background-color .15s,opacity .2s,visibility .2s}"
+ css=("a.preview-subscribe{position:fixed;right:max(20px,calc(env(safe-area-inset-right) + 12px));bottom:max(20px,calc(env(safe-area-inset-bottom) + 12px));z-index:19;display:inline-flex;align-items:center;min-height:66px;padding:0 27px;border-radius:999px;background:#000098;color:#fff;font:600 22.5px/1.1 'Instrument Sans',sans-serif;letter-spacing:.01em;text-transform:none;text-decoration:none;white-space:nowrap;box-shadow:0 9px 27px rgba(0,0,0,.22);transition:background-color .15s,opacity .2s,visibility .2s}"
   "a.preview-subscribe:hover{background:#00006e;color:#fff;text-decoration:none}"
   "a.preview-subscribe:focus-visible{background:#000098;color:#fff;outline:3px solid #000098;outline-offset:3px;box-shadow:0 0 0 3px #fff,0 6px 18px rgba(0,0,0,.22)}"
   "a.preview-subscribe.is-tucked,body:has(header [aria-expanded=\"true\"]) a.preview-subscribe{opacity:0;visibility:hidden}"
-  "@media (max-width:760px){a.preview-subscribe{right:max(12px,calc(env(safe-area-inset-right) + 8px));bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px));min-height:40px;padding:0 14px;font-size:14px}}"
+  "@media (max-width:760px){a.preview-subscribe{right:max(12px,calc(env(safe-area-inset-right) + 8px));bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px));min-height:60px;padding:0 21px;font-size:21px}}"
   "@media (prefers-reduced-motion:reduce){a.preview-subscribe{transition:none}}")
- js=("(()=>{const b=document.querySelector('a.preview-subscribe');if(!b)return;const k=[...document.querySelectorAll('footer,main .button,main button,main input[type=submit]')];let q=0;"
+ js=("(()=>{const b=document.querySelector('a.preview-subscribe');if(!b)return;const k=[...document.querySelectorAll('footer,main .button,main button,main form,main input,main textarea,main select')];let q=0;"
   "const u=()=>{q=0;const r=b.getBoundingClientRect();b.classList.toggle('is-tucked',k.some(e=>{const g=e.getBoundingClientRect();return g.width&&g.top<r.bottom+8&&g.bottom>r.top-8&&g.left<r.right+8&&g.right>r.left-8}))};"
   "const s=()=>{if(!q)q=requestAnimationFrame(u)};addEventListener('scroll',s,{passive:true});addEventListener('resize',s);u()})();")
+ from keep import build_keep
+ build_keep(site_dir,PREVIEW_SUBSCRIBE_URL)
  for page in site_dir.rglob('*.html'):
+  if page==site_dir/'keep'/'index.html': continue
   html=re.sub(r'<!-- preview-subscribe -->.*?<!-- /preview-subscribe -->','',page.read_text(),flags=re.S)
   if PREVIEW_SUBSCRIBE_URL:
    html=html.replace('</head>','<!-- preview-subscribe --><style>'+css+'</style><!-- /preview-subscribe --></head>',1)
-   html=html.replace('</body>','<!-- preview-subscribe --><a class="preview-subscribe" href="'+esc(PREVIEW_SUBSCRIBE_URL)+'" target="_blank" rel="noopener" aria-label="Keep this site, $20 per month: subscribe to hosting and management (opens in a new tab)">Keep this site · $20/mo</a><script>'+js+'</script><!-- /preview-subscribe --></body>',1)
+   html=html.replace('</body>','<!-- preview-subscribe --><a class="preview-subscribe" href="/keep/" aria-label="Upgrade my website: see how to switch to this new site">Upgrade my website</a><script>'+js+'</script><!-- /preview-subscribe --></body>',1)
   page.write_text(html)
 add_preview_subscribe()
