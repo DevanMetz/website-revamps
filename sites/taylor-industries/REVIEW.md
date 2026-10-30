@@ -108,3 +108,19 @@ Phone and fax formatting match the reference. Empty forms were blocked by browse
 - Fixed the product anchor offset and shortened the menu category labels. Rebuilt, passed `src/check.py`, and deployed.
 - On the live site the header remained at the top at both widths: [desktop](/workspace/shots/rev2/taylor-industries/r5-final-stuck-1440.png), [mobile](/workspace/shots/rev2/taylor-industries/r5-final-stuck-390.png). The [mobile menu](/workspace/shots/rev2/taylor-industries/r5-final-menu.png) marks ECG as current; TENS opens in one tap. Escape, the close button and initial keyboard tab worked. The 6000ZT anchor landed below the header at both widths.
 - Visited all 14 routes at both widths and scrolled to load images; no broken images, horizontal overflow, console errors, failed requests or page exceptions were reported. Two legacy redirects returned 301. The final pass did not individually click every footer and content link or resubmit every form; prior rounds cover some of those flows. Source photos remain small and YouTube playback was not tested.
+
+## Follow-up
+
+- P1: The mobile category switcher occupied two rows before the page heading and delayed the product list. [Before, 390](/workspace/shots/rev2/taylor-industries/before-ecg-390.png).
+- P2: The tiny logo subtitle was unreadable in both header sizes, including the sticky header. [Before, 390](/workspace/shots/rev2/taylor-industries/before-home-390-scroll.png), [before, 1440](/workspace/shots/rev2/taylor-industries/before-home-1440-scroll.png).
+
+### Loop 1
+
+- Replaced the clipped logo treatment with a transparent wordmark asset, retaining the complete symbol and lettering. Made the mobile category links a single horizontally scrollable row and reduced the surrounding spacing. Rebuilt, passed `src/check.py`, and deployed.
+- Live screenshots at [1440](/workspace/shots/rev2/taylor-industries/followup1-ecg-1440.png) and [390](/workspace/shots/rev2/taylor-industries/followup1-ecg-390.png), including [sticky mobile header](/workspace/shots/rev2/taylor-industries/followup1-ecg-390-scroll.png), show the result. Later categories needed to be brought into view when current.
+
+### Loop 2
+
+- Scrolled the current mobile category into view when it would otherwise be clipped. Rebuilt, passed `src/check.py`, and deployed. [Custom at 390](/workspace/shots/rev2/taylor-industries/followup2-custom-390.png) and [ECG at 390](/workspace/shots/rev2/taylor-industries/followup2-ecg-390.png) show the marked current category; [desktop ECG](/workspace/shots/rev2/taylor-industries/followup2-ecg-1440.png) and [sticky header](/workspace/shots/rev2/taylor-industries/followup2-ecg-1440-scroll.png) retain the approved layout.
+- Visited all 14 routes at both widths, checked image load state, overflow, one h1 and browser errors, and clicked the main navigation and category links. Category links measured 44px high; the mobile menu opened, closed with the button and Escape, and accepted keyboard focus. Empty contact, quote and machine forms failed validation; filled submissions generated mailto links with the expected recipient, subject and entered details. Three sampled old URLs returned 301. The browser aborted mailto navigation because it had no email application.
+- Remaining: the original product and machine images are small. The row requires horizontal scrolling for all categories. This narrow pass did not individually click every footer/content link or verify external sites and video playback.

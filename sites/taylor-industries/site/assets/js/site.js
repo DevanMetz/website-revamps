@@ -6,3 +6,9 @@ document.addEventListener('keydown',event=>{if(event.key==='Escape'&&toggle?.get
 document.querySelectorAll('.video-load').forEach(button=>button.addEventListener('click',()=>{const frame=document.createElement('iframe');frame.src='https://www.youtube-nocookie.com/embed/lV67T6aLGC0?autoplay=1';frame.title='ECG Electrode Production Machine';frame.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';frame.allowFullscreen=true;button.replaceWith(frame)}));
 document.querySelectorAll('form[data-subject]').forEach(form=>form.addEventListener('submit',event=>{event.preventDefault();const data=new FormData(form);const lines=[];for(const [key,value] of data.entries())lines.push(`${key}: ${value}`);const url=`mailto:sales@taylor-ind.com?subject=${encodeURIComponent(form.dataset.subject)}&body=${encodeURIComponent(lines.join('\n'))}`;form.querySelector('.form-status').textContent='Your email application should open with your answers ready to send.';window.location.href=url}));
 if(location.pathname==='/contact/'){const value=(new URLSearchParams(location.search).get('product')||'').replace(/[\u0000-\u001f\u007f]/g,'').slice(0,60);if(value){const form=document.querySelector('form[data-subject]');form.querySelector('#comments').value=`Product: ${value}\n`;form.dataset.subject=`Quote / sample request: ${value}`}}
+const categoryNav=document.querySelector('.category-nav');
+const currentCategory=categoryNav?.querySelector('[aria-current="page"]');
+if(currentCategory && matchMedia('(max-width:600px)').matches){
+ const navBox=categoryNav.getBoundingClientRect(), currentBox=currentCategory.getBoundingClientRect();
+ if(currentBox.right>navBox.right) categoryNav.scrollLeft+=currentBox.right-navBox.right+12;
+}
