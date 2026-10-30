@@ -3,3 +3,21 @@
 @media(max-width:1099px){.header{position:relative;width:auto}.head{min-height:78px;padding:8px 24px;flex-direction:row;align-items:center;justify-content:space-between;flex-wrap:wrap}.brand{width:100px}.menu{display:block;background:transparent;color:white;border:1px solid #aaa;min-width:70px;min-height:44px;font:700 17px Archivo Narrow,sans-serif;text-transform:uppercase}.head nav{display:none;flex-basis:100%;margin:10px -24px 0}.head nav.open{display:flex}.head nav a{padding:15px 24px}.rail-contact{display:none}main,footer{margin-left:0}.hero{grid-template-rows:repeat(2,minmax(220px,27vw))}}
 @media(max-width:650px){.wrap{width:calc(100% - 40px)}.hero{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto repeat(2,150px)}.hero-copy{grid-column:span 2;grid-row:auto;padding:44px 24px 48px}.hero h1{font-size:46px}.actions{margin-top:30px}.mosaic-photo-1{grid-column:auto}.mosaic-photo-5{display:none}.section{padding-top:60px;padding-bottom:60px}.cards,.gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 6px}.card-title h3{font-size:18px}.page-hero{padding:40px 0}.service-content{padding-top:35px;padding-bottom:60px}.shop-layout,.contact-layout,.footer{grid-template-columns:1fr;gap:32px}.contact-layout>div:last-child{order:-1}.form-grid{grid-template-columns:1fr;gap:0}.shop-band{padding:60px 0}.gallery figcaption{font-size:14px}.footer{gap:24px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+/* Navigation and photo sizes follow the source material. */
+.head{overflow-y:auto}.head nav{display:block;margin:30px -28px 20px}.head nav ul{list-style:none;margin:0;padding:0}.head nav a{display:block}.head nav .service-nav a{font:500 16px/1.2 Karla,sans-serif;text-transform:none;padding:7px 20px 7px 32px}.head nav .service-nav a[aria-current],.head nav .section-current{border-left-color:#d33739}.rail-contact{font-size:16px}.rail-contact a{min-height:32px}.hero{grid-template-columns:minmax(0,1fr) repeat(2,200px);grid-template-rows:repeat(2,150px)}.hero-copy{grid-column:auto;grid-row:span 2}.hero h1{font-size:clamp(40px,4vw,62px)}.mosaic-photo img{object-fit:cover}.cards,.gallery{grid-template-columns:repeat(4,minmax(0,200px));justify-content:space-between;gap:32px 16px}.gallery-image{aspect-ratio:auto;background:none;overflow:visible}.gallery-image img{width:100%;height:auto;object-fit:initial}.gallery figcaption{font-size:16px;line-height:1.45}.footer a:not(.brand){min-height:44px}
+@media(max-width:1099px){html{scroll-padding-top:90px}.header{position:sticky;top:0;border-bottom:1px solid #666}.head{overflow:visible}.head nav{display:none;max-height:calc(100vh - 78px);overflow:auto;margin:10px -24px 0}.head nav.open{display:block}.head nav .service-nav a{padding:10px 24px 10px 40px;min-height:44px}.hero{grid-template-columns:minmax(0,1fr) repeat(2,200px);grid-template-rows:repeat(2,150px)}}
+@media(max-width:650px){.hero{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto repeat(2,140px)}.hero-copy{grid-column:span 2;grid-row:auto}.hero h1{font-size:42px}.cards,.gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 12px}.contact-layout>div:last-child{order:initial}.page-hero{padding:25px 0 32px}.back{margin-bottom:12px}.service-content{padding-top:24px}.gallery figcaption{font-size:16px}}
+/* Work board: preserve complete source photos while giving them room to read. */
+@media(min-width:1100px){
+.hero{grid-template-columns:minmax(0,1fr) repeat(2,minmax(0,300px));grid-template-rows:repeat(2,198px)}
+.cards{grid-template-columns:repeat(4,minmax(0,1fr));gap:32px 16px}
+.card-image{max-width:300px}
+.gallery{display:block;columns:3 250px;column-gap:24px;max-width:1000px}
+.gallery figure{display:inline-block;width:100%;max-width:var(--photo-width);margin:0 0 28px;break-inside:avoid}
+.head nav .service-nav a[aria-current]{background:#3e4042;font-weight:700}
+}
+@media(max-width:650px){
+.gallery{display:block;columns:2;column-gap:12px}
+.gallery figure{display:inline-block;width:100%;max-width:var(--photo-width);margin:0 0 28px;break-inside:avoid}
+.head nav .service-nav a[aria-current]{background:#3e4042;font-weight:700}
+}
