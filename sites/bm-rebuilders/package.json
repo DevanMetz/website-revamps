@@ -1,0 +1,1 @@
+{"name":"bm-rebuilders-redesign","private":true,"scripts":{"deploy":"wrangler deploy"}}
