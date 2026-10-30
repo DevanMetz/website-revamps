@@ -44,3 +44,22 @@ html{scroll-padding-top:100px}#quote{scroll-margin-top:100px}.header{position:st
 .brand,.footer-brand{display:block;flex:none;line-height:0}.brand img,.footer-brand img{display:block;width:142px;height:auto}.header-inner{min-height:90px}.footer-brand img{width:142px}@media(max-width:900px){.header-inner{min-height:82px}.brand img{width:120px}}
 
 .footer-brand{margin-bottom:18px}
+/* The original mark sits on its native blue field. */
+.header{background:#144f9d;border-color:#144f9d}
+.header-inner{min-height:128px}
+.brand img{width:220px;height:auto}
+.header nav a,.header nav a[aria-current],.header nav .nav-quote{color:#fff}
+.header nav a{border-color:#aabfd9}
+.header nav .nav-quote{border-color:#fff}
+.header nav a:hover{color:#fff;text-decoration:underline;text-underline-offset:5px}
+.header a:focus-visible,.header button:focus-visible{outline-color:#fff}
+.footer-brand{display:inline-block;background:#144f9d;padding:12px}
+.footer-brand img{width:180px}
+@media(max-width:900px){
+ .header-inner{min-height:100px}
+ .brand img{width:150px}
+ .mobile-quote,.menu{color:#fff}
+ .menu{border-color:#fff}
+ .header nav{background:#144f9d;max-height:calc(100vh - 100px)}
+}
+@media(max-width:600px){.mobile-quote{white-space:nowrap;font-size:13px}.menu{padding-left:12px;padding-right:12px}.header-inner{gap:10px}}
