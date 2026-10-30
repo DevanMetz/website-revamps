@@ -2,9 +2,9 @@
 
 A speculative redesign preview of https://dondyeco.com/. The static site lives in `site/`.
 
-Pages: home, single row idler pulleys, double row idler pulleys, industrial drive pulleys, unground ball bearings, contact and quotes, and a 404 page. The catalog is linked directly from the site.
+Pages: home, single row idler pulleys, double row idler pulleys, industrial drive pulleys, unground ball bearings, contact and quotes, and a 404 page. The catalog is linked directly from the home page and footer. Product tables sit beside their diagrams on desktop and precede construction details on the single and double row pages, with one quote link after the tables.
 
-Edit table data in `src/data.py` and page content and templates in `src/build.py`, then run `python3 src/build.py`. Pillow is required. Styles and behavior are in `site/assets/css/site.css` and `site/assets/js/site.js`. Run `python3 src/check.py` to check the generated site.
+Edit table data in `src/data.py` and page content and templates in `src/build.py`, then run `python3 src/build.py`. Pillow is required. The three transparent product images are retained in site/assets/img; their original versions are in img-originals/assets/img. Styles and behavior are in `site/assets/css/site.css` and `site/assets/js/site.js`. Run `python3 src/check.py` to check the generated site.
 
 Preview: https://don-dye-company-redesign.metzdevan.workers.dev (Cloudflare Worker `don-dye-company-redesign`, static assets from `site/`, configured in `wrangler.jsonc`). Deploy with `npx wrangler deploy` from this folder; the local `package.json` keeps wrangler's cache inside this folder.
 
