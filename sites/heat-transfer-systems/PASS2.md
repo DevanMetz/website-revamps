@@ -1,9 +1,0 @@
-# PASS 2 review (screenshots at 1440 and 390)
-Keep all BRIEF.md rules; rebuild and make src/check.py pass. Do not ask questions.
-1. Home: the banner-1 strip under the hero sits in a white frame half-overlapping the hero and About band - looks like a mistake. Either place it inside the hero's right column (hero becomes 2-column at >=1024px, image framed with no white border) or as a clean full-content-width strip in its own section with normal spacing. Never upscale above ~756px wide.
-2. Home Fabrication section: the three photo strips are tiny (about 160px). Show one strip per fabrication link, under each link label, at the column width (3 columns at 1440, stacked at 390).
-3. Remove hero/sub-lines that are not verbatim source copy: check "From material processing through welding, assembly, testing and inspection." (fabrication hero) and "Heat Transfer Systems photo sets and descriptions." (photos hero) against reference/crawl-page-text.txt; delete them if absent. Photos page: heading "Photo sets" -> delete (page title is enough); hero "Photo gallery" -> "Photos".
-4. Fabrication page: the Viper video is small and left-aligned under the photos - put it in a 2-column row with its source sentence ("Deep hole drilling of 15" thick carbon steel ...") on the left and the video on the right at native 520px width; the photo strips get consistent spacing and widths (max 756px, left-aligned with the text column).
-5. Check all pages once more for any sentence not in the source (headings, nav, button and form labels excepted) and remove it.
-6. Mobile: header logo + phone + menu button fit on one row; confirm the hero buttons stack full-width at 390.
-7. Home card/section copy to verify (not found verbatim in the source by my grep): "Shell and tube heat exchangers and special design heat transfer equipment." and "Heat Transfer Systems has served clients throughout the world." - replace with the closest real source sentence or remove.
