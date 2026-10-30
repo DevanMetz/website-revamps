@@ -53,6 +53,7 @@ if PREVIEW_SUBSCRIBE_URL:
   if _h.count('<a class="button" href="'+_escape(PREVIEW_SUBSCRIBE_URL)+'">Continue to checkout · $20/mo</a>')!=1 or _h.count('buy.stripe.com')!=1: errors.append('/keep/: checkout link')
   if _h.count('href="'+_escape(_code)+'"')!=1 or '<a href="'+_escape(_code)+'" target="_blank" rel="noopener" aria-label="Get the code (opens in a new tab)">Get the code</a>' not in _h: errors.append('/keep/: code link must open in a new tab')
   if '<meta name="robots" content="noindex">' not in _h: errors.append('/keep/: noindex')
+  if _h.count('class="keep-step"')!=4 or 'Cancel your old hosting' not in _h: errors.append('/keep/: 4 steps')
   if _h.count('target="_blank"')!=1: errors.append('/keep/: only the code link may open a new tab')
 elif _keep.parent.exists(): errors.append('/keep/ built while PREVIEW_SUBSCRIBE_URL is empty')
 for _x in ('sitemap.xml',):
