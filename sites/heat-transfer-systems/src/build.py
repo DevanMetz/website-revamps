@@ -56,8 +56,9 @@ for slug,(title,desc,body) in pages.items():
     links=''.join('<li>'+navlink(label,url)+'</li>' for label,url in nav)
     groups=[('Equipment',nav[1:4]),('Capabilities',[nav[0],nav[4],nav[5]]),('Company',nav[6:])]
     menu=''.join('<li><span>'+name+'</span><ul>'+''.join('<li>'+navlink(label,url)+'</li>' for label,url in group)+'</ul></li>' for name,group in groups)
-    primary=[nav[1],nav[2],nav[3],nav[4],nav[5]]
-    primary_links=''.join('<li>'+navlink(label,url)+'</li>' for label,url in primary)
+    primary=[nav[0],nav[4],nav[5],nav[6],nav[7],nav[8]]
+    products='<li class="product-menu"><details><summary>Products</summary><ul>'+''.join('<li>'+navlink(label,url)+'</li>' for label,url in nav[1:4])+'</ul></details></li>'
+    primary_links=products+''.join('<li>'+navlink(label,url)+'</li>' for label,url in primary)
     related = next((group for name,group in groups if any(url == '/'+slug+'/' for _,url in group)), []) if slug else []
     siblings = '<nav class="siblings" aria-label="Related pages"><ul>'+''.join('<li>'+navlink(label,url)+'</li>' for label,url in related)+'</ul></nav>' if related else ''
     body=body.replace('</h1>', '</h1>'+siblings, 1)
