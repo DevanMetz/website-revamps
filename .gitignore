@@ -5,3 +5,4 @@ __pycache__/
 *.webm
 .DS_Store
 sites/*/reference/img/
+!sites/*/site/**/*.mp4

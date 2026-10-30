@@ -1,0 +1,15 @@
+/index.php / 301
+/electrodes.php /electrodes/ 301
+/electrodes/ecg_electrodes.php /electrodes/ecg/ 301
+/electrodes/tens_electrodes.php /electrodes/tens/ 301
+/electrodes/tab_electrodes.php /electrodes/tab/ 301
+/electrodes/adhesive_strips.php /electrodes/adhesive-strips/ 301
+/electrodes/custom_electrodes.php /electrodes/custom/ 301
+/production/index.php /production-machines/ 301
+/production/ecg_machine.php /production-machines/ecg-electrode-machine/ 301
+/production/packagers.php /production-machines/packaging-systems/ 301
+/information/index.php /machine-inquiry/ 301
+/contact_info.php /contact/ 301
+/site_map.php / 301
+/links.php /links/ 301
+/Electrode_Reference_Guide.pdf /assets/Electrode_Reference_Guide.pdf 301

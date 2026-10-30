@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://www.taylor-ind.com/sitemap.xml
