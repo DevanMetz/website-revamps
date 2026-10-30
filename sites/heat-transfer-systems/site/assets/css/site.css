@@ -29,3 +29,37 @@ video{display:block;width:100%;max-width:520px;height:auto;margin:32px 0;backgro
 @media(max-width:1100px){.header-right{display:flex;flex-direction:row;align-items:center;gap:12px}.menu-toggle{margin:0}}
 @media(max-width:650px){.header-inner{flex-wrap:nowrap}.brand{gap:6px;font-size:14px}.brand img{width:36px}.header-phone{font-size:12px;white-space:nowrap}.header-right{gap:8px}.menu-toggle{font-size:13px;white-space:nowrap}.actions .button,.actions .text-link{width:100%;text-align:center}.video-row{grid-template-columns:1fr;gap:12px}.process{gap:24px}.process a{min-height:0}}
 @media(max-width:350px){.brand span{font-size:12px}.header-phone{font-size:11px}.menu-toggle{padding:6px}}
+/* Keep the product choices compact and easy to scan. */
+.card{min-height:0;padding:24px}
+.card p{margin:0}
+@media(max-width:650px){.card{min-height:0}}
+/* Responsive photographic layouts */
+.hero{padding:80px 0}
+.hero-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,605px);align-items:center;gap:40px}
+.hero-layout>img{display:block;width:100%;height:auto;max-width:605px}
+.card{padding:0;overflow:hidden}
+.card img{display:block;width:100%;height:150px;object-fit:cover}
+.card h3{margin:0;padding:20px;font-size:20px}
+.process img{width:100%;height:150px;object-fit:cover}
+.photo-grid{max-width:none;grid-template-columns:repeat(2,minmax(0,1fr));justify-items:center}
+.photo-grid img{width:100%;max-width:605px;height:auto}
+.photo-grid a{width:100%;max-width:605px}
+.band-inner{justify-content:flex-start}
+.band-phone{font-size:clamp(24px,3vw,36px);font-weight:750;text-decoration:none}
+@media(max-width:650px){
+ .hero{padding:58px 0}
+ .hero-layout{grid-template-columns:1fr;gap:32px}
+ .card img{height:150px}
+ .photo-grid{grid-template-columns:1fr}
+ .band-inner{flex-direction:row;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+ .band-phone{font-size:22px}
+}
+.photo-grid>img:only-child{grid-column:1/-1}
+.section:has(> .wrap > .inline-link:only-of-type){padding:45px 0}
+
+/* Final polish */
+.page-intro{padding:38px 0 41px}
+.page-intro h1:last-child{margin-bottom:0}
+.about-copy p{font-size:18px}
+.photo-grid>a:last-child:nth-child(odd){grid-column:1/-1}
+@media(max-width:650px){.page-intro{padding:30px 0}.photo-grid>a:last-child:nth-child(odd){grid-column:auto}}
