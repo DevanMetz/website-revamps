@@ -13,7 +13,7 @@ for key,path in IMAGES.items():
   # Trim the baked-in white mat and drop shadow around the source photo.
   import numpy as _np; _a=_np.asarray(im.convert('RGB')).astype(int); _m=(_a.max(2)-_a.min(2))>60
   _r=_np.where(_m.mean(1)>0.5)[0]; _c=_np.where(_m.mean(0)>0.5)[0]
-  im.crop((_c.min()+1,_r.min()+1,_c.max(),_r.max())).save(out,optimize=True)
+  im.crop((_c.min()+1,_r.min()+1,int(_c.min()+(_c.max()-_c.min())*.62),_r.max())).save(out,optimize=True)
 logo = Image.open(REF/'img/image/2007 logo.gif').convert('RGBA')
 # Remove only border-connected white, preserving enclosed details.
 import numpy as np
@@ -34,7 +34,7 @@ def img(key,alt):
 def tile_img(key,alt):
  name=f'{key}-transparent.png' if key in {'bench','impact','inspector','kit','power','press','servo'} else f'{key}.png'
  im=Image.open(SITE/'assets/img'/name)
- return img(key,alt).replace('<img ', f'<img style="width:{im.width * 1.25:g}px" ')
+ return img(key,alt).replace('<img ', f'<img class="photo-{key}" style="width:{im.width * 1.25:g}px" ')
 def link(label,url): return f'<a href="{url}">{escape(label)} <span aria-hidden="true">→</span></a>'
 def cards(items): return '<div class="cards">'+''.join(f'<a class="card" href="{u}"><span>{escape(t)}</span><b aria-hidden="true">→</b></a>' for t,u in items)+'</div>'
 nav=[('Riveters','/riveters/'),('Presses','/presses/'),('Riveting kits','/riveting-kits/'),('Automation','/automation/'),('Services','/services/'),('Literature','/literature/')]
@@ -89,7 +89,7 @@ def source_content(files):
     key=str(rows)
     if key in seen: continue
     seen.add(key)
-    parts.append('<div class="table-wrap" tabindex="0" role="region" aria-label="Specifications"><table><tbody>'+''.join('<tr>'+''.join((('<th scope="col">' if j==0 else '<th scope="row">') if i==0 or j==0 else '<td>')+escape(c)+('</th>' if i==0 or j==0 else '</td>') for i,c in enumerate(row))+'</tr>' for j,row in enumerate(rows))+'</tbody></table></div>')
+    parts.append('<div class="table-wrap" tabindex="0" role="region" aria-label="Specifications, scroll horizontally to see all models"><table><tbody>'+''.join('<tr>'+''.join((('<th scope="col">' if j==0 else '<th scope="row">') if i==0 or j==0 else '<td>')+escape(c)+('</th>' if i==0 or j==0 else '</td>') for i,c in enumerate(row))+'</tr>' for j,row in enumerate(rows))+'</tbody></table></div>')
  return ''.join(parts)
 def fields(quoteform=False):
  c=('<fieldset><legend>Request</legend>'+''.join(f'<label class="check"><input type="checkbox" name="{x}"> {x}</label>' for x in ['Send product literature','Require a quotation','Have a salesperson contact me'])+'</fieldset>' if not quoteform else '')+'<div class="form-grid">'
@@ -161,16 +161,19 @@ def mop_table():
    specs.append((row[0]+(' ('+row[1]+')' if row[1] else ''),values))
  return table(['07','15','30','50'],specs)
 def table(models, rows):
- return '<div class="table-wrap" tabindex="0" role="region" aria-label="Specifications"><table><thead><tr><th scope="col">Model</th>'+''.join('<th scope="col">'+escape(x)+'</th>' for x in models)+'</tr></thead><tbody>'+''.join('<tr><th scope="row">'+escape(label)+'</th>'+''.join('<td>'+cell(x).replace('\n','<br>')+'</td>' for x in values)+'</tr>' for label,values in rows)+'</tbody></table></div>'
+ return '<div class="table-wrap" tabindex="0" role="region" aria-label="Specifications, scroll horizontally to see all models"><table><thead><tr><th scope="col">Model</th>'+''.join('<th scope="col">'+escape(x)+'</th>' for x in models)+'</tr></thead><tbody>'+''.join('<tr><th scope="row">'+escape(label)+'</th>'+''.join('<td>'+cell(x).replace('\n','<br>')+'</td>' for x in values)+'</tr>' for label,values in rows)+'</tbody></table></div>'
 def product_body(path):
  out=''
  if path.startswith('riveters/orbital/'):
   bench=path.endswith('bench-top')
   out+='<nav class="anchors" aria-label="Riveter variants"><a href="#pneumatic">Pneumatic</a><a href="#hydraulic">Hydraulic</a><a href="#servo-electric">Servo-electric</a></nav>'
-  if bench: out+='<div class="product-intro"><p>'+' '.join(escape(p) for p in ORBITAL_INTRO)+' We offer a standard two-year factory warranty.</p>'
+  out+='<div class="product-intro">'
+  if bench: out+='<p>'+' '.join(escape(p) for p in ORBITAL_INTRO)+' We offer a standard two-year factory warranty.</p>'
   else: out+='<p>Power-head riveters offer Orbital, Twin-Spin, Multi-Spin and Spin-Press forming techniques. Typical cycle time is 0.5 to 1.5 seconds for most applications.</p>'
   out+='<p>The riveters have a modular design and support Orbital, Twin-Spin, Multi-Spin and Spin-Press forming. Pneumatic and hydraulic models are available with adjustable stroke and multi-process tooling.</p>'
-  if bench: out+='</div>'
+  out+='</div>'
+  intro=out[out.index('<div class="product-intro">'):]
+  out=out[:out.index('<div class="product-intro">')]
   for label,anchor,key,data in [('Pneumatic','pneumatic','bench' if bench else 'power',PNEUMATIC),('Hydraulic','hydraulic','hydraulic',HYDRAULIC),('Servo-electric','servo-electric','servo',SERVO)]:
    models=data['models'] if bench or anchor!='pneumatic' else ['G003','G005','G008','G012','G016']
    caps=list(data['capacity'])
@@ -180,7 +183,7 @@ def product_body(path):
    elif anchor=='hydraulic': benefits+=['Precision micrometer stroke adjustment','Bearings lubricated for life','Tempo-Sonic III and servo or proportional valve upgrades available']
    else: benefits+=['Programmable stroke and profile','Real-time inspection','Emerson servo components']
    out+='<section id="'+anchor+'"><h2>'+label+'</h2><div class="variant-layout"><div class="product-photo">'+img(key,label+' riveter')+'</div><div>'+('<p>The servo-electric riveter is programmable in spindle stroke velocity, profile, forming pressure and depth.</p>' if anchor=='servo-electric' else '')+'<h3>Features</h3><ul>'+''.join('<li>'+escape(b)+'</li>' for b in benefits)+'</ul>'
-   out+='</div></div>'+orbital_table(anchor.replace('-electric','')+('bt' if bench else 'ph'))
+   out+='</div></div>'+(intro if anchor=='pneumatic' else '')+orbital_table(anchor.replace('-electric','')+('bt' if bench else 'ph'))
    out+='<p>'+('These riveters are backed with a two-year warranty and are 100% guaranteed.' if anchor=='pneumatic' else 'These riveters are backed with a three-year warranty and are 100% guaranteed.')+'</p></section>'
   return out
  for label,key,paragraphs,benefits,models,values in PRODUCTS[path]:
@@ -196,15 +199,16 @@ def product_body(path):
   out+='</section>'
  return out
 family=[('Bench-top orbital riveters','/riveters/orbital/bench-top/','bench'),('Power-head orbital riveters','/riveters/orbital/power-head/','power'),('Orbitfeed','/riveters/orbitfeed/','orbitfeed'),('Double-ended riveters','/riveters/double-ended/','double'),('Impact riveters','/riveters/impact/','impact'),('Hydraulic squeeze riveters','/riveters/squeeze/','squeeze'),('Pneumatic presses & cylinders','/presses/','press'),('Riveting kits','/riveting-kits/','kit'),('Automation','/automation/','automation'),('Process Inspector','/process-inspector/','inspector')]
-lineup=[('Bench-top','bench','/riveters/orbital/bench-top/'),('Impact','impact','/riveters/impact/'),('Power-head','power','/riveters/orbital/power-head/'),('Presses','press','/presses/'),('Servo-electric','servo','/riveters/orbital/bench-top/#servo-electric'),('Process Inspector','inspector','/process-inspector/'),('Riveting kits','kit','/riveting-kits/')]
-home='<section class="hero"><div class="wrap hero-inner"><h1>Orbital, impact and squeeze riveting machines</h1><div class="actions"><a class="button" href="#machines">Explore machines</a><a class="text-action" href="/request-a-quote/">Request a quote →</a></div><div class="lineup">'+''.join(f'<a href="{url}" class="lineup-item"><div>{img(key,label)}</div><span>{label}</span></a>' for label,key,url in lineup)+'</div></div></section><section class="section wrap" id="machines"><div class="section-head"><h2>Riveting machines</h2></div><div class="product-grid">'+''.join(f'<a class="product" href="{u}"><div class="image-well">{tile_img(k,t)}</div><h3>{t}</h3></a>' for t,u,k in family)+'</div></section><section class="fact-row"><div class="wrap">Over 230,000 riveting systems installed worldwide</div></section><section class="section wrap split"><div><h2>Contract riveting services</h2><p>Grant Riveters offers contract riveting, prototyping and consulting for product design, rivets and riveting process selection.</p>'+link('Our services','/services/')+'</div><div><h2>Riveting methods</h2><p>Orbital, Twin-Spin, Multi-Spin and Spin-Press</p>'+link('Explore methods','/riveting-methods/')+'</div><div><h2>Company history</h2><p>Grant Manufacturing and Machine Company’s first invention was in 1860.</p>'+link('Our history','/history/')+'</div></section>'
+lineup=[('Bench-top','bench','/riveters/orbital/bench-top/'),('Impact','impact','/riveters/impact/'),('Power-head','power','/riveters/orbital/power-head/'),('Presses','press','/presses/'),('Process Inspector','inspector','/process-inspector/'),('Riveting kits','kit','/riveting-kits/')]
+home='<section class="hero"><div class="wrap hero-inner"><h1>Orbital, impact and squeeze riveting machines</h1><div class="actions"><a class="button" href="#machines">Explore machines</a><a class="text-action" href="/request-a-quote/">Request a quote →</a></div><div class="lineup">'+''.join(f'<a href="{url}" class="lineup-item"><div>{img(key,label)}</div><span>{label}</span></a>' for label,key,url in lineup)+'</div></div></section><section class="section wrap" id="machines"><div class="section-head"><h2>Riveting machines</h2></div><div class="product-grid">'+''.join(f'<a class="product" href="{u}"><div class="image-well image-{k}">{tile_img(k,t)}</div><h3>{t}</h3></a>' for t,u,k in family)+'</div></section><section class="section wrap home-services"><div><h2>Contract riveting services</h2><p>Grant Riveters offers contract riveting, prototyping and consulting for product design, rivets and riveting process selection.</p>'+link('Our services','/services/')+'</div><div class="home-links">'+link('Riveting methods','/riveting-methods/')+link('Company history','/history/')+'</div></section>'
 
 def write(path,title,desc,body):
  out=SITE/path/'index.html' if path else SITE/'index.html';out.parent.mkdir(parents=True,exist_ok=True);out.write_text(layout(title,desc,body,path))
 write('','Riveting machines and assembly systems','Orbital, spin, impact and squeeze riveting machines, presses and automated systems.',home)
 for path,(title,desc,files,items) in PAGES.items():
  body=hero(title,desc)+'<section class="section wrap content">'
- if items: body+=cards(items)
+ if items and path=='riveters': body+='<div class="product-grid family-grid">'+''.join(f'<a class="product" href="{u}"><div class="image-well image-{k}">{tile_img(k,t)}</div><h3>{t}</h3></a>' for t,u,k in family[:6])+'</div>'
+ elif items: body+=cards(items)
  if path=='process-inspector': body+='<div class="feature">'+img('inspector','Process Inspector screen')+'<div><h2>Force and distance control</h2><p>Grant Riveters has implemented the Process Inspector™ controller in its riveter product line. The controller provides real-time force and distance data and alerts the operator to non-conforming parts.</p><p>The PLC/HMI features a color touch-screen control with a digital readout for setting force and distance triggers. Programs are generated from high and low distance and force data and saved under a preferred name.</p></div></div>'
  if path=='process-inspector': body+='<h2>Specifications</h2><p>The Process Inspector V570 combines a PLC and HMI with a 5.7-inch QVGA 256-color touch panel. It monitors force, distance and time for presses and riveters, with configurable measurement and force ranges. It stores up to 49 recipes and has 24 inputs and 23 outputs, expandable. Sensors include strain gage, piezoelectric and potentiometric sensors.</p>'
  if path=='sales-representatives': body+='<p>For sales assistance, contact Grant Riveters at <a href="tel:8002272150">800-227-2150</a>, sales extension 101, or <a href="mailto:sales@grantriveters.com">sales@grantriveters.com</a>.</p>'

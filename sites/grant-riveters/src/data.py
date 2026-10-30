@@ -17,6 +17,6 @@ PAGES = {
 }
 IMAGES = {'bench':'image/MPRiveter_36x36_R2_white_cropped_sm.jpg','press':'image/Press-Mailer.png','squeeze':'image/17.5tonriv2_copy.jpg','kit':'image/rivet_box_sm.jpg','inspector':'image/Inspector-Screen.png','history':'image/Bronze_award_20x20_white_cropped_sm.jpg','impact':'images/trom.gif','power':'images/Servo_stripped_1c.jpg'}
 
-IMAGES.update({'orbitfeed':'images/ORBITFEED1.JPG','double':'images/hingemch.jpg','automation':'images/new_pa1.jpg','hydraulic':'images/Hgs500ts_small.jpg','servo':'images/Servo_stripped_1c.jpg'})
+IMAGES.update({'orbitfeed':'images/ORBITFEED1.JPG','double':'images/hingemch.jpg','automation':'pictures/Fleet.jpg','hydraulic':'images/Hgs500ts.jpg','servo':'images/Servo_stripped_1c.jpg'})
 PRODUCT_IMAGES = {'riveters/orbital/bench-top':'bench','riveters/orbital/power-head':'power','riveters/orbitfeed':'orbitfeed','riveters/double-ended':'double','riveters/impact':'impact','riveters/squeeze':'squeeze','presses':'press','riveting-kits':'kit','automation':'automation','process-inspector':'inspector'}
 LITERATURE = {'riveters/orbital/bench-top':['Pneumatic_Riveters_2010_sm.pdf','servo-riveters.pdf'],'riveters/orbital/power-head':['Pneumatic_Riveters_2010_sm.pdf','servo-riveters.pdf'],'presses':['Pneumatic_Press_2010_sm.pdf'],'riveting-kits':['Riveting_Kit_2010_sm.pdf'],'process-inspector':['Process_Inspector_2010_sm.pdf'],'automation':['XYZ _2010_sm.pdf']}
