@@ -19,10 +19,12 @@ Industrial buyers and engineers visit to assess a custom heat exchanger, pressur
 - Remove the time-relative client teaser; the client list remains one click away.
 
 ## Images
-- Made 1 image transparent: HTS logo (hts-logo-alpha.png); original saved in img-originals/assets/img/hts-logo.png. Checked on white, checkerboard and dark backgrounds; the logo is displayed on white.
-- Seven banner strips and the video poster depict real scenes, so retain their original backgrounds. No other eligible product or line-drawing images are used.
+- 1 used image was converted from white to transparency: the HTS logo. Its original is retained in `img-originals/assets/img/hts-logo.png`.
+- 0 used images were transparent in the source.
+- 0 product, drawing, or logo images remain on white backgrounds.
+- 8 used photographic images retain their real backgrounds: seven banner photographs and the drilling video poster.
 
 ## Polish pass
 - Place the truck photo in the hero; use the existing scene photos for capability cards and responsive grids.
 - Remove decorative arrows and bring the phone number into the contact band.
-- No additional images made transparent; the existing transparent logo remains the only one.
+- The existing transparent logo remains the only converted image.
