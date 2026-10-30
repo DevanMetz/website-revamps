@@ -23,3 +23,5 @@
 }
 /* Give the original mark more room in the mobile bar. */
 @media(max-width:1099px){.head .brand{width:130px}}
+@media(max-width:650px){.head{padding-left:20px;padding-right:20px}.head nav{margin-left:-20px;margin-right:-20px}.head nav a{padding-left:20px;padding-right:20px}}
+@media(max-width:650px){.head{width:100%}}
