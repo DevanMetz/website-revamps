@@ -2,6 +2,7 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 from urllib.parse import urlsplit, unquote
 import re
+from data import PREVIEW_SUBSCRIBE_URL
 root=Path(__file__).resolve().parents[1]; site=root/'site'; errors=[]
 pages=list(site.rglob('*.html'))
 for p in pages:
@@ -12,6 +13,7 @@ for p in pages:
  for tag in s.find_all(['a','img','script','link']):
   value=tag.get('href') or tag.get('src')
   if not value or value.startswith(('#','mailto:','tel:')): continue
+  if value==PREVIEW_SUBSCRIBE_URL: continue
   if value.startswith(('http:','https:','//')): errors.append(f'{p}: external resource {value}'); continue
   path=unquote(urlsplit(value).path)
   dest=site/path.lstrip('/') if path.startswith('/') else p.parent/path
@@ -33,6 +35,12 @@ for file,limit in [('assets/css/site.css',25000),('assets/js/site.js',6000)]:
  size=(site/file).stat().st_size
  print(f'{file}: {size} bytes')
  if size>limit: errors.append(file+' too large')
+# Preview subscribe button: one per page while PREVIEW_SUBSCRIBE_URL is set, none once it is ''.
+from html import escape as _escape
+for _f in (Path(__file__).resolve().parent.parent/'site').rglob('*.html'):
+ _h=_f.read_text(); _n=_h.count('class="preview-subscribe"')
+ if _n!=(1 if PREVIEW_SUBSCRIBE_URL else 0): errors.append(f'{_f}: {_n} preview subscribe buttons')
+ elif PREVIEW_SUBSCRIBE_URL and f'href="{_escape(PREVIEW_SUBSCRIBE_URL)}" target="_blank" rel="noopener"' not in _h: errors.append(f'{_f}: preview subscribe link')
 print(f'{len(pages)} HTML pages checked; {len(redirects)} redirects checked; {len(errors)} errors')
 for e in errors: print('ERROR:',e)
 raise SystemExit(bool(errors))

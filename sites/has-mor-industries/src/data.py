@@ -6,3 +6,6 @@ materials = {
 'VITON® (Fluorocarbon Rubber)': ['Recommended for use in hot chemically corrosive environments that are very degrading to most other rubber compounds','For use in Aerospace, Oil and Gas, Automotive and Chemical manufacturing','Temperature range: 0°F (-17°C) to 400°F (204°C). Short periods above and below the temperature range are tolerable.','Meets or exceeds all AMS 3216G (formerly Mil Spec MIL-R-83248C, Type II, Class 1) physical and chemical requirements, 75 Durometer.'],
 'Silicone Elastomer': ['Excellent heat resistance and the best low temperature flexibility of all elastomers.','Temperature range: -60°F (-51°C) to 400°F (204°C).','Meets FDA 21CFR.177.2600, 70 Durometer.'],
 'EPDM': ['Low gas permeability','Resistance to ozone, steam, water, alcohols, and brake fluids','Temperature range: -50°F (-46°C) to 300°F (149°C),','Short term exposures to -60°F (-51°C) to 350°F (175°C)','65 Durometer.']}
+
+# Preview-only "Keep this site · $20/mo" button (Stripe Payment Link). Set to '' to remove it from every page.
+PREVIEW_SUBSCRIBE_URL = 'https://buy.stripe.com/3cIfZjbjgcPZ6jW6Jk4c806'

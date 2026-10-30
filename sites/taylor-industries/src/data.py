@@ -665,3 +665,6 @@ CATALOG = [{'category': 'ECG',
   'image': 'strip/5CS-single_Adhesive_Strips.jpg',
   'note': '(not a monitoring electrode)',
   'source': 'guide'}]
+
+# Preview-only "Keep this site · $20/mo" button (Stripe Payment Link). Set to '' to remove it from every page.
+PREVIEW_SUBSCRIBE_URL = 'https://buy.stripe.com/5kQ8wR5YW17hgYAaZA4c800'

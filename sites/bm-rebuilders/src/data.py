@@ -8,3 +8,6 @@ SERVICES = [
  ('press-rebuilding','Press Rebuilding',['pressbuild']),
  ('tool-room-and-production-machine-rebuilding','Tool Room and Production Machine Rebuilding',['toolroomrebuild','toolroomrebuild2','toolroomrebuild3']),
 ]
+
+# Preview-only "Keep this site · $20/mo" button (Stripe Payment Link). Set to '' to remove it from every page.
+PREVIEW_SUBSCRIBE_URL = 'https://buy.stripe.com/7sY14pafc5nx8s4ebM4c809'

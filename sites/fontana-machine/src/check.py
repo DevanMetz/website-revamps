@@ -41,6 +41,13 @@ for path,limit in [('assets/css/site.css',25000),('assets/js/site.js',6000)]:
  size=(site/path).stat().st_size
  if size>limit: errors.append(f'{path} too large: {size}')
  print(f'{path}: {size} bytes')
+# Preview subscribe button: one per page while PREVIEW_SUBSCRIBE_URL is set, none once it is ''.
+from data import PREVIEW_SUBSCRIBE_URL
+from html import escape as _escape
+for _f in (Path(__file__).resolve().parent.parent/'site').rglob('*.html'):
+ _h=_f.read_text(); _n=_h.count('class="preview-subscribe"')
+ if _n!=(1 if PREVIEW_SUBSCRIBE_URL else 0): errors.append(f'{_f}: {_n} preview subscribe buttons')
+ elif PREVIEW_SUBSCRIBE_URL and f'href="{_escape(PREVIEW_SUBSCRIBE_URL)}" target="_blank" rel="noopener"' not in _h: errors.append(f'{_f}: preview subscribe link')
 print(f'Checked {len(files)} HTML pages, internal links, images, external resources, redirects and asset sizes.')
 if errors:
  print('\n'.join(errors)); raise SystemExit(1)

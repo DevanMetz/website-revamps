@@ -236,3 +236,6 @@ TABLES = {'v-idler_srb': [['Part No.',
          ['F \n\t\t\t\t\t\t\t\t\t12-32', '.750', '2.00', '.430', '2.125', '.720', '.203', '.093', 'No', 'Yes', '18', '.250'],
          ['F \n\t\t\t\t\t\t\t\t\t12112', '.500', '1.50', '.375', '1.594', '.531', '.411', '.067', 'No', 'No', '16', '.187'],
          ['F \n\t\t\t\t\t\t\t\t\t58112', '.625', '1.50', '.375', '1.594', '.531', '.411', '.067', 'No', 'No', '16', '.187']]}
+
+# Preview-only "Keep this site · $20/mo" button (Stripe Payment Link). Set to '' to remove it from every page.
+PREVIEW_SUBSCRIBE_URL = 'https://buy.stripe.com/aFa00l8744jt6jWgjU4c802'

@@ -30,6 +30,13 @@ for line in (root/'src/assets/pages.tsv').read_text().splitlines()[1:]:
  if path!='/' and path not in mapping: errors.append('missing redirect '+path)
 for name,content,limit in [('CSS',css,25000),('JS',js,6000)]:
  if len(content.encode())>limit: errors.append(name+' exceeds size limit')
+# Preview subscribe button: one per page while PREVIEW_SUBSCRIBE_URL is set, none once it is ''.
+from data import PREVIEW_SUBSCRIBE_URL
+from html import escape as _escape
+for _f in (Path(__file__).resolve().parent.parent/'site').rglob('*.html'):
+ _h=_f.read_text(); _n=_h.count('class="preview-subscribe"')
+ if _n!=(1 if PREVIEW_SUBSCRIBE_URL else 0): errors.append(f'{_f}: {_n} preview subscribe buttons')
+ elif PREVIEW_SUBSCRIBE_URL and f'href="{_escape(PREVIEW_SUBSCRIBE_URL)}" target="_blank" rel="noopener"' not in _h: errors.append(f'{_f}: preview subscribe link')
 print(f'{len(list(site.rglob("*.html")))} HTML pages checked; CSS {len(css.encode())} bytes; JS {len(js.encode())} bytes')
 print('\n'.join(errors) if errors else 'All static checks passed.')
 raise SystemExit(bool(errors))

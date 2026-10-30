@@ -2,6 +2,7 @@ from pathlib import Path
 from html.parser import HTMLParser
 from urllib.parse import urlsplit, unquote
 import csv,re
+from data import PREVIEW_SUBSCRIBE_URL
 root=Path(__file__).resolve().parent.parent; site=root/'site'; errors=[]
 class Check(HTMLParser):
  def __init__(self,path): super().__init__(); self.path=path; self.h1=0
@@ -14,6 +15,7 @@ class Check(HTMLParser):
   for k in ('href','src'):
    v=a.get(k,'')
    if not v or v.startswith(('#','mailto:','tel:','data:')): continue
+   if v==PREVIEW_SUBSCRIBE_URL: continue
    if v.startswith(('http:','https:','//')): errors.append(f'{self.path}: external {k} {v}'); continue
    p=unquote(urlsplit(v).path)
    target=site/p.lstrip('/') if p.startswith('/') else self.path.parent/p
@@ -36,6 +38,12 @@ with (root/'src/assets/pages.tsv').open() as f:
 for p,limit in [('assets/css/site.css',25600),('assets/js/site.js',6144)]:
  size=(site/p).stat().st_size
  if size>limit: errors.append(f'{p} too large: {size}')
+# Preview subscribe button: one per page while PREVIEW_SUBSCRIBE_URL is set, none once it is ''.
+from html import escape as _escape
+for _f in (Path(__file__).resolve().parent.parent/'site').rglob('*.html'):
+ _h=_f.read_text(); _n=_h.count('class="preview-subscribe"')
+ if _n!=(1 if PREVIEW_SUBSCRIBE_URL else 0): errors.append(f'{_f}: {_n} preview subscribe buttons')
+ elif PREVIEW_SUBSCRIBE_URL and f'href="{_escape(PREVIEW_SUBSCRIBE_URL)}" target="_blank" rel="noopener"' not in _h: errors.append(f'{_f}: preview subscribe link')
 print(f'{len(pages)} HTML pages checked; {len(redirects)} redirects; CSS {(site/"assets/css/site.css").stat().st_size} bytes; JS {(site/"assets/js/site.js").stat().st_size} bytes')
 print('\n'.join(errors) if errors else 'All static checks passed.')
 raise SystemExit(bool(errors))

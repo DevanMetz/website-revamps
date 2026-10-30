@@ -2,3 +2,6 @@ CLIENTS = '''Abonos Colombianos S.A.|Anadarko Petroleum|Bechtel Corporation|Burn
 PRODUCTS = 'Condensers|Coolers|Cryogenic Vessels|Evaporators|Feedwater heaters|Heat Exchangers|Heaters|Kettles|Pressure Vessels|Receivers|Separators|Tanks|Vessels, Process|Weldments'.split('|')
 MATERIALS = 'Aluminum|Carbon Steel|Copper|Cupro-Nickel|Nickel and Nickel Alloys|Silicon-Bronze|Stainless Steel|Titanium|Other Alloys'.split('|')
 INDUSTRIES = 'Brewing|Chemical|Food Processing|Munitions|Petrochemical|Petroleum|Pharmaceutical|Power|Pulp and Paper'.split('|')
+
+# Preview-only "Keep this site · $20/mo" button (Stripe Payment Link). Set to '' to remove it from every page.
+PREVIEW_SUBSCRIBE_URL = 'https://buy.stripe.com/dRm9AV0EC6rBfUw9Vw4c807'

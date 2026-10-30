@@ -125,3 +125,28 @@ redirect={'index.html':'/','sitemap.html':'/products/','products.html':'/product
 for old,n in [('diap',4),('5014',4),('5016',6),('50112',12),('50118',18),('50125',25)]: redirect[old+'.html']=f'/products/linear-diaphragm-operators/#model-501-{n}'
 (S/'_redirects').write_text(''.join(f'/{a} {b} 301\n' for a,b in redirect.items()))
 (S/'_headers').write_text('/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n  X-Robots-Tag: noindex\n\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n')
+
+
+# Preview-only "Keep this site" subscribe button, added to every page after the build.
+# Set PREVIEW_SUBSCRIBE_URL = '' in src/data.py and rebuild to remove it.
+from data import PREVIEW_SUBSCRIBE_URL
+def add_preview_subscribe():
+ import re
+ from html import escape as esc
+ site_dir=Path(__file__).resolve().parent.parent/'site'
+ css=("a.preview-subscribe{position:fixed;right:max(20px,calc(env(safe-area-inset-right) + 12px));bottom:max(20px,calc(env(safe-area-inset-bottom) + 12px));z-index:19;display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;background:#a80000;color:#fff;font:700 15px/1.1 'DM Sans',sans-serif;letter-spacing:.01em;text-transform:none;text-decoration:none;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.22);transition:background-color .15s,opacity .2s,visibility .2s}"
+  "a.preview-subscribe:hover{background:#780000;color:#fff;text-decoration:none}"
+  "a.preview-subscribe:focus-visible{background:#a80000;color:#fff;outline:3px solid #a80000;outline-offset:3px;box-shadow:0 0 0 3px #fff,0 6px 18px rgba(0,0,0,.22)}"
+  "a.preview-subscribe.is-tucked,body:has(header [aria-expanded=\"true\"]) a.preview-subscribe{opacity:0;visibility:hidden}"
+  "@media (max-width:760px){a.preview-subscribe{right:max(12px,calc(env(safe-area-inset-right) + 8px));bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px));min-height:40px;padding:0 14px;font-size:14px}}"
+  "@media (prefers-reduced-motion:reduce){a.preview-subscribe{transition:none}}")
+ js=("(()=>{const b=document.querySelector('a.preview-subscribe');if(!b)return;const k=[...document.querySelectorAll('footer,main .button,main button,main input[type=submit]')];let q=0;"
+  "const u=()=>{q=0;const r=b.getBoundingClientRect();b.classList.toggle('is-tucked',k.some(e=>{const g=e.getBoundingClientRect();return g.width&&g.top<r.bottom+8&&g.bottom>r.top-8&&g.left<r.right+8&&g.right>r.left-8}))};"
+  "const s=()=>{if(!q)q=requestAnimationFrame(u)};addEventListener('scroll',s,{passive:true});addEventListener('resize',s);u()})();")
+ for page in site_dir.rglob('*.html'):
+  html=re.sub(r'<!-- preview-subscribe -->.*?<!-- /preview-subscribe -->','',page.read_text(),flags=re.S)
+  if PREVIEW_SUBSCRIBE_URL:
+   html=html.replace('</head>','<!-- preview-subscribe --><style>'+css+'</style><!-- /preview-subscribe --></head>',1)
+   html=html.replace('</body>','<!-- preview-subscribe --><a class="preview-subscribe" href="'+esc(PREVIEW_SUBSCRIBE_URL)+'" target="_blank" rel="noopener" aria-label="Keep this site, $20 per month: subscribe to hosting and management (opens in a new tab)">Keep this site · $20/mo</a><script>'+js+'</script><!-- /preview-subscribe --></body>',1)
+  page.write_text(html)
+add_preview_subscribe()

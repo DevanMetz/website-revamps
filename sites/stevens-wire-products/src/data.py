@@ -8,3 +8,6 @@ PRODUCTS = {
  'wire-forms': ('Individual wire forms', 'Our variety of resistance welding and forming equipment allows us to manufacture an array of wire products, from the simplest wire forms to complex fabrications.', [])
 }
 WIRE = 'We have the capability of fabricating in a variety of wire sizes and types including: low carbon steel, stainless steel, pre-galvanized, and spring wire in wire diameters from 1/16” up to 1/2”.'
+
+# Preview-only "Keep this site · $20/mo" button (Stripe Payment Link). Set to '' to remove it from every page.
+PREVIEW_SUBSCRIBE_URL = 'https://buy.stripe.com/00waEZ0ECbLVgYAaZA4c80a'

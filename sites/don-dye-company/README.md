@@ -18,6 +18,8 @@ To host on Cloudflare instead, run `npx wrangler deploy` in this folder. Change 
 
 While this is a preview, every page carries a `noindex` tag so search engines skip it. That tag should come out before the site goes live on your own domain.
 
+The floating "Keep this site · $20/mo" button is preview-only: set `PREVIEW_SUBSCRIBE_URL = ''` in `src/data.py` and rebuild to remove it.
+
 ## Editing content
 
 Edit `src/data.py`, then run this from the folder:

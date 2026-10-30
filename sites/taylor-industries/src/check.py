@@ -24,5 +24,12 @@ for category,slug in [('ECG','ecg'),('TENS','tens'),('Tab','tab'),('Adhesive Str
  page=Page(); page.feed((root/'electrodes'/slug/'index.html').read_text())
  for p in CATALOG:
   if p['category']==category and p['code'] not in page.ids: errors.append(f'{slug}: missing {p["code"]}')
+# Preview subscribe button: one per page while PREVIEW_SUBSCRIBE_URL is set, none once it is ''.
+from data import PREVIEW_SUBSCRIBE_URL
+from html import escape as _escape
+for _f in (Path(__file__).resolve().parent.parent/'site').rglob('*.html'):
+ _h=_f.read_text(); _n=_h.count('class="preview-subscribe"')
+ if _n!=(1 if PREVIEW_SUBSCRIBE_URL else 0): errors.append(f'{_f}: {_n} preview subscribe buttons')
+ elif PREVIEW_SUBSCRIBE_URL and f'href="{_escape(PREVIEW_SUBSCRIBE_URL)}" target="_blank" rel="noopener"' not in _h: errors.append(f'{_f}: preview subscribe link')
 print('\n'.join(errors) if errors else 'All internal assets, product anchors and noindex tags pass.')
 sys.exit(bool(errors))

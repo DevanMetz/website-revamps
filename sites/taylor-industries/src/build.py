@@ -116,3 +116,28 @@ for path,(title,desc,body) in pages.items():
  html=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>{escape(title)} | Taylor Industries Inc.</title><meta name="description" content="{escape(desc,quote=True)}"><meta property="og:title" content="{escape(title)} | Taylor Industries Inc."><meta property="og:description" content="{escape(desc,quote=True)}"><meta property="og:type" content="website">{'<link rel="preload" as="image" href="/assets/img/brand/electrodes-collage.webp" fetchpriority="high">' if path == "/" else ""}<link rel="preload" href="/assets/fonts/instrument-serif-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/assets/css/site.css"><script type="application/ld+json">{json.dumps(org)}</script><script defer src="/assets/js/site.js"></script></head><body><a class="skip" href="#main">Skip to content</a><header class="header"><div class="wrap header-inner"><a href="/" class="logo" aria-label="Taylor Industries home">{img('brand/logo-full.png','Taylor Industries Inc.',eager=True)}</a><button class="menu-toggle" aria-expanded="false" aria-controls="nav"><span class="menu-label">Menu</span></button><nav id="nav" class="nav" aria-label="Main navigation">{navhtml}</nav><div class="header-actions"><a class="header-phone" href="tel:+15738935412" aria-label="Call 573-893-5412">573-893-5412</a><a class="button header-quote" href="/contact/">Request a quote</a></div></div></header><main id="main">{body}</main><footer class="footer"><div class="wrap footer-grid"><div><h2>Taylor Industries Inc.</h2><p>2704 Industrial Drive<br>Jefferson City, MO 65109</p><p><a href="tel:+15738935412">573-893-5412</a><br>Fax 573-893-3647<br><a href="mailto:sales@taylor-ind.com">sales@taylor-ind.com</a></p></div><div class="footer-links"><div><h2>Electrodes</h2>{link_list([('Overview','/electrodes/')]+[(n,u) for n,u,p in categories]+[('Reference guide','/assets/Electrode_Reference_Guide.pdf')])}</div><div><h2>Production machines</h2>{link_list([('Overview','/production-machines/'),('ECG Electrode Production Machine','/production-machines/ecg-electrode-machine/'),('Packaging Systems','/production-machines/packaging-systems/'),('Machine Inquiry','/machine-inquiry/')])}</div><div><h2>Company</h2>{link_list([('Home','/'),('Contact','/contact/'),('Links','/links/')])}</div></div></div><div class="wrap footer-bottom">© Taylor Industries Inc.</div></footer></body></html>'''
  html=html.replace('</a><a', '</a>\n<a').replace('</a><button', '</a>\n<button').replace('</button><a', '</button>\n<a')
  target=S/('index.html' if path=='/' else path.strip('/')+('' if path.endswith('.html') else '/index.html')); target.parent.mkdir(parents=True,exist_ok=True); target.write_text(html)
+
+
+# Preview-only "Keep this site" subscribe button, added to every page after the build.
+# Set PREVIEW_SUBSCRIBE_URL = '' in src/data.py and rebuild to remove it.
+from data import PREVIEW_SUBSCRIBE_URL
+def add_preview_subscribe():
+ import re
+ from html import escape as esc
+ site_dir=Path(__file__).resolve().parent.parent/'site'
+ css=("a.preview-subscribe{position:fixed;right:max(20px,calc(env(safe-area-inset-right) + 12px));bottom:max(20px,calc(env(safe-area-inset-bottom) + 12px));z-index:19;display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;background:#000098;color:#fff;font:600 15px/1.1 'Instrument Sans',sans-serif;letter-spacing:.01em;text-transform:none;text-decoration:none;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.22);transition:background-color .15s,opacity .2s,visibility .2s}"
+  "a.preview-subscribe:hover{background:#00006e;color:#fff;text-decoration:none}"
+  "a.preview-subscribe:focus-visible{background:#000098;color:#fff;outline:3px solid #000098;outline-offset:3px;box-shadow:0 0 0 3px #fff,0 6px 18px rgba(0,0,0,.22)}"
+  "a.preview-subscribe.is-tucked,body:has(header [aria-expanded=\"true\"]) a.preview-subscribe{opacity:0;visibility:hidden}"
+  "@media (max-width:760px){a.preview-subscribe{right:max(12px,calc(env(safe-area-inset-right) + 8px));bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px));min-height:40px;padding:0 14px;font-size:14px}}"
+  "@media (prefers-reduced-motion:reduce){a.preview-subscribe{transition:none}}")
+ js=("(()=>{const b=document.querySelector('a.preview-subscribe');if(!b)return;const k=[...document.querySelectorAll('footer,main .button,main button,main input[type=submit]')];let q=0;"
+  "const u=()=>{q=0;const r=b.getBoundingClientRect();b.classList.toggle('is-tucked',k.some(e=>{const g=e.getBoundingClientRect();return g.width&&g.top<r.bottom+8&&g.bottom>r.top-8&&g.left<r.right+8&&g.right>r.left-8}))};"
+  "const s=()=>{if(!q)q=requestAnimationFrame(u)};addEventListener('scroll',s,{passive:true});addEventListener('resize',s);u()})();")
+ for page in site_dir.rglob('*.html'):
+  html=re.sub(r'<!-- preview-subscribe -->.*?<!-- /preview-subscribe -->','',page.read_text(),flags=re.S)
+  if PREVIEW_SUBSCRIBE_URL:
+   html=html.replace('</head>','<!-- preview-subscribe --><style>'+css+'</style><!-- /preview-subscribe --></head>',1)
+   html=html.replace('</body>','<!-- preview-subscribe --><a class="preview-subscribe" href="'+esc(PREVIEW_SUBSCRIBE_URL)+'" target="_blank" rel="noopener" aria-label="Keep this site, $20 per month: subscribe to hosting and management (opens in a new tab)">Keep this site · $20/mo</a><script>'+js+'</script><!-- /preview-subscribe --></body>',1)
+  page.write_text(html)
+add_preview_subscribe()

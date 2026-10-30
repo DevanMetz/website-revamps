@@ -29,6 +29,13 @@ with (root/'src/assets/pages.tsv').open() as f:
 css=(site/'assets/css/site.css').read_text();js=(site/'assets/js/site.js').read_text()
 if re.search(r'url\(["\']?(?:https?:)?//|@import',css): errors.append('external CSS request')
 if len(css.encode())>25000 or len(js.encode())>6000: errors.append('asset size limit')
+# Preview subscribe button: one per page while PREVIEW_SUBSCRIBE_URL is set, none once it is ''.
+from data import PREVIEW_SUBSCRIBE_URL
+from html import escape as _escape
+for _f in (Path(__file__).resolve().parent.parent/'site').rglob('*.html'):
+ _h=_f.read_text(); _n=_h.count('class="preview-subscribe"')
+ if _n!=(1 if PREVIEW_SUBSCRIBE_URL else 0): errors.append(f'{_f}: {_n} preview subscribe buttons')
+ elif PREVIEW_SUBSCRIBE_URL and f'href="{_escape(PREVIEW_SUBSCRIBE_URL)}" target="_blank" rel="noopener"' not in _h: errors.append(f'{_f}: preview subscribe link')
 print(f'{len(pages)} HTML pages checked; {len(redirects)} redirects; CSS {len(css.encode())} bytes; JS {len(js.encode())} bytes.')
 print('\n'.join(errors) if errors else 'All static checks passed.')
 raise SystemExit(bool(errors))
