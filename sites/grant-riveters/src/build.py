@@ -14,22 +14,8 @@ for key,path in IMAGES.items():
   import numpy as _np; _a=_np.asarray(im.convert('RGB')).astype(int); _m=(_a.max(2)-_a.min(2))>60
   _r=_np.where(_m.mean(1)>0.5)[0]; _c=_np.where(_m.mean(0)>0.5)[0]
   im.crop((_c.min()+1,_r.min()+1,int(_c.min()+(_c.max()-_c.min())*.62),_r.max())).save(out,optimize=True)
-logo = Image.open(REF/'img/image/2007 logo.gif').convert('RGBA')
-# Remove only border-connected white, preserving enclosed details.
-import numpy as np
-from scipy import ndimage
-pixels = np.array(logo)
-white = np.all(pixels[:, :, :3] >= 240, axis=2)
-seed = np.zeros(white.shape, dtype=bool)
-seed[0, :] = seed[-1, :] = True
-seed[:, 0] = seed[:, -1] = True
-background = ndimage.binary_propagation(seed & white, mask=white)
-pixels[background, 3] = 0
-edge = ndimage.binary_dilation(background) & ~background
-pixels[edge, 3] = np.minimum(pixels[edge, 3], 192)
-logo = Image.fromarray(pixels)
-# Keep the complete wordmark with a small transparent margin on every side.
-logo.crop((22, 14, 315, 60)).resize((586, 92), Image.Resampling.LANCZOS).save(SITE/'assets/img/wordmark.png', optimize=True)
+# Use the traced primary header wordmark.
+shutil.copyfile(ROOT/'src/wordmark.svg', SITE/'assets/img/header-wordmark.svg')
 def img(key,alt):
  name=f'{key}-transparent.png' if key in {'bench','impact','inspector','kit','power','press','servo'} else f'{key}.png'; im=Image.open(SITE/'assets/img'/name); return f'<img src="/assets/img/{name}" alt="{escape(alt)}" width="{im.width}" height="{im.height}" loading="lazy">'
 def tile_img(key,alt):
@@ -42,7 +28,7 @@ nav=[('Riveters','/riveters/'),('Presses','/presses/'),('Riveting kits','/riveti
 def layout(title,desc,body,path):
  links='\n'.join(f'<a href="{u}"'+(' aria-current="page"' if path==u.strip('/') or (u=='/riveters/' and path.startswith('riveters/')) else '')+f'>{t}</a>' for t,u in nav)
  data={'@context':'https://schema.org','@type':'Organization','name':'Grant Riveters','url':'https://www.grantriveters.com/','telephone':['800-227-2150','203-366-4557'],'faxNumber':'203-366-0370','email':'sales@grantriveters.com','address':{'@type':'PostalAddress','streetAddress':'90 Silliman Avenue, P.O. Box 3350','addressLocality':'Bridgeport','addressRegion':'Connecticut','postalCode':'06605','addressCountry':'USA'}}
- return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>{escape(title)} | Grant Riveters</title><meta name="description" content="{escape(desc,quote=True)}"><meta property="og:title" content="{escape(title)} | Grant Riveters"><meta property="og:description" content="{escape(desc,quote=True)}"><meta property="og:type" content="website"><meta property="og:url" content="https://www.grantriveters.com/{path}/"><link rel="icon" href="/assets/img/favicon.svg"><link rel="preload" href="/assets/fonts/barlow-semi-800-italic.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/css/site.css"><script type="application/ld+json">{json.dumps(data)}</script><script src="/assets/js/site.js" defer></script></head><body><a class="skip" href="#main">Skip to content</a><header><div class="masthead wrap"><a class="brand" href="/" aria-label="Grant Riveters home"><img src="/assets/img/wordmark.png" alt="Grant Riveters" width="586" height="92"></a><a class="header-phone" href="tel:8002272150">800-227-2150</a><a class="button header-quote" href="/request-a-quote/">Request a quote</a><button class="menu" aria-expanded="false" aria-controls="navigation">Menu</button></div><div class="nav-row"><nav class="wrap" id="navigation" aria-label="Main navigation">{links}<a class="nav-quote" href="/request-a-quote/">Request a quote</a></nav></div></header><main id="main">{body}</main><footer><div class="wrap footer-grid"><div><a class="brand footer-brand" href="/"><img src="/assets/img/wordmark.png" alt="Grant Riveters" width="586" height="92"></a><p>A Woman Owned Company</p><p>90 Silliman Avenue<br>P.O. Box 3350<br>Bridgeport, Connecticut 06605, USA</p></div><div><h2>Contact</h2><p><a href="tel:8002272150">800-227-2150</a> · Sales ext. 101<br><a href="tel:2033664557">203-366-4557</a><br>Fax 203-366-0370<br><a href="mailto:sales@grantriveters.com">sales@grantriveters.com</a></p></div><div><h2>Explore</h2><a href="/riveting-methods/">Riveting methods</a><a href="/process-inspector/">Process Inspector</a><a href="/history/">History</a><a href="/sales-representatives/">Sales representatives</a><a href="/contact/">Contact</a></div></div></footer></body></html>'''
+ return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>{escape(title)} | Grant Riveters</title><meta name="description" content="{escape(desc,quote=True)}"><meta property="og:title" content="{escape(title)} | Grant Riveters"><meta property="og:description" content="{escape(desc,quote=True)}"><meta property="og:type" content="website"><meta property="og:url" content="https://www.grantriveters.com/{path}/"><link rel="icon" href="/assets/img/favicon.svg"><link rel="preload" href="/assets/fonts/barlow-semi-800-italic.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/css/site.css"><script type="application/ld+json">{json.dumps(data)}</script><script src="/assets/js/site.js" defer></script></head><body><a class="skip" href="#main">Skip to content</a><header><div class="masthead wrap"><a class="brand" href="/" aria-label="Grant Riveters home"><img src="/assets/img/header-wordmark.svg" alt="Grant Riveters" width="700" height="92"></a><a class="header-phone" href="tel:8002272150">800-227-2150</a><a class="button header-quote" href="/request-a-quote/">Request a quote</a><button class="menu" aria-expanded="false" aria-controls="navigation">Menu</button></div><div class="nav-row"><nav class="wrap" id="navigation" aria-label="Main navigation">{links}<a class="nav-quote" href="/request-a-quote/">Request a quote</a></nav></div></header><main id="main">{body}</main><footer><div class="wrap footer-grid"><div><a class="brand footer-brand" href="/"><img src="/assets/img/header-wordmark.svg" alt="Grant Riveters" width="700" height="92"></a><p>A Woman Owned Company</p><p>90 Silliman Avenue<br>P.O. Box 3350<br>Bridgeport, Connecticut 06605, USA</p></div><div><h2>Contact</h2><p><a href="tel:8002272150">800-227-2150</a> · Sales ext. 101<br><a href="tel:2033664557">203-366-4557</a><br>Fax 203-366-0370<br><a href="mailto:sales@grantriveters.com">sales@grantriveters.com</a></p></div><div><h2>Explore</h2><a href="/riveting-methods/">Riveting methods</a><a href="/process-inspector/">Process Inspector</a><a href="/history/">History</a><a href="/sales-representatives/">Sales representatives</a><a href="/contact/">Contact</a></div></div></footer></body></html>'''
 def hero(title,desc): return f'<section class="page-hero"><div class="wrap"><h1>{escape(title)}</h1></div></section>'
 def source_content(files):
  parts=[]; seen=set()
@@ -246,4 +232,6 @@ for p in docs:
 (SITE/'_headers').write_text('/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n  X-Robots-Tag: noindex\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n')
 (SITE/'robots.txt').write_text('User-agent: *\nDisallow: /\nSitemap: https://www.grantriveters.com/sitemap.xml\n')
 paths=['']+list(PAGES)+['contact','request-a-quote','literature'];(SITE/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join('<url><loc>https://www.grantriveters.com/'+p+('/' if p else '')+'</loc></url>' for p in paths)+'</urlset>')
-(SITE/'assets/img/favicon.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#b51d23"/><text x="32" y="45" text-anchor="middle" font-family="sans-serif" font-size="40" font-weight="bold" fill="white">G</text></svg>')
+# Crop the traced initial for a recognizable favicon.
+favicon=(ROOT/'src/wordmark.svg').read_text().replace('viewBox="0 0 700 92" width="700" height="92"', 'viewBox="0 0 100 92" width="100" height="92"')
+(SITE/'assets/img/favicon.svg').write_text(favicon)
