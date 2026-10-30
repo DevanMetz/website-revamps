@@ -17,4 +17,4 @@ Visitors are equipment buyers and engineers looking for a riveting machine, pres
 
 ## Images
 
-Seven product images converted to transparent PNG: bench, impact, inspector, kit, power, press and servo. Originals are retained in img-originals. Other images were retained where the background was not suitable or the result was not clean. Product images remain at their native size or smaller in consistent frames.
+Eight used images were converted from white backgrounds to transparency: seven product images (bench, impact, inspector, kit, power, press and servo) and the Grant logo. Their originals are retained in img-originals. No used images were transparent in the source. No product images or logos retain a white box. Five other used images retain their photographic or colored backgrounds: Orbitfeed, double-ended, automation, hydraulic and squeeze. The Orbitfeed photo's baked-in white mat and shadow are trimmed in src/build.py (original in img-originals/assets/img/). Product images remain at their native size or smaller in consistent frames.
