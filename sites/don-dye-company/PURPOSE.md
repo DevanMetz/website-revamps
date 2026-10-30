@@ -16,6 +16,8 @@ Visitors are buyers and OEMs selecting pressed-steel idler pulleys, drive pulley
 
 ## Images
 
-Three product images made transparent: hero.png, single.png and drive.png (deployed as *-transparent.png). Originals are preserved in img-originals/assets/img/. Checked on the actual light background, checkerboard and dark background. Technical drawings remain on white to preserve fine dimension lines and labels. The supplied bearing page has no bearing-specific image. No images were upscaled.
-
-Polish: product diagrams now sit beside their tables on desktop at natural size and stack on mobile. The hero image sits directly on the dark band; product card arrows were removed and imagery balanced. Drive pulley ordering context remains before its tables.
+- 12 used images were converted from white to transparency: three product photos (hero, single row, drive) by edge removal, and nine technical drawings by color-to-alpha in src/build.py, which keeps every dimension line and label.
+- 0 used images were transparent in the source.
+- 0 product, drawing or logo images remain on a white box.
+- No photographs are used. The bearing family has no supplied bearing image, so its card is set as type.
+- Originals are in img-originals/assets/img/ and reference/img/images/.
