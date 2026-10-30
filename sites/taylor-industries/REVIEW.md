@@ -67,3 +67,44 @@ Phone and fax formatting match the reference. Empty forms were blocked by browse
 - Live sweeps at 1440 and 390 covered all 14 routes, including machine and contact pages and the 404; scrolling loaded all images. No broken images, horizontal overflow, or page exceptions were detected. [Desktop sweep](/workspace/shots/rev2/taylor-industries/round3-loop2-1440-sheet.png), [mobile sweep](/workspace/shots/rev2/taylor-industries/round3-loop2-390-sheet.png), [home](/workspace/shots/rev2/taylor-industries/round3-loop2-1440-0.png), [mobile ECG](/workspace/shots/rev2/taylor-industries/round3-loop2-390-2.png). Metric dimensions stay together, and products appear in the first mobile screen.
 - Main navigation worked at both widths; mobile menu opened, closed by button and Escape, and accepted keyboard focus. Empty forms failed validation; actual contact, quote, and machine submissions requested mailto URLs with the expected recipient, subject, and entered answers. Three legacy paths returned 301. Video controls created the expected iframe.
 - Remaining: source imagery limits product and machine detail; YouTube playback and external company destinations were not verified. Footer and every individual content link were inspected or covered by route checks, but not all were clicked individually. Network failures and all console messages were not comprehensively captured in this sweep.
+
+# Round 4
+
+## Initial review
+
+- P1: ECG has no nearby route back to the overview or across to TENS; the related links sit after the long catalog. The mobile menu only offers the overview. [Desktop ECG](/workspace/shots/rev2/taylor-industries/r4-before-ecg-1440.png), [mobile ECG](/workspace/shots/rev2/taylor-industries/r4-before-ecg-390.png), [mobile menu](/workspace/shots/rev2/taylor-industries/r4-before-menu-390.png).
+- P1: Adjacent generated links have no text separator. The phone includes both the desktop number and mobile Call text, so text-only output joins or duplicates actions even though CSS separates them visually. [Desktop ECG](/workspace/shots/rev2/taylor-industries/r4-before-ecg-1440.png).
+- P2: Machine detail pages likewise lack a local back path. Existing source photographs remain small and soft; no larger source images were available in the reference.
+- P3: The header is clear but the small embedded logo subtitle remains illegible. [Desktop home](/workspace/shots/rev2/taylor-industries/r4-before-home-1440.png), [mobile home](/workspace/shots/rev2/taylor-industries/r4-before-home-390.png).
+
+## Round 4 — Loop 1
+
+- Added an overview link and category switcher above every electrode category, with the current category marked, and a production overview link above both machine details. Separated adjacent generated links and gave the header phone one accessible name and one text value.
+- Rebuilt and deployed. Clicked ECG to the overview and TENS at both widths; both routes worked in one click. Scrolled all routes to load images; no broken images, horizontal overflow or page errors were reported. [Desktop sweep](/workspace/shots/rev2/taylor-industries/r4-1-1440-sheet.jpg), [mobile sweep](/workspace/shots/rev2/taylor-industries/r4-1-390-sheet.jpg), [ECG desktop](/workspace/shots/rev2/taylor-industries/r4-1-1440-2.png), [ECG mobile](/workspace/shots/rev2/taylor-industries/r4-1-390-2.png).
+- Footer links still lacked list semantics, so the next pass addresses that.
+
+## Round 4 — Loop 2
+
+- Converted footer link groups to lists and retained clear spacing in the contact band. Rebuilt, checked and deployed again.
+- Repeated the live route and image sweep at both widths, captured body text and accessibility snapshots for every route, and checked the generated HTML for adjacent anchors and anchor/button pairs. The ECG action names and header actions are separated in the text dumps. [Desktop sweep](/workspace/shots/rev2/taylor-industries/r4-2-1440-sheet.jpg), [mobile sweep](/workspace/shots/rev2/taylor-industries/r4-2-390-sheet.jpg), [desktop ECG and header](/workspace/shots/rev2/taylor-industries/r4-2-1440-2.png), [mobile ECG and header](/workspace/shots/rev2/taylor-industries/r4-2-390-2.png), [mobile menu](/workspace/shots/rev2/taylor-industries/r4-2-menu-390.png), [contact band](/workspace/shots/rev2/taylor-industries/r4-2-band-1440.png).
+- ECG to overview and TENS worked at both widths. Main nav links, mobile menu button and Escape, and empty and filled contact, category quote and machine forms were exercised. Two sampled redirects returned 301. No broken images, overflow or page errors were reported.
+- Remaining: source photos are small. The final pass checked form validation and the email-launch status, but did not capture and independently inspect the generated mailto URL, click every footer/external link, or verify actual YouTube playback. The mobile switcher pushes the first ECG products lower, a tradeoff for direct category navigation.
+
+# Round 5
+
+## Initial review
+
+- P1: The header disappears while scrolling the long catalog, leaving buyers without immediate navigation. [Desktop](/workspace/shots/rev2/taylor-industries/r5-before-1440.png), [mobile](/workspace/shots/rev2/taylor-industries/r5-before-390.png).
+- P1: The mobile menu only links to the overview pages, requiring extra navigation to reach a category or machine. [Mobile menu](/workspace/shots/rev2/taylor-industries/r5-before-menu.png).
+- P2: The small original product photos limit detail; the catalog is legible but cannot show fine product features. [Desktop](/workspace/shots/rev2/taylor-industries/r5-before-1440.png).
+
+## Round 5 — Loop 1
+
+- Added the compact sticky header and nested mobile navigation. Live screenshots show the header stays visible at [desktop](/workspace/shots/rev2/taylor-industries/r5-1-stuck-1440.png) and [mobile](/workspace/shots/rev2/taylor-industries/r5-1-stuck-390.png); the [mobile menu](/workspace/shots/rev2/taylor-industries/r5-1-menu.png) exposes the category and machine links.
+- Found an existing product-specific scroll margin that overrides the new anchor offset; corrected it in the next loop. Shortened category names to match the existing category switcher.
+
+## Round 5 — Loop 2
+
+- Fixed the product anchor offset and shortened the menu category labels. Rebuilt, passed `src/check.py`, and deployed.
+- On the live site the header remained at the top at both widths: [desktop](/workspace/shots/rev2/taylor-industries/r5-final-stuck-1440.png), [mobile](/workspace/shots/rev2/taylor-industries/r5-final-stuck-390.png). The [mobile menu](/workspace/shots/rev2/taylor-industries/r5-final-menu.png) marks ECG as current; TENS opens in one tap. Escape, the close button and initial keyboard tab worked. The 6000ZT anchor landed below the header at both widths.
+- Visited all 14 routes at both widths and scrolled to load images; no broken images, horizontal overflow, console errors, failed requests or page exceptions were reported. Two legacy redirects returned 301. The final pass did not individually click every footer and content link or resubmit every form; prior rounds cover some of those flows. Source photos remain small and YouTube playback was not tested.
