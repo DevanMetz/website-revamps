@@ -2,7 +2,7 @@
 
 Preview: https://stevens-wire-products-redesign.metzdevan.workers.dev (Cloudflare Worker `stevens-wire-products-redesign`, static assets from `site/`, configured in `wrangler.jsonc`). Deploy with `npx wrangler deploy` from this folder; the local `package.json` keeps wrangler's cache inside this folder.
 
-Pages: home, about, design and prototyping, products, material handling, conveyor, food service, medical, displays, shelving and guards, wire forms, careers, contact, and 404.
+Pages: home, about, design and prototyping, products, material handling, conveyor, food service, medical, displays, shelving and guards, wire forms, careers, contact, and 404. Product lines show five photo cards in a wide-screen row followed by compact links for lines without photos. Product galleries display examples at their natural size, and quote actions lead to the contact form; on mobile the form appears before the office directory.
 
 Edit product names, descriptions and image selections in `src/data.py`; edit shared templates and other page content in `src/build.py`. Run `python3 src/build.py` to regenerate the HTML and optimized images, then `python3 src/check.py` to check the output. Pillow is required for the build.
 
