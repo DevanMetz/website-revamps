@@ -770,6 +770,11 @@ p { max-width: 68ch; }
   padding: 6px 0;
 }
 .machine-card h3 { margin: 0; }
+/* Invisible twin of the arrow keeps the title itself centered */
+.machine-card div::before {
+  content: "↗";
+  visibility: hidden;
+}
 
 .machine-intro { align-items: center; }
 
