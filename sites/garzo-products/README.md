@@ -7,7 +7,7 @@ Live preview: https://garzo-products-redesign.metzdevan.workers.dev
 ## What's in this folder
 
 - `site/` is the finished website: plain HTML, CSS, images and JavaScript, ready to host as is.
-- `src/` is the build: `data.py` holds the content, `build.py` generates `site/`, and `check.py` checks the result. `src/assets/` holds the original images and text from the current website that the build draws on.
+- `src/` is the build: `data.py` holds the content, `build.py` generates `site/`, and `check.py` checks the result. `src/assets/` holds source images, text, styles and scripts; `src/transparent/` holds prepared product images and `src/fonts/` holds the locally hosted fonts.
 - `wrangler.jsonc` is the Cloudflare configuration used for the preview.
 
 ## Hosting it yourself

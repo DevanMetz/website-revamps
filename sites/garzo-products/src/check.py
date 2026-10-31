@@ -20,6 +20,15 @@ class Check(HTMLParser):
 for f in root.rglob('*.html'):
  c=Check(f); c.feed(f.read_text());
  if c.h!=1: errors.append(f'{f}: {c.h} h1s')
+# Every published page is reachable from the home page or the shared footer.
+home=(root/'index.html').read_text()
+footer=home.split('<footer>',1)[1].split('</footer>',1)[0]
+for _page in root.rglob('index.html'):
+ _path='/' + str(_page.parent.relative_to(root)).strip('.') + '/'
+ if _path == '//': _path='/'
+ if _path.startswith('/keep/'): continue
+ if f'href="{_path}"' not in home and f'href="{_path}"' not in footer:
+  errors.append(f'{_page}: not linked from home or footer')
 css=(root/'assets/css/site.css').read_text(); js=(root/'assets/js/site.js').read_text()
 if re.search(r'url\(["\']?https?://|@import',css): errors.append('External CSS request')
 if len(css.encode())>25600 or len(js.encode())>6144: errors.append('Asset size exceeded')
