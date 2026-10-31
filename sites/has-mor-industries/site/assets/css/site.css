@@ -47,3 +47,8 @@
 
 /* Original Has-Mor mark */
 .brand img{display:block;width:120px;height:auto}.footer-brand img{display:block;width:140px;height:auto}.header-inner{min-height:110px}@media(max-width:800px){.header-inner{min-height:96px}.brand img{width:110px}#navigation{max-height:calc(100dvh - 96px)}}
+
+.copy-toast{position:fixed;right:max(20px,env(safe-area-inset-right));bottom:100px;z-index:22;max-width:calc(100% - 40px);padding:10px 16px;background:#272425;color:#fff;box-shadow:0 4px 16px #0003;opacity:0;visibility:hidden;transition:opacity .15s}.copy-toast.visible{opacity:1;visibility:visible}@media(max-width:760px){.copy-toast{right:12px;bottom:84px}}@media(prefers-reduced-motion:reduce){.copy-toast{transition:none}}
+/* Keep long contact details and product information within narrow screens. */
+p,li,dd,td,th{overflow-wrap:break-word}
+.figure-grid figure{min-width:0}.figure-grid img{max-width:100%;height:auto}
