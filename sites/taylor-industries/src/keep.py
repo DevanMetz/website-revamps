@@ -21,7 +21,7 @@ def _css(c):
   '.keep h2{font-size:clamp(1.25rem,1.8vw,1.5rem);margin:0;line-height:1.15;max-width:none}'
   '.keep h3{font-size:1.05rem;margin:0;line-height:1.25}'
   '.keep p{margin:0}'
-  '.keep-lede{font-size:1.1rem;max-width:40em}'
+  '.keep-lede{font-size:1.1rem;max-width:62em}'
   '.keep-ico{display:block;width:24px;height:24px;color:'+a+';flex:none}'
   '.keep-head{display:flex;align-items:center;gap:10px}'
   '.keep-choices{display:grid;gap:16px;margin:clamp(18px,3vh,28px) 0 0;padding:0;list-style:none}'
@@ -68,7 +68,7 @@ def build_keep(site_dir, url):
  W=c['container']
  main=('<main id="main"><section class="keep" aria-labelledby="keep-title"><div class="'+W+' keep-in">'
   '<h1 id="keep-title">Upgrade your website</h1>'
-  '<p class="keep-lede">Two ways to keep the new '+name+' website.</p>'
+  '<p class="keep-lede">Your current site isn’t built for phones, and Google ranks sites by how they work on mobile. The new one works on every screen and loads fast, which helps buyers find you and get in touch.</p>'
   '<ul class="keep-choices">'
   '<li class="keep-choice"><div class="keep-head">'+ICONS['code']+'<h2>Do it yourself</h2></div><p class="keep-price">Free</p>'
   '<p>Take the full source code for free, then set it up and manage it yourself.</p>'
