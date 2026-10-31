@@ -175,3 +175,28 @@ h1,h2,.page-head h1:has(+ p){margin-bottom:10px}
 .contact-band{padding:24px 0}
 .footer{padding:28px 0 16px}
 @media(max-width:600px){.section{padding:26px 0}.section:not(.pale)+.section:not(.pale){padding-top:6px}.hero-grid{padding:18px 0}.ecg-line svg{height:26px}.page-head{padding-top:18px}.page-head + .section:not(.catalog),.catalog{padding-top:16px}}
+
+/* Compaction pass 4: minimal blank space. */
+.header-inner{min-height:64px}
+h1,h2,.page-head h1:has(+ p),.section-heading h2{margin-bottom:8px}
+h2{font-size:clamp(1.9rem,2.8vw,2.6rem)}
+.section{padding:18px 0}
+.section:not(.pale)+.section:not(.pale){padding-top:0}
+.hero-grid{padding:14px 0;gap:40px}
+.hero-tray{min-height:220px;padding:14px}
+.hero-image{max-height:240px}
+.actions{margin-top:12px}
+.ecg-line svg{height:22px}
+.section h2+.category-grid,.category-grid,.machine-grid,.home-machines{margin-top:8px}
+.category-image{height:112px;margin-bottom:6px}
+.category-image img{max-height:92px}
+.machine-card img,.machine-photo img{height:190px;padding:10px}
+.machine-card div,.machine-photo span{padding:6px 0}
+.section-heading{margin-bottom:6px}
+.page-head{padding-top:16px}
+.page-head + .section:not(.catalog),.catalog{padding-top:12px}
+.contact-band{padding:16px 0}
+.footer{padding:20px 0 12px}
+.footer-bottom{margin-top:12px;padding-top:10px}
+@media(max-width:600px){.section{padding:16px 0}.section:not(.pale)+.section:not(.pale){padding-top:0}.hero-grid{padding:12px 0;gap:12px}.hero-tray{min-height:150px}.hero-image{max-height:170px}.ecg-line svg{height:20px}.page-head{padding-top:14px}.page-head + .section:not(.catalog),.catalog{padding-top:10px}.category-image{height:100px}.machine-card img,.machine-photo img{height:170px}.contact-band{padding:16px 0}.footer{padding:20px 0 12px}}
+.section:not(.pale)+.section:not(.pale){padding-top:10px}
