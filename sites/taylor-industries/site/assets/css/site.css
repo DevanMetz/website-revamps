@@ -1108,3 +1108,27 @@ legend {
   .header-inquiry,
   .header-quote { padding: 11px 22px; font-size: 1rem; }
 }
+
+/* "Copied" confirmation for phone and email clicks */
+.copy-toast {
+  position: fixed;
+  left: 50%;
+  top: 76px;
+  z-index: 30;
+  padding: 10px 16px;
+  border-radius: 6px;
+  background: var(--ink);
+  color: #fff;
+  font: 600 .9375rem/1.2 'Instrument Sans', sans-serif;
+  box-shadow: 0 6px 18px rgba(0,0,0,.2);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -6px);
+  transition: opacity .15s, transform .15s, visibility .15s;
+  pointer-events: none;
+}
+.copy-toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
