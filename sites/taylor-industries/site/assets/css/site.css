@@ -426,14 +426,14 @@ p { max-width: 68ch; }
 .ecg-line svg {
   display: block;
   width: 100%;
-  height: 22px;
-  overflow: visible;
+  height: 28px;
 }
 .ecg-line path {
   fill: none;
   stroke: var(--navy);
   stroke-width: 1.5;
-  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+  stroke-linecap: round;
 }
 
 @media (min-width: 861px) and (max-width: 1240px) {
@@ -468,7 +468,6 @@ p { max-width: 68ch; }
   .hero .usa-stamp span { font-size: .85rem; }
   .hero-tray { min-height: 150px; }
   .hero-image { max-height: 170px; }
-  .ecg-line svg { height: 20px; }
 }
 @media (max-width: 380px) {
   .hero .usa-stamp {
