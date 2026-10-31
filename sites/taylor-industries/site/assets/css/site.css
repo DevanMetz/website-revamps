@@ -211,3 +211,7 @@ h2{font-size:clamp(1.9rem,2.8vw,2.6rem)}
 .hero .usa-stamp{transform:none;font-size:1.15rem;padding:12px 24px;gap:14px;margin-top:6px;border-width:3px;outline-width:2px;outline-offset:4px}.hero .usa-stamp span{font-size:1.2rem}
 @media(max-width:600px){.hero .usa-stamp{font-size:.95rem;padding:10px 16px;gap:10px}}
 .hero .usa-stamp{white-space:nowrap}@media(max-width:600px){.hero .usa-stamp{font-size:.9rem;letter-spacing:.08em;padding:10px 14px;gap:8px}}
+.hero-copy{margin-top:16px;align-self:stretch}.hero-copy p{margin:0 0 10px;font-size:1.02rem;max-width:560px}.hero-copy p:last-child{margin-bottom:0}
+.hero-grid>div:first-child{width:auto}
+@media(max-width:1000px){.hero-copy p{margin-left:auto;margin-right:auto}}
+@media(max-width:600px){.hero .usa-stamp{font-size:.74rem;letter-spacing:.04em;padding:9px 10px;gap:6px}.hero .usa-stamp span{font-size:.85rem}}
