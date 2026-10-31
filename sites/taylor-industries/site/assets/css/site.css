@@ -853,7 +853,7 @@ p { max-width: 68ch; }
 }
 .pack-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 180px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
   gap: 20px;
   align-items: center;
 }
