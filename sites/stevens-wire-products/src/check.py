@@ -16,6 +16,10 @@ class Check(HTMLParser):
   for k in ('href','src'):
    v=a.get(k,'')
    if not v or v.startswith(('#','mailto:','tel:','data:')): continue
+   if tag=='link' and a.get('rel')=='canonical':
+    expected='https://stevenswire.com'+('/' if self.path==site/'index.html' else '/'+str(self.path.relative_to(site)).removesuffix('index.html'))
+    if v!=expected: errors.append(f'{self.path}: incorrect canonical {v}')
+    continue
    if v in (PREVIEW_SUBSCRIBE_URL,KEEP_CODE_URL,STRIPE_PORTAL_URL): continue
    if v.startswith(('http:','https:','//')): errors.append(f'{self.path}: external {k} {v}'); continue
    p=unquote(urlsplit(v).path)

@@ -63,3 +63,8 @@ html{scroll-padding-top:100px}#quote{scroll-margin-top:100px}.header{position:st
  .header nav{background:#144f9d;max-height:calc(100vh - 100px)}
 }
 @media(max-width:600px){.mobile-quote{white-space:nowrap;font-size:13px}.menu{padding-left:12px;padding-right:12px}.header-inner{gap:10px}}
+/* Keep contact details readable on narrow screens and feedback clear of the preview button. */
+body{overflow-wrap:break-word}
+.copy-toast{position:fixed;left:max(12px,env(safe-area-inset-left));bottom:max(92px,calc(env(safe-area-inset-bottom) + 82px));z-index:40;max-width:calc(100% - 24px);padding:10px 16px;background:#231f20;color:#fff;box-shadow:0 4px 16px #0003;font:500 15px/1.4 Jost,sans-serif}
+.copy-toast[hidden]{display:none}
+@media(max-width:400px){.brand img{width:105px}.header-inner{gap:8px}.mobile-quote{font-size:12px}.menu{padding-inline:9px}}
