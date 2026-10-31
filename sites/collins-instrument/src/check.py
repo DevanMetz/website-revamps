@@ -11,7 +11,7 @@ class Check(HTMLParser):
   if tag=='img' and not all(k in a for k in ('alt','width','height')): errors.append(f'{self.p}: incomplete image')
   for k in ('href','src'):
    v=a.get(k,''); u=urlsplit(v)
-   if u.scheme in ('http','https') and tag not in ('a',): errors.append(f'{self.p}: external request {v}')
+   if u.scheme in ('http','https') and tag not in ('a',) and not (tag=='link' and a.get('rel')=='canonical'): errors.append(f'{self.p}: external request {v}')
    if v.startswith('/') and not v.startswith('//'):
     target=site/u.path.lstrip('/'); target=target/'index.html' if u.path.endswith('/') else target
     if not target.is_file(): errors.append(f'{self.p}: missing {v}')

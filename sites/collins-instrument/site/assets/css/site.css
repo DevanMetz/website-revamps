@@ -75,3 +75,11 @@
 .brand{display:block;flex:none;padding:12px 0;line-height:0}.brand img{display:block;width:178px;height:99px}.header nav a span,.card-number{color:#006e3d}@media(max-width:760px){.brand img{width:178px;height:auto}}
 
 .header{border-bottom:2px solid #008349}
+.copy-toast{position:fixed;right:max(20px,env(safe-area-inset-right));bottom:100px;z-index:21;max-width:calc(100vw - 40px);padding:10px 16px;background:var(--ink);color:#fff;box-shadow:0 4px 16px #0003;overflow-wrap:anywhere}
+.copy-toast[hidden]{display:none}
+.series h4{font-size:1.1rem;margin:36px 0 16px}
+@media(max-width:760px){.copy-toast{right:12px;bottom:84px;max-width:calc(100vw - 24px)}}
+/* Keep long content within its column at narrow widths. */
+main, footer { overflow-wrap:break-word }
+.split > *, .contact-grid > *, .form > * { min-width:0 }
+.card-image picture, .model-img picture { display:contents }
