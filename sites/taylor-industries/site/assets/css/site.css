@@ -372,22 +372,30 @@ p { max-width: 68ch; }
   white-space: nowrap;
 }
 
+/* Stamp spans exactly the heading's width */
+.hero-title {
+  display: grid;
+  width: fit-content;
+  max-width: 100%;
+}
 /* "Manufactured in the United States" stamp */
 .hero .usa-stamp {
   display: inline-flex;
   align-items: center;
-  align-self: flex-start;
+  justify-content: center;
   gap: 14px;
-  max-width: 100%;
-  margin: 6px 0 4px 4px;
-  padding: 12px 24px;
+  /* sized by the heading, never widens the title block */
+  width: 0;
+  min-width: calc(100% - 12px);
+  margin: 12px 6px 6px;
+  padding: 12px 14px;
   border: 3px solid var(--navy);
   border-radius: 3px;
   outline: 2px solid var(--navy);
   outline-offset: 4px;
   color: var(--navy);
-  font: 700 1.15rem/1 'Instrument Sans', sans-serif;
-  letter-spacing: .14em;
+  font: 700 min(1.15rem, 2.6cqi)/1 'Instrument Sans', sans-serif;
+  letter-spacing: .12em;
   text-transform: uppercase;
   white-space: nowrap;
 }
