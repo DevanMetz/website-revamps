@@ -7,7 +7,7 @@ Live preview: https://grant-riveters-redesign.metzdevan.workers.dev
 ## What's in this folder
 
 - `site/` is the finished website: plain HTML, CSS, images and JavaScript, ready to host as is.
-- `src/` is the build: `data.py` holds the content, `build.py` generates `site/`, and `check.py` checks the result. `src/assets/` holds the original images and text from the current website that the build draws on.
+- `src/` is the build: `data.py` holds the content, `build.py` generates `site/`, and `check.py` checks the result. `src/assets/` holds source images, archived page content, CSS and JavaScript. The existing `site/assets/docs/` PDFs and `site/assets/fonts/` font files are also build inputs and must remain in place.
 - `wrangler.jsonc` is the Cloudflare configuration used for the preview.
 
 ## Hosting it yourself
