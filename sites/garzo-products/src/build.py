@@ -1,9 +1,14 @@
 from pathlib import Path
 from PIL import Image
 import html, json, re, shutil
+from bs4 import BeautifulSoup
 from data import source, products
 S=Path('site'); I=S/'assets/img'; I.mkdir(parents=True,exist_ok=True)
 used=set()
+for kind in ('css', 'js'):
+    destination = S/'assets'/kind
+    destination.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(Path('src/assets')/kind/('site.'+kind), destination/('site.'+kind))
 fonts=S/'assets/fonts'; fonts.mkdir(parents=True, exist_ok=True)
 for font in Path('src/fonts').glob('*.woff2'): shutil.copyfile(font, fonts/font.name)
 shutil.copyfile('src/assets/logo/garzo.png', I/'garzo-logo.png')
@@ -11,27 +16,43 @@ used.add('garzo-logo.png')
 shutil.copyfile('src/assets/logo/favicon.png', I/'favicon.png')
 used.add('favicon.png')
 logo='<img src="/assets/img/garzo-logo.png" alt="Garzo Products" width="900" height="272">'
-def img(name, alt=None):
+def img(name, alt=None, priority=False):
     p=Path('src/assets/img/images')/name
     if not p.exists(): return ''
     out=re.sub(r'[^a-z0-9.-]','-',name.lower()).rsplit('.',1)[0]+'.png' if name.lower().endswith(('.gif','.png')) else re.sub(r'[^a-z0-9.-]','-',name.lower())
     transparent=Path('src/transparent')/(p.stem.lower()+'.png')
     if transparent.exists():
-        out=transparent.name; shutil.copyfile(transparent, I/out); im=Image.open(transparent)
+        out=transparent.stem+'.webp'; im=Image.open(transparent); im.save(I/out, format='WEBP', lossless=True, method=6)
     else:
         im=Image.open(p); im.seek(0); im=im.convert('RGB' if out.endswith('.jpg') else 'RGBA'); im.save(I/out, quality=82, optimize=True)
     used.add(out); w,h=im.size
-    return f'<img src="/assets/img/{out}" alt="{html.escape(alt or name.rsplit(".",1)[0])}" width="{w}" height="{h}" loading="lazy">'
+    return f'<img src="/assets/img/{out}" alt="{html.escape(alt or name.rsplit(".",1)[0])}" width="{w}" height="{h}" '+('fetchpriority="high"' if priority else 'loading="lazy" decoding="async"')+'>'
 def cards():
-    return '<div class="cards">'+''.join(f'<a class="card" href="{u}"><div class="card-image">{img(n,t)}</div><div class="card-caption"><span>Fig. {i:02}</span><h3>{t}</h3></div></a>' for i,(t,u,n) in enumerate(products,1))+'</div>'
+    return '<div class="cards">'+''.join(f'<a class="card" href="{u}"><div class="card-image">{img(n,t)}</div><div class="card-caption"><span>Fig. {i:02}</span><h2>{t}</h2></div></a>' for i,(t,u,n) in enumerate(products,1))+'</div>'
 def layout(title, body, path, desc=None):
     nav=[('Products','/products/'),('Product registration','/product-registration/'),('Contact','/contact/')]
     mobile_products = [('Oil level regulator 101', '/products/oil-level-regulators/101/'), ('Oil level regulator 108', '/products/oil-level-regulators/108/'), ('108 installation guide', '/products/oil-level-regulators/108/installation/'), ('Low flow meters', '/products/low-flow-meters/'), ('Lubricator box control 211', '/products/lubricator-box-controls/211/'), ('Lubricator box control 213', '/products/lubricator-box-controls/213/'), ('Linear diaphragm operators', '/products/linear-diaphragm-operators/')]
     mobile_links = '<ul class="mobile-products">' + ''.join('<li><a href="' + u + '"' + (' aria-current="page"' if path == u else '') + '>' + t + '</a>' + ('<ul>' + ' '.join(f'<li><a href="{u}#model-501-{n}">501-{n}</a></li>' for n in (4,6,12,18,25)) + '</ul>' if t == 'Linear diaphragm operators' else '') + '</li>' for t, u in mobile_products) + '</ul>'
     links=' '.join(f'<li><a href="{u}"'+(' aria-current="page"' if path == u else '')+f'>{t}</a>' + (mobile_links if u == '/products/' else '') + '</li>' for t,u in nav)
-    description=desc or title+' by Garzo Products, Waller, Texas.'
-    ld={'@context':'https://schema.org','@type':'Organization','name':'Garzo Products','url':'https://garzoproducts.com/','telephone':'(713) 466-8679','email':'info@garzoproducts.com','address':{'@type':'PostalAddress','streetAddress':'42146 HWY 290 Business','addressLocality':'Waller','addressRegion':'TX','postalCode':'77484'}}
-    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>{html.escape(title)} | Garzo Products</title><meta name="description" content="{html.escape(description)}"><meta property="og:title" content="{html.escape(title)} | Garzo Products"><meta property="og:description" content="{html.escape(description)}"><meta property="og:type" content="website"><meta property="og:url" content="https://garzoproducts.com{path}"><link rel="icon" href="/assets/img/favicon.png" type="image/png"><link rel="preload" href="/assets/fonts/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/css/site.css"><script type="application/ld+json">{json.dumps(ld)}</script><script src="/assets/js/site.js" defer></script></head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header"><a class="brand" href="/" aria-label="Garzo Products home">{logo}</a><a class="mobile-call" href="tel:8007298807">Call</a><button class="menu" aria-expanded="false" aria-controls="nav">Menu</button><nav id="nav" aria-label="Main navigation"><ul class="nav-list">{links} <li><a class="nav-cta" href="/catalog-request/" {('aria-current="page"' if path == '/catalog-request/' else '')}>Request a catalog</a></li></ul> <a class="header-phone" href="tel:8007298807">(800) 729-8807</a></nav></div></header><main id="main">{body}</main><footer><div class="wrap footer"><div><a class="brand" href="/" aria-label="Garzo Products home">{logo}</a><p>42146 HWY 290 Business<br>Waller, TX 77484</p></div><div><a href="tel:7134668679">(713) 466-8679</a><br><a href="tel:8007298807">(800) 729-8807</a><br><a href="mailto:info@garzoproducts.com">info@garzoproducts.com</a></div><div><a href="/products/">Products</a><br><a href="/product-registration/">Product registration</a><br><a href="/contact/">Contact</a></div></div></footer></body></html>'''
+    paragraph = BeautifulSoup(body, 'html.parser').find('p')
+    descriptions = {
+        '/': 'Oil level regulators and compressor accessories by Garzo Products, Waller, Texas.',
+        '/404.html': 'Page not found by Garzo Products, Waller, Texas.',
+        '/products/lubricator-box-controls/213/': 'Lubricator box control 213 by Garzo Products, Waller, Texas.',
+        '/products/oil-level-regulators/108/installation/': '108B installation guide by Garzo Products, Waller, Texas.',
+    }
+    description = descriptions.get(path) or desc or (paragraph.get_text(' ', strip=True) if paragraph and paragraph.get_text(' ', strip=True) != 'Since 1939' else title)
+    if len(description) > 160:
+        first_sentence = re.split(r'(?<=[.!?])\s+', description)[0]
+        description = first_sentence if len(first_sentence) <= 160 else description[:157].rsplit(' ', 1)[0] + '…'
+    ld={'@context':'https://schema.org','@type':'Organization','name':'Garzo Products','url':'https://garzoproducts.com/','telephone':'(713) 466-8679','email':'info@garzoproducts.com','logo':'https://garzoproducts.com/assets/img/garzo-logo.png','address':{'@type':'PostalAddress','streetAddress':'42146 HWY 290 Business','addressLocality':'Waller','addressRegion':'TX','postalCode':'77484'}}
+    if path not in ('/', '/404.html'):
+        crumbs = [{'@type':'ListItem','position':1,'name':'Home','item':'https://garzoproducts.com/'}]
+        if path.startswith('/products/') and path != '/products/':
+            crumbs.append({'@type':'ListItem','position':2,'name':'Products','item':'https://garzoproducts.com/products/'})
+        crumbs.append({'@type':'ListItem','position':len(crumbs)+1,'name':title,'item':'https://garzoproducts.com'+path})
+        ld = [ld, {'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':crumbs}]
+    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>{html.escape(title)} | Garzo Products</title><meta name="description" content="{html.escape(description)}"><meta property="og:title" content="{html.escape(title)} | Garzo Products"><meta property="og:description" content="{html.escape(description)}"><meta property="og:type" content="website"><meta property="og:image" content="https://garzoproducts.com/assets/img/garzo-logo.png"><link rel="canonical" href="https://garzoproducts.com{path}"><meta property="og:url" content="https://garzoproducts.com{path}"><link rel="icon" href="/assets/img/favicon.png" type="image/png"><link rel="preload" href="/assets/fonts/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/css/site.css"><script type="application/ld+json">{json.dumps(ld)}</script><script src="/assets/js/site.js" defer></script></head><body><a class="skip" href="#main">Skip to content</a><header><div class="wrap header"><a class="brand" href="/" aria-label="Garzo Products home">{logo}</a><a class="mobile-call" href="tel:8007298807">Call</a><button class="menu" aria-expanded="false" aria-controls="nav">Menu</button><nav id="nav" aria-label="Main navigation"><ul class="nav-list">{links} <li><a class="nav-cta" href="/catalog-request/" {('aria-current="page"' if path == '/catalog-request/' else '')}>Request a catalog</a></li></ul> <a class="header-phone" href="tel:8007298807">(800) 729-8807</a></nav></div></header><main id="main">{body}</main><footer><div class="wrap footer"><div><a class="brand" href="/" aria-label="Garzo Products home">{logo}</a><p>42146 HWY 290 Business<br>Waller, TX 77484</p></div><div><a href="tel:7134668679">(713) 466-8679</a><br><a href="tel:8007298807">(800) 729-8807</a><br><a href="mailto:info@garzoproducts.com">info@garzoproducts.com</a></div><div><a href="/products/">Products</a><br><a href="/product-registration/">Product registration</a><br><a href="/contact/">Contact</a></div></div></footer></body></html>'''
 def write(path,title,body,desc=None):
     f=S/path.strip('/')/'index.html' if path!='/' else S/'index.html'; f.parent.mkdir(parents=True,exist_ok=True); f.write_text(re.sub(r'</a>(?=<(?:a|button)\b)', '</a> ', layout(title,body,path,desc)))
 def banner(title, intro='', back=True, back_url='/products/', back_label='Products'):
@@ -42,7 +63,7 @@ def checklist(lines, heading='Features'):
     return '<h2>'+heading+'</h2><ul class="checklist">'+''.join('<li>'+html.escape(x)+'</li>' for x in lines)+'</ul>'
 def ordering(name, alt):
     picture=img(name,alt)
-    target=(Path('src/transparent')/(Path(name).stem.lower()+'.png')).name if (Path('src/transparent')/(Path(name).stem.lower()+'.png')).exists() else name
+    target=(Path(name).stem.lower()+'.webp') if (Path('src/transparent')/(Path(name).stem.lower()+'.png')).exists() else name
     width=Image.open(Path('src/assets/img/images')/name).width
     return f'<figure class="ordering" style="max-width:{width:g}px"><figcaption><a href="/assets/img/{target}">Open full size</a><span>Scroll chart →</span></figcaption><div class="chart-scroll" tabindex="0" role="region" aria-label="{html.escape(alt)}">{picture}</div></figure>'
 def siblings(current):
@@ -65,7 +86,7 @@ def product_content(lines, model, photo, title):
     for i,line in enumerate(lines[1:],1): result+='<h2 id="'+re.sub(r'[^a-z0-9]+','-',headings[i].lower()).strip('-')+'">'+headings[i]+'</h2>'+paras([line])
     if model == '300B': result+=checklist(specs,'Specifications')
     return result
-write('/','Oil level regulators and compressor accessories','<section class="hero wrap"><div class="cover"><p class="since">Since 1939</p><h1>Oil level regulators and compressor accessories</h1><div class="actions"><a class="button" href="/products/">Explore products</a><a class="textlink" href="/contact/">Contact us</a></div><div class="hero-image">'+img('501gp.jpg','Garzo linear diaphragm operators')+'</div></div></section><section class="section wrap"><div class="section-title"><h2>Products</h2><a href="/products/">View all products</a></div>'+cards()+'</section><section class="band"><div class="wrap band-inner"><div><h2>Request a catalog</h2><p>Garzo catalogs are sent out by bulk mail. Please allow 1-4 weeks for delivery.</p></div><a class="button" href="/catalog-request/">Request a catalog</a></div></section>')
+write('/','Oil level regulators and compressor accessories','<section class="hero wrap"><div class="cover"><p class="since">Since 1939</p><h1>Oil level regulators and compressor accessories</h1><div class="actions"><a class="button" href="/products/">Explore products</a><a class="textlink" href="/contact/">Contact us</a></div><div class="hero-image">'+img('501gp.jpg','Garzo linear diaphragm operators',priority=True)+'</div></div></section><section class="section wrap"><div class="section-title"><h2>Products</h2><a href="/products/">View all products</a></div>'+cards()+'</section><section class="band"><div class="wrap band-inner"><div><h2>Request a catalog</h2><p>Garzo catalogs are sent out by bulk mail. Please allow 1-4 weeks for delivery.</p></div><a class="button" href="/catalog-request/">Request a catalog</a></div></section>')
 write('/products/','Products',banner('Products','Oil level regulators, shut down devices, low flow meters, lubricator box controls, oil reservoirs and linear diaphragm operators.',False)+'<section class="section wrap">'+cards()+'<p class="model-link"><a href="/products/lubricator-box-controls/213/">Lubricator box control 213</a></p><div class="additional"><h2>Shut-down devices &amp; oil reservoirs</h2><p>Contact Garzo Products for information about shut-down devices and oil reservoirs.</p><a class="button dark" href="/contact/">Contact us</a></div></section>')
 items=[('101','oil-level-regulators/101','101.html','101b.jpg'),('108','oil-level-regulators/108','108.html','108b.jpg'),('300B','low-flow-meters','meter.html','300b.jpg'),('211','lubricator-box-controls/211','211.html','211-08.jpg')]
 for model,path,old,photo in items:
@@ -137,7 +158,7 @@ def add_preview_subscribe():
  css=("a.preview-subscribe{position:fixed;right:max(20px,calc(env(safe-area-inset-right) + 12px));bottom:max(20px,calc(env(safe-area-inset-bottom) + 12px));z-index:19;display:inline-flex;align-items:center;min-height:66px;padding:0 27px;border-radius:999px;background:#a80000;color:#fff;font:700 22.5px/1.1 'DM Sans',sans-serif;letter-spacing:.01em;text-transform:none;text-decoration:none;white-space:nowrap;box-shadow:0 9px 27px rgba(0,0,0,.22);transition:background-color .15s,opacity .2s,visibility .2s}"
   "a.preview-subscribe:hover{background:#780000;color:#fff;text-decoration:none}"
   "a.preview-subscribe:focus-visible{background:#a80000;color:#fff;outline:3px solid #a80000;outline-offset:3px;box-shadow:0 0 0 3px #fff,0 6px 18px rgba(0,0,0,.22)}"
-  "a.preview-subscribe.is-tucked,body:has(header [aria-expanded=\"true\"]) a.preview-subscribe{opacity:0;visibility:hidden}"
+  
   "@media (max-width:760px){a.preview-subscribe{right:max(12px,calc(env(safe-area-inset-right) + 8px));bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px));min-height:60px;padding:0 21px;font-size:21px}}"
   "footer:last-of-type::after{content:\"\";display:block;height:88px}"
   "@media (prefers-reduced-motion:reduce){a.preview-subscribe{transition:none}}")

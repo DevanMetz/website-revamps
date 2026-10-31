@@ -13,7 +13,7 @@ class Check(HTMLParser):
   if tag=='img' and not all(k in a for k in ('alt','width','height')): errors.append(f'{self.file}: incomplete image')
   for key in ('href','src'):
    v=a.get(key,''); u=urlsplit(v)
-   if u.scheme in ('http','https') and tag not in ('meta',) and v not in (PREVIEW_SUBSCRIBE_URL,KEEP_CODE_URL,STRIPE_PORTAL_URL): errors.append(f'{self.file}: external {v}')
+   if u.scheme in ('http','https') and tag not in ('meta',) and not (tag=='link' and a.get('rel')=='canonical' and v.startswith('https://garzoproducts.com/')) and v not in (PREVIEW_SUBSCRIBE_URL,KEEP_CODE_URL,STRIPE_PORTAL_URL): errors.append(f'{self.file}: external {v}')
    if v.startswith('/') and not v.startswith('//'):
     p=root/unquote(u.path.lstrip('/')); p=p/'index.html' if u.path.endswith('/') else p
     if not p.is_file(): errors.append(f'{self.file}: missing {v}')

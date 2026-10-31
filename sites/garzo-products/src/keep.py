@@ -38,7 +38,7 @@ def _css(c):
   '.keep-cta{margin-top:28px;display:flex;flex-wrap:wrap;align-items:center;gap:14px}'
   '.keep-cta .button{min-height:56px;padding-inline:28px;font-size:1.05rem;max-width:100%;text-align:center}'
   '.keep-faq{margin-top:clamp(40px,6vw,64px);display:grid;gap:18px;max-width:44em}'
-  '.keep-faq h3{margin:0 0 4px}'
+  '.keep-faq h2{font-size:1.15rem;margin:0 0 4px}'
   '.keep a:focus-visible{outline:3px solid '+a+';outline-offset:3px}'
   '@media (min-width:720px){.keep-choices{grid-template-columns:1fr 1fr}}'
   '@media (min-width:640px){.keep-steps{grid-template-columns:1fr 1fr}}')
@@ -84,8 +84,8 @@ def build_keep(site_dir, url):
   '<div class="keep-cta"><a class="button" href="'+esc(url)+'">Continue to checkout · $20/mo</a></div>'
   '</section>'
   '<section class="keep-faq" aria-label="Questions">'
-  '<div><h3>Will my email break?</h3><p>No. We only point www at the new site.</p></div>'
-  '<div><h3>Can I cancel?</h3><p>Yes, anytime. <a href="'+esc(STRIPE_PORTAL_URL)+'" target="_blank" rel="noopener" aria-label="Manage or cancel your subscription (opens in a new tab)">Manage or cancel your subscription here</a>.</p></div>'
+  '<div><h2>Will my email break?</h2><p>No. We only point www at the new site.</p></div>'
+  '<div><h2>Can I cancel?</h2><p>Yes, anytime. <a href="'+esc(STRIPE_PORTAL_URL)+'" target="_blank" rel="noopener" aria-label="Manage or cancel your subscription (opens in a new tab)">Manage or cancel your subscription here</a>.</p></div>'
   '</section>'
   '</div></section></main>')
  html=re.sub(r'<main id="main">.*</main>',lambda m:main,html,count=1,flags=re.S)
