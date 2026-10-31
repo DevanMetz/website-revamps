@@ -17,7 +17,7 @@ class Check(HTMLParser):
    value=a.get(key,'')
    if not value or value.startswith(('#','mailto:','tel:')): continue
    if value.startswith(('https://','http://')):
-    if tag in ('img','script','link'): errors.append(f'{self.file}: external resource {value}')
+    if tag in ('img','script') or (tag == 'link' and not (a.get('rel') == 'canonical' and value.startswith('https://www.fontanamachine.com/'))): errors.append(f'{self.file}: external resource {value}')
     continue
    path=unquote(urlsplit(value).path)
    target=(site/path.lstrip('/')) if path.startswith('/') else (self.file.parent/path)

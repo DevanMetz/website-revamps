@@ -7,29 +7,43 @@ from data import ROUTES
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'site'
 (OUT / 'assets/fonts').mkdir(parents=True, exist_ok=True)
+for folder in ('css', 'js'):
+    (OUT / 'assets' / folder).mkdir(parents=True, exist_ok=True)
+    for asset in (ROOT / 'src/assets' / folder).iterdir():
+        if asset.is_file():
+            shutil.copy2(asset, OUT / 'assets' / folder / asset.name)
 for font in (ROOT / 'src/fonts').glob('*.woff2'):
     shutil.copy2(font, OUT / 'assets/fonts' / font.name)
 for source, dest in [('heavyturbine.gif','heavy-turbine.png'),('portablemachining.jpg','portable-machining.jpg'),('heavyclass.gif','heavy-class.png'),('heavyscmap.gif','heavy-map.png')]:
     im = Image.open(ROOT / 'src/assets/img/images' / source).convert('RGB')
     if dest == 'portable-machining.jpg':
         im = im.crop((12, 15, 134, 161))  # trim the baked-in white mat and shadow
-    im.save(OUT / 'assets/img' / dest, quality=82, optimize=True)
+    if dest in ('heavy-turbine.png', 'heavy-class.png'):
+        im.save(OUT / 'assets/img' / dest.replace('.png', '.webp'), 'WEBP', quality=85, method=6)
+        (OUT / 'assets/img' / dest).unlink(missing_ok=True)
+    else:
+        im.save(OUT / 'assets/img' / dest, quality=82, optimize=True)
 
 shutil.copy2(ROOT / 'src/assets/logo/original.gif', OUT / 'assets/img/brand-header.gif')
 
 def image(name, alt, w, h):
-    return f'<img src="/assets/img/{name}" alt="{alt}" width="{w}" height="{h}">'
+    if name in ('heavy-turbine.png', 'heavy-class.png'):
+        name = name.replace('.png', '.webp')
+    return f'<img src="/assets/img/{name}" alt="{alt}" width="{w}" height="{h}" loading="lazy" decoding="async">'
 
 def page(title, desc, path, body):
     nav = '\n'.join(f'<li><a href="{url}"{(" aria-current=\"page\"" if path == url else "")}>{label}</a></li>' for label,url in [('Home','/'),('Directions','/directions/'),('Contact','/contact/'),('Privacy','/privacy/')])
-    schema = {'@context':'https://schema.org','@type':'Organization','name':'Fontana Machine & Engineering Co.','url':'https://www.fontanamachine.com/','telephone':'909-823-0657','faxNumber':'909-823-0619','email':'info@FontanaMachine.com','address':{'@type':'PostalAddress','streetAddress':'10703 Poplar Ave','addressLocality':'Fontana','addressRegion':'CA','postalCode':'92337','addressCountry':'USA'}}
+    schema = {'@context':'https://schema.org','@type':'Organization','name':'Fontana Machine & Engineering Co.','url':'https://www.fontanamachine.com/','telephone':'909-823-0657','faxNumber':'909-823-0619','logo':'https://www.fontanamachine.com/assets/img/brand-header.gif','email':'info@FontanaMachine.com','address':{'@type':'PostalAddress','streetAddress':'10703 Poplar Ave','addressLocality':'Fontana','addressRegion':'CA','postalCode':'92337','addressCountry':'USA'}}
+    breadcrumb = ''
+    if path != '/':
+        breadcrumb = '<script type="application/ld+json">' + json.dumps({'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.fontanamachine.com/'}, {'@type': 'ListItem', 'position': 2, 'name': title, 'item': 'https://www.fontanamachine.com' + path}]}) + '</script>'
     strip = '<div class="emergency-strip"><div class="wrap"><span>24/7 emergency pager <a href="tel:9093221616">909-322-1616</a></span><span>Phone <a href="tel:9098230657">909-823-0657</a></span></div></div>'
 
     if path == '/contact/':
         strip = '<div class="emergency-strip"><div class="wrap"><span>24/7 emergency pager <a href="tel:9093221616">909-322-1616</a></span></div></div>'
     footer_details = '' if path == '/contact/' else '<div><a href="tel:9098230657">909-823-0657</a><br>Fax 909-823-0619<br>Pager <a href="tel:9093221616">909-322-1616</a><br><a href="mailto:info@fontanamachine.com">info@FontanaMachine.com</a></div>'
     back = '<div class="inner-back"><div class="wrap"><a href="/">← Home</a></div></div>' if path != '/' else ''
-    html = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>{title} | Fontana Machine &amp; Engineering Co.</title><meta name="description" content="{desc}"><meta property="og:title" content="{title} | Fontana Machine &amp; Engineering Co."><meta property="og:description" content="{desc}"><meta property="og:type" content="website"><meta property="og:url" content="https://www.fontanamachine.com{path}"><link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml"><link rel="preload" href="/assets/fonts/big-shoulders-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/css/site.css"><script type="application/ld+json">{json.dumps(schema)}</script><script src="/assets/js/site.js" defer></script></head><body><a class="skip" href="#main">Skip to content</a><header class="header">{strip}<div class="wrap header-inner"><a class="brand" href="/" aria-label="Fontana Machine &amp; Engineering"><img src="/assets/img/brand-header.gif" alt="Fontana Machine &amp; Engineering" width="600" height="75"><span aria-hidden="true">Fontana Machine &amp; Engineering</span></a><div class="header-actions"><button class="menu" type="button" aria-expanded="false" aria-controls="navigation">Menu</button></div><nav id="navigation" aria-label="Main navigation"><ul>{nav}</ul></nav><a class="header-contact" href="/contact/">Contact us</a></div></header><main id="main">{back}{body}</main><footer><div class="wrap footer-inner"><div><strong>Fontana Machine &amp; Engineering Co.</strong><p>10703 Poplar Ave<br>Fontana, CA 92337, USA</p></div>{footer_details}<a href="/privacy/">Privacy policy</a></div></footer></body></html>'''
+    html = f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>{title} | Fontana Machine &amp; Engineering Co.</title><meta name="description" content="{desc}"><meta property="og:title" content="{title} | Fontana Machine &amp; Engineering Co."><meta property="og:description" content="{desc}"><meta property="og:type" content="website"><meta property="og:image" content="https://www.fontanamachine.com/assets/img/brand-header.gif"><meta property="og:url" content="https://www.fontanamachine.com{path}"><link rel="canonical" href="https://www.fontanamachine.com{path}"><link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml"><link rel="preload" href="/assets/fonts/big-shoulders-display-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/css/site.css"><script type="application/ld+json">{json.dumps(schema)}</script>{breadcrumb}<script src="/assets/js/site.js" defer></script></head><body><a class="skip" href="#main">Skip to content</a><header class="header">{strip}<div class="wrap header-inner"><a class="brand" href="/" aria-label="Fontana Machine &amp; Engineering"><img src="/assets/img/brand-header.gif" alt="Fontana Machine &amp; Engineering" width="600" height="75" fetchpriority="high" decoding="async"><span aria-hidden="true">Fontana Machine &amp; Engineering</span></a><div class="header-actions"><button class="menu" type="button" aria-expanded="false" aria-controls="navigation">Menu</button></div><nav id="navigation" aria-label="Main navigation"><ul>{nav}</ul></nav><a class="header-contact" href="/contact/">Contact us</a></div></header><main id="main">{back}{body}</main><footer><div class="wrap footer-inner"><div><strong>Fontana Machine &amp; Engineering Co.</strong><p>10703 Poplar Ave<br>Fontana, CA 92337, USA</p></div>{footer_details}<a href="/privacy/">Privacy policy</a></div></footer></body></html>'''
     target = OUT / ('index.html' if path == '/' else path.strip('/') + '/index.html')
     target.parent.mkdir(parents=True, exist_ok=True); target.write_text(html)
 
@@ -39,10 +53,10 @@ directions = f'''<section class="page-head"><div class="wrap"><h1>Driving direct
 contact = '''<section class="page-head"><div class="wrap"><h1>Contact us</h1></div></section><div class="wrap contact-grid"><div class="contact-info"><p class="emergency-note">Available 24/7/365 for emergency repairs; contact us after hours by pager above.</p><div class="contact-details"><h2>Contact details</h2><p>Phone: <a href="tel:9098230657">909-823-0657</a><br>Fax: 909-823-0619<br>Email: <a href="mailto:info@fontanamachine.com">info@FontanaMachine.com</a></p><p>Fontana Machine &amp; Engineering Co.<br>10703 Poplar Ave<br>Fontana, CA 92337<br>USA</p></div></div><div class="inquiry"><h2>Send an inquiry</h2><!-- Replace the mailto fallback with a production form endpoint here. --><form id="inquiry"><div class="form-grid"><label>Name<input name="Name" autocomplete="name" required></label><label>Company<input name="Company" autocomplete="organization"></label><label>Phone<input name="Phone" type="tel" autocomplete="tel"></label><label>Email<input name="Email" type="email" autocomplete="email" required></label></div><label>Part size and weight<input name="Part size and weight"></label><label>Message<textarea name="Message" rows="6" required></textarea></label><button class="button" type="submit">Send inquiry</button><p id="form-status" role="status"></p></form></div></div>'''
 privacy = '''<section class="page-head"><div class="wrap"><h1>Privacy policy</h1></div></section><div class="wrap prose"><p>Any information you send to us is company confidential. We will never sell or distribute it to individuals or organizations not owned or controlled by us. We will not place cookies on your system, nor will our server do so intentionally.</p></div>'''
 page('Heavy machining and fabrication','Heavy machining and fabrication for aerospace and industry in Fontana, California.','/',home)
-page('Directions','Driving directions to Fontana Machine & Engineering Co. in Fontana, California.','/directions/',directions)
+page('Directions','Driving directions: 10703 Poplar Ave, Fontana, CA 92337.','/directions/',directions)
 page('Contact','Contact Fontana Machine & Engineering Co. for machining and emergency repairs.','/contact/',contact)
 page('Privacy policy','Fontana Machine & Engineering Co. privacy policy.','/privacy/',privacy)
-(OUT/'404.html').write_text((OUT/'privacy/index.html').read_text().replace('<title>Privacy policy', '<title>Page not found').replace('<h1>Privacy policy</h1>', '<h1>Page not found</h1>').replace(' aria-current="page"', '').replace('<div class="wrap prose"><p>Any information you send to us is company confidential. We will never sell or distribute it to individuals or organizations not owned or controlled by us. We will not place cookies on your system, nor will our server do so intentionally.</p></div>', '<div class="wrap prose"><a href="/">Return home</a></div>'))
+(OUT/'404.html').write_text((OUT/'privacy/index.html').read_text().replace('<link rel="canonical" href="https://www.fontanamachine.com/privacy/">', '').replace('<meta property="og:url" content="https://www.fontanamachine.com/privacy/">', '').replace('<title>Privacy policy', '<title>Page not found').replace('<script type="application/ld+json">' + json.dumps({'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://www.fontanamachine.com/'}, {'@type': 'ListItem', 'position': 2, 'name': 'Privacy policy', 'item': 'https://www.fontanamachine.com/privacy/'}]}) + '</script>', '').replace('<h1>Privacy policy</h1>', '<h1>Page not found</h1>').replace(' aria-current="page"', '').replace('<div class="wrap prose"><p>Any information you send to us is company confidential. We will never sell or distribute it to individuals or organizations not owned or controlled by us. We will not place cookies on your system, nor will our server do so intentionally.</p></div>', '<div class="wrap prose"><a href="/">Return home</a></div>'))
 
 
 # Preview-only "Keep this site" subscribe button, added to every page after the build.
@@ -55,7 +69,6 @@ def add_preview_subscribe():
  css=("a.preview-subscribe{position:fixed;right:max(20px,calc(env(safe-area-inset-right) + 12px));bottom:max(20px,calc(env(safe-area-inset-bottom) + 12px));z-index:19;display:inline-flex;align-items:center;min-height:66px;padding:0 27px;border-radius:999px;background:#660000;color:#fff;font:600 22.5px/1.1 'Work Sans',sans-serif;letter-spacing:.01em;text-transform:none;text-decoration:none;white-space:nowrap;box-shadow:0 9px 27px rgba(0,0,0,.22);transition:background-color .15s,opacity .2s,visibility .2s}"
   "a.preview-subscribe:hover{background:#4a0000;color:#fff;text-decoration:none}"
   "a.preview-subscribe:focus-visible{background:#660000;color:#fff;outline:3px solid #7b0c12;outline-offset:3px;box-shadow:0 0 0 3px #fff,0 6px 18px rgba(0,0,0,.22)}"
-  "a.preview-subscribe.is-tucked,body:has(header [aria-expanded=\"true\"]) a.preview-subscribe{opacity:0;visibility:hidden}"
   "@media (max-width:760px){a.preview-subscribe{right:max(12px,calc(env(safe-area-inset-right) + 8px));bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px));min-height:60px;padding:0 21px;font-size:21px}}"
   "footer:last-of-type::after{content:\"\";display:block;height:88px}"
   "@media (prefers-reduced-motion:reduce){a.preview-subscribe{transition:none}}")
