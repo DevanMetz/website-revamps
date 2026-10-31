@@ -363,9 +363,14 @@ p { max-width: 68ch; }
   flex-direction: column;
   align-items: flex-start;
   max-width: 100%;
-  justify-self: start;
+  container-type: inline-size;
 }
-.hero-grid > div:first-child h1 { align-self: stretch; }
+/* Heading scales with its column so it always stays on one line */
+.hero-grid > div:first-child h1 {
+  align-self: stretch;
+  font-size: min(3.1rem, 6.9cqi);
+  white-space: nowrap;
+}
 
 /* "Manufactured in the United States" stamp */
 .hero .usa-stamp {
@@ -439,9 +444,6 @@ p { max-width: 68ch; }
     letter-spacing: .05em;
   }
   .hero .usa-stamp span { font-size: .9rem; }
-}
-@media (max-width: 1000px) {
-  .hero-grid > div:first-child { justify-self: stretch; }
 }
 @media (max-width: 860px) {
   .hero-grid {
