@@ -487,6 +487,8 @@ p { max-width: 68ch; }
 /* Two plain sections in a row share their gap */
 .section:not(.pale) + .section:not(.pale) { padding-top: 10px; }
 .pale { background: var(--tray); }
+/* Home: same gap above and below the ECG line */
+.section.home-electrodes { padding-top: 6px; }
 
 .page-head { padding: 16px 0 0; }
 .page-head h1 { margin-bottom: 0; }
@@ -615,6 +617,7 @@ p { max-width: 68ch; }
 }
 @media (max-width: 600px) {
   .section { padding: 16px 0; }
+  .section.home-electrodes { padding-top: 4px; }
   .page-head { padding-top: 14px; }
   .page-head p { font-size: 1rem; }
   .page-head + .section:not(.catalog) { padding-top: 10px; }
