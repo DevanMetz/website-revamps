@@ -6,8 +6,8 @@ Live preview: https://collins-instrument-redesign.metzdevan.workers.dev
 
 ## What's in this folder
 
-- `site/` is the finished website: plain HTML, CSS, images and JavaScript, ready to host as is.
-- `src/` is the build: `data.py` holds the content, `build.py` generates `site/`, and `check.py` checks the result. `src/assets/` holds the original images and text from the current website that the build draws on.
+- `site/` is the finished website: plain HTML, CSS, images and JavaScript, ready to host as is. It also holds the original logo, product PDF, fonts, favicon and hosting headers used by the build.
+- `src/` is the build: `data.py` and `valve_tables.py` hold content, `build.py` generates pages and image variants, `keep.py` builds the preview funnel, and `check.py` checks the result. `src/assets/` holds the source styles, scripts, images and redirect inventory.
 - `wrangler.jsonc` is the Cloudflare configuration used for the preview.
 
 ## Hosting it yourself
