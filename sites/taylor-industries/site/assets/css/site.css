@@ -200,3 +200,8 @@ h2{font-size:clamp(1.9rem,2.8vw,2.6rem)}
 .footer-bottom{margin-top:12px;padding-top:10px}
 @media(max-width:600px){.section{padding:16px 0}.section:not(.pale)+.section:not(.pale){padding-top:0}.hero-grid{padding:12px 0;gap:12px}.hero-tray{min-height:150px}.hero-image{max-height:170px}.ecg-line svg{height:20px}.page-head{padding-top:14px}.page-head + .section:not(.catalog),.catalog{padding-top:10px}.category-image{height:100px}.machine-card img,.machine-photo img{height:170px}.contact-band{padding:16px 0}.footer{padding:20px 0 12px}}
 .section:not(.pale)+.section:not(.pale){padding-top:10px}
+.hero-grid>div:first-child{display:flex;flex-direction:column;align-items:center;width:fit-content;max-width:100%;justify-self:start}
+.hero-grid>div:first-child h1{align-self:stretch}
+.hero .usa-stamp{transform-origin:center}
+.hero .actions{justify-content:center}
+@media(max-width:1000px){.hero-grid>div:first-child{justify-self:center}.hero-grid>div:first-child h1{text-align:center}}
