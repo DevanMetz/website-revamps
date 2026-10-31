@@ -1096,3 +1096,15 @@ legend {
   .footer-links { display: contents; }
   .footer-links > div { max-width: 210px; }
 }
+
+/* Desktop header: no nav links, just the logo, contact and the two buttons
+   (the nav stays in the markup for the mobile Menu) */
+@media (min-width: 1001px) {
+  .header-inner { grid-template-columns: auto 1fr; gap: 24px; }
+  .nav { display: none; }
+  .logo img { width: 290px; }
+  .header-actions { gap: 20px; }
+  .header-email { display: inline; font-size: .875rem; }
+  .header-inquiry,
+  .header-quote { padding: 11px 22px; font-size: 1rem; }
+}
