@@ -163,3 +163,15 @@ h1,h2,.page-head h1:has(+ p){margin-bottom:10px}
 }
 .hero .usa-stamp{display:inline-flex;align-items:center;gap:10px;max-width:none;margin:0 0 4px;padding:8px 16px;border:2px solid var(--navy);outline:1px solid var(--navy);outline-offset:3px;border-radius:3px;color:var(--navy);font:700 .82rem/1 'Instrument Sans',sans-serif;letter-spacing:.14em;text-transform:uppercase;transform:rotate(-2deg);transform-origin:left center}.hero .usa-stamp span{color:#b3122e;font-size:.9rem;letter-spacing:0}
 .section h2+.category-grid{margin-top:20px}
+
+/* Compaction pass 3: less blank space between sections. */
+.section{padding:32px 0}
+.section:not(.pale)+.section:not(.pale){padding-top:8px}
+.hero-grid{padding:24px 0}
+.ecg-line svg{height:32px}
+.section h2+.category-grid{margin-top:12px}
+.page-head{padding-top:24px}
+.page-head + .section:not(.catalog),.catalog{padding-top:20px}
+.contact-band{padding:24px 0}
+.footer{padding:28px 0 16px}
+@media(max-width:600px){.section{padding:26px 0}.section:not(.pale)+.section:not(.pale){padding-top:6px}.hero-grid{padding:18px 0}.ecg-line svg{height:26px}.page-head{padding-top:18px}.page-head + .section:not(.catalog),.catalog{padding-top:16px}}
