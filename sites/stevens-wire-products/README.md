@@ -6,8 +6,8 @@ Live preview: https://stevens-wire-products-redesign.metzdevan.workers.dev
 
 ## What's in this folder
 
-- `site/` is the finished website: plain HTML, CSS, images and JavaScript, ready to host as is.
-- `src/` is the build: `data.py` holds the content, `build.py` generates `site/`, and `check.py` checks the result. `src/assets/` holds the original images and text from the current website that the build draws on.
+- `site/` is the finished website: plain HTML, CSS, images and JavaScript, ready to host as is. It also contains the brochure, fonts and favicon used by the build.
+- `src/` is the build: `data.py` holds product content, `build.py` generates the pages and images, `keep.py` generates the preview funnel, and `check.py` checks the result. `src/assets/` holds the styles, JavaScript, original images and redirect inventory; `src/logo.png` and `src/transparent/` supply the logo and image cutout.
 - `wrangler.jsonc` is the Cloudflare configuration used for the preview.
 
 ## Hosting it yourself
