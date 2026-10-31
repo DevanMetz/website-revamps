@@ -205,3 +205,6 @@ h2{font-size:clamp(1.9rem,2.8vw,2.6rem)}
 .hero .usa-stamp{transform-origin:center}
 .hero .actions{justify-content:center}
 @media(max-width:1000px){.hero-grid>div:first-child{justify-self:center}.hero-grid>div:first-child h1{text-align:center}}
+.band-actions{display:flex;gap:12px;flex-wrap:wrap}
+.button-outline{background:transparent;color:var(--navy)}.button-outline:hover{background:var(--navy);color:#fff}
+@media(max-width:600px){.band-actions{width:100%}.band-actions .button{flex:1}}
