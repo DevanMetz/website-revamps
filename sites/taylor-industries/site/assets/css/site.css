@@ -161,3 +161,5 @@ h1,h2,.page-head h1:has(+ p){margin-bottom:10px}
 .split,.feature-columns,.home-machines,.machine-grid,.media-row,.form-layout,.footer-grid{gap:20px}
 .spec-row{margin:20px 0 10px}
 }
+.hero .usa-stamp{display:inline-flex;align-items:center;gap:10px;max-width:none;margin:0 0 4px;padding:8px 16px;border:2px solid var(--navy);outline:1px solid var(--navy);outline-offset:3px;border-radius:3px;color:var(--navy);font:700 .82rem/1 'Instrument Sans',sans-serif;letter-spacing:.14em;text-transform:uppercase;transform:rotate(-2deg);transform-origin:left center}.hero .usa-stamp span{color:#b3122e;font-size:.9rem;letter-spacing:0}
+.section h2+.category-grid{margin-top:20px}
