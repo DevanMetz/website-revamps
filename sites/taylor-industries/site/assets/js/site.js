@@ -15,7 +15,7 @@ if(currentCategory && matchMedia('(max-width:600px)').matches){
 // Phone numbers and email addresses copy to the clipboard instead of opening an app
 (()=>{let toast,timer;
 function show(msg){if(!toast){toast=document.createElement('div');toast.className='copy-toast';toast.setAttribute('role','status');toast.setAttribute('aria-live','polite');document.body.appendChild(toast)}toast.textContent=msg;toast.classList.add('show');clearTimeout(timer);timer=setTimeout(()=>toast.classList.remove('show'),1800)}
-function fallback(text){const area=document.createElement('textarea');area.value=text;area.setAttribute('readonly','');area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}area.remove();return ok}
+function fallback(text){const focused=document.activeElement;const area=document.createElement('textarea');area.value=text;area.setAttribute('readonly','');area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();let ok=false;try{ok=document.execCommand('copy')}catch(e){}area.remove();focused?.focus({preventScroll:true});return ok}
 document.addEventListener('click',event=>{const link=event.target.closest('a[href^="tel:"],a[href^="mailto:"]');if(!link||event.defaultPrevented||event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
  const href=link.getAttribute('href');const isTel=href.startsWith('tel:');let text=link.textContent.trim();
  if(isTel){if(!/\d{3}.*\d{4}/.test(text))text=href.slice(4)}else{const addr=decodeURIComponent(href.slice(7).split('?')[0]);if(!text.includes('@'))text=addr}

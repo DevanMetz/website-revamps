@@ -33,7 +33,7 @@ Then open http://localhost:8765.
 
 Run `npx wrangler deploy` in this folder to publish `site/` to the Cloudflare Worker `taylor-industries-redesign`. Change `name` in `wrangler.jsonc` first if you want a different Worker name. The contents of `site/` can also be uploaded to any static web host; no server-side code or database is needed.
 
-While this is a preview, every page carries a `noindex` tag so search engines skip it. That tag should come out before the site goes live on your own domain.
+While this is a preview, every page carries a `noindex` tag so search engines skip it. That tag should come out before the site goes live on your own domain. At the same time, set `SITE_ORIGIN` in `src/data.py` to the real domain (it sets the canonical, social-share and breadcrumb URLs) and rebuild.
 
 The floating "Upgrade my website" button and the `/keep/` page it opens are preview-only: set `PREVIEW_SUBSCRIBE_URL = ''` in `src/data.py` and rebuild to remove both.
 

@@ -559,7 +559,7 @@ p { max-width: 68ch; }
 }
 /* ECG features and options sit above the catalog, so keep them compact */
 .section.ecg-features { padding-bottom: 20px; }
-.ecg-features h3 { margin-bottom: 4px; }
+.ecg-features h2 { font-size: 1.1rem; line-height: 1.3; letter-spacing: normal; margin-bottom: 4px; }
 .ecg-features .checklist li { padding: 7px 0; font-size: .9375rem; }
 
 .detail-image {
@@ -696,7 +696,7 @@ p { max-width: 68ch; }
 /* TL225: product photo plus lead-wire photo side by side */
 .catalog-image:has(img + img) img { max-width: 48%; }
 
-.product h3 { margin: 0 0 6px; }
+.product h2 { font-size: 1.1rem; line-height: 1.3; letter-spacing: normal; margin: 0 0 6px; }
 .product p,
 .product dl {
   margin: 0 0 4px;
@@ -771,6 +771,7 @@ p { max-width: 68ch; }
   padding: 6px 0;
 }
 .machine-card h3 { margin: 0; }
+.machine-card h2 { font-size: 1.1rem; line-height: 1.3; letter-spacing: normal; margin: 0; }
 /* Invisible twin of the arrow keeps the title itself centered */
 .machine-card div::before {
   content: "↗";
