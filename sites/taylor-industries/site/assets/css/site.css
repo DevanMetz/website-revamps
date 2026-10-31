@@ -828,8 +828,47 @@ p { max-width: 68ch; }
   border: 0;
 }
 
+/* Machine detail pages: text left, photo and video right, one screen tall */
+.machine-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: start;
+}
+.machine-text > p + p { margin-top: 10px; }
+.section.machine-page { padding-top: 14px; }
+.machine-text h1 { font-size: clamp(2rem, 3.2vw, 2.6rem); margin-bottom: 10px; }
+.machine-lede { font-size: 1.05rem; margin-bottom: 12px; }
+.machine-text .spec-row { gap: 16px; }
+.machine-text .spec-row span { font-size: .875rem; line-height: 1.35; }
+.section.machine-page { padding-bottom: 28px; }
+.machine-text .spec-row { margin: 18px 0 10px; }
+.machine-text .spec-row strong { font-size: 1.5rem; }
+.machine-text .button { margin-top: 14px; }
+.machine-media { display: grid; gap: 14px; }
+.machine-media .detail-image {
+  width: 100%;
+  height: clamp(180px, 28vh, 260px);
+  object-fit: contain;
+}
+.pack-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  gap: 20px;
+  align-items: center;
+}
+.pack-row .checklist { margin: 6px 0 0; }
+.pack-row .pouches img { width: 100%; height: auto; }
+.pack-row .pouches figcaption { margin-top: 4px; font-size: .8125rem; }
+@media (max-width: 860px) {
+  .machine-layout { grid-template-columns: 1fr; gap: 24px; }
+}
+@media (max-width: 600px) {
+  .pack-row { grid-template-columns: 1fr; }
+}
+
 /* Packaging systems */
-.pack-options { margin-top: 20px; }
+.pack-options { margin-top: 4px; }
 .media-row {
   align-items: center;
   margin-top: 24px;
