@@ -422,6 +422,18 @@ p { max-width: 68ch; }
   object-fit: contain;
 }
 
+/* Desktop: heading, stamp and copy fill the image's height, evenly spaced.
+   Text is trimmed to cap height and baseline so edges line up exactly. */
+@media (min-width: 861px) {
+  .hero-grid { align-items: stretch; }
+  .hero-grid > div:first-child { justify-content: space-between; }
+  .hero-grid > div:first-child h1,
+  .hero-copy p { text-box: trim-both cap alphabetic; }
+  .hero-grid > div:first-child h1 { margin: 0; }
+  .hero .usa-stamp { margin: 5px 0 5px 5px; }
+  .hero-copy { margin-top: 0; }
+}
+
 /* ECG trace under the hero */
 .ecg-line svg {
   display: block;
