@@ -1086,7 +1086,14 @@ legend {
 
 /* Reference guide sits alone between the address and Electrodes */
 .footer-links .footer-ref h2 a { color: var(--navy); }
-@media (max-width: 600px) {
-  .footer-links .footer-ref { grid-column: 1 / -1; }
-  .footer-links .footer-ref h2 { margin-bottom: 0; }
+
+/* Footer: all five columns share one row with equal gaps between them */
+@media (min-width: 1001px) {
+  .footer-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .footer-links { display: contents; }
+  .footer-links > div { max-width: 210px; }
 }
