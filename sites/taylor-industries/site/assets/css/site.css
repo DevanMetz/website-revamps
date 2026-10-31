@@ -862,6 +862,15 @@ p { max-width: 68ch; }
 .pack-row .pouches figcaption { margin-top: 4px; font-size: .8125rem; }
 @media (max-width: 860px) {
   .machine-layout { grid-template-columns: 1fr; gap: 24px; }
+  /* Packaging on phones: machine photo comes before the pouch samples */
+  .machine-layout:has(.pack-row) { display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+  .machine-layout:has(.pack-row) > .machine-text,
+  .machine-layout:has(.pack-row) > .machine-media { display: contents; }
+  .machine-layout:has(.pack-row) .detail-image:not(.pack-row *) { order: 1; margin: 4px 0 18px; }
+  .machine-layout:has(.pack-row) .pack-row { order: 2; }
+  .machine-layout:has(.pack-row) .machine-text > .button { order: 3; align-self: flex-start; }
+  .machine-layout:has(.pack-row) .video { order: 4; margin-top: 24px; }
+  .machine-layout:has(.pack-row) .machine-text > :not(.pack-row):not(.button) { order: 0; }
 }
 @media (max-width: 600px) {
   .pack-row { grid-template-columns: 1fr; }
