@@ -231,3 +231,4 @@ h2{font-size:clamp(1.9rem,2.8vw,2.6rem)}
 @media(max-width:600px){.category-grid{--cols:2}}
 @media(max-width:340px){.category-image,.catalog-image{padding:8px}}
 @media(max-width:860px){.hero-grid{grid-template-columns:minmax(0,1fr)}.hero-grid>div:first-child{min-width:0;max-width:100%}}@media(max-width:380px){.hero .usa-stamp{white-space:normal;text-align:center;font-size:.7rem;padding:8px 8px}}.product{min-width:0;overflow-wrap:anywhere}
+.hero-grid>div:first-child{align-items:flex-start}.hero .usa-stamp{align-self:flex-start;margin-left:4px;transform-origin:left center}@media(max-width:1000px){.hero-grid>div:first-child h1{text-align:left}.hero-grid>div:first-child{justify-self:stretch}.hero-copy p{margin-left:0}}
