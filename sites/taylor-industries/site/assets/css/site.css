@@ -388,8 +388,8 @@ p { max-width: 68ch; }
   outline: 2px solid var(--navy);
   outline-offset: 4px;
   color: var(--navy);
-  font: 700 min(1.15rem, 2.6cqi)/1 'Instrument Sans', sans-serif;
-  letter-spacing: .12em;
+  font: 700 1.15rem/1 'Instrument Sans', sans-serif;
+  letter-spacing: .1em;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -1066,4 +1066,20 @@ legend {
 @media (max-width: 1000px) {
   .logo { flex: 1 1 0; min-width: 0; max-width: 220px; }
   .logo img { width: 100%; }
+}
+
+/* USA stamp: a fixed text size at each layout (no fluid scaling) */
+.hero .usa-stamp { padding: 12px 14px; gap: 12px; font-size: 1.15rem; letter-spacing: .1em; }
+@media (max-width: 1160px) and (min-width: 861px) {
+  .hero .usa-stamp { padding: 9px 10px; gap: 8px; font-size: .8125rem; letter-spacing: .06em; }
+}
+@media (max-width: 600px) {
+  .hero .usa-stamp { padding: 9px 8px; gap: 6px; font-size: .75rem; letter-spacing: .04em; }
+  .hero .usa-stamp span { font-size: .85rem; }
+}
+@media (max-width: 389px) {
+  .hero .usa-stamp { font-size: .6875rem; letter-spacing: .02em; }
+}
+@media (max-width: 359px) {
+  .hero .usa-stamp { font-size: .625rem; letter-spacing: 0; }
 }
