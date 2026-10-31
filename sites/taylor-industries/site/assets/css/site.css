@@ -1052,7 +1052,6 @@ legend {
 /* Phones: smaller logo so the stacked phone and email fit beside Menu */
 @media (max-width: 600px) {
   .header-inner { gap: 10px; }
-  .logo img { width: min(150px, 38vw); }
   .header-contact { gap: 1px; }
   .header-phone { font-size: .875rem; }
   .header-email { font-size: .75rem; }
@@ -1060,6 +1059,11 @@ legend {
 }
 @media (max-width: 400px) {
   .header-inner { gap: 8px; }
-  .logo img { width: min(150px, calc(100vw - 236px)); }
   .header-email { font-size: .6875rem; }
+}
+
+/* ≤1000px: logo stays full size and only shrinks once the row runs out of room */
+@media (max-width: 1000px) {
+  .logo { flex: 1 1 0; min-width: 0; max-width: 220px; }
+  .logo img { width: 100%; }
 }
