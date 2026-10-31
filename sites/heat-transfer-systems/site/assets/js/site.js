@@ -27,3 +27,36 @@ if (form) form.addEventListener('submit', event => {
 const products = document.querySelector('.product-menu details');
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && products.open) { products.open = false; products.querySelector('summary').focus(); } });
 document.addEventListener('click', event => { if (!products.contains(event.target)) products.open = false; });
+
+let copyTimer;
+document.addEventListener('click', async event => {
+  const link = event.target.closest('a[href^="tel:"], a[href^="mailto:"]');
+  if (!link) return;
+  event.preventDefault();
+  const value = link.textContent.trim() || decodeURIComponent(link.getAttribute('href').split(':')[1]);
+  try {
+    if (!navigator.clipboard || !window.isSecureContext) throw new Error('Clipboard unavailable');
+    await navigator.clipboard.writeText(value);
+  } catch (_) {
+    const field = document.createElement('textarea');
+    field.value = value;
+    field.style.cssText = 'position:fixed;left:-9999px;top:0';
+    document.body.appendChild(field);
+    field.select();
+    const copied = document.execCommand('copy');
+    field.remove();
+    if (!copied) return;
+  }
+  let toast = document.querySelector('.copy-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.className = 'copy-toast';
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
+    document.body.appendChild(toast);
+  }
+  toast.textContent = 'Copied ' + value;
+  toast.hidden = false;
+  clearTimeout(copyTimer);
+  copyTimer = setTimeout(() => { toast.hidden = true; }, 1800);
+});

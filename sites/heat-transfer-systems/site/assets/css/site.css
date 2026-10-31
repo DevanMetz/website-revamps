@@ -65,3 +65,5 @@ nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--carb
 @media(min-width:1201px) and (max-width:1250px){.menu-groups>li:first-child,.menu-groups>li:nth-child(2) li:nth-child(n+2),.menu-groups>li:nth-child(3) li:last-child{display:list-item}.menu-groups{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:650px){.header-inner{min-height:82px;padding:10px 0}.brand img{width:auto;height:62px}}
 .primary-nav > ul > li > a{display:flex;align-items:center}
+/* Keep long contact details and focus indicators usable on small screens. */
+body{overflow-wrap:break-word}a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #231f20;outline-offset:3px}.hero a:focus-visible,.page-intro a:focus-visible,footer a:focus-visible{outline-color:#fff}.copy-toast{position:fixed;z-index:40;top:max(12px,env(safe-area-inset-top));right:12px;max-width:calc(100% - 24px);padding:10px 16px;background:#231f20;color:#fff;box-shadow:0 4px 16px #0003}.copy-toast[hidden]{display:none}.contact-grid a{overflow-wrap:anywhere}.back-link{min-height:44px;padding:10px 0}
