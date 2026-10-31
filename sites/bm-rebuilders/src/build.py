@@ -2,23 +2,27 @@ from pathlib import Path
 from html import escape
 from bs4 import BeautifulSoup
 from PIL import Image
-import re, json
+import re, json, shutil
 from data import SERVICES
 ROOT=Path(__file__).resolve().parent.parent
 SITE=ROOT/'site'; IMG=SITE/'assets/img'; IMG.mkdir(parents=True,exist_ok=True)
+for stale in ('020.png', '023.png', '024.png', '055.png'):
+ (IMG / stale).unlink(missing_ok=True)
+for asset in ('css', 'js', 'fonts'):
+ shutil.copytree(ROOT / 'src/assets' / asset, SITE / 'assets' / asset, dirs_exist_ok=True)
 source=(ROOT/'src/assets/crawl-page-text.txt').read_text()
 sections={}
 for chunk in source.split('='*100):
  m=re.search(r'URL: https://bmrebuildersinc.com/([^\n]*)\nTITLE:.*?\n(.*)',chunk,re.S)
  if m: sections[m.group(1).removesuffix('.html')]=m.group(2)
 
-def image(name,alt,cls=''):
+def image(name,alt,cls='',priority=False):
  p=ROOT/'src/assets/img/images'/name
  im=Image.open(p); im.seek(0)
  if im.mode not in ('RGB','L'): im=im.convert('RGB')
- out=Path(name).stem.lower()+('.png' if p.suffix.lower() in ('.gif','.png') else '.jpg'); im.save(IMG/out, 'PNG' if out.endswith('.png') else 'JPEG', **({'optimize': True} if out.endswith('.png') else {'quality':82,'optimize':True}))
+ out=Path(name).stem.lower()+('.webp' if p.suffix.lower() in ('.gif','.png') else '.jpg'); im.save(IMG/out, 'WEBP' if out.endswith('.webp') else 'JPEG', quality=82, optimize=True)
  w,h=im.size
- return f'<img class="{cls}" src="/assets/img/{out}" width="{w}" height="{h}" alt="{escape(alt)}" loading="lazy">'
+ return f'<img class="{cls}" src="/assets/img/{out}" width="{w}" height="{h}" alt="{escape(alt)}" '+('fetchpriority="high"' if priority else 'loading="lazy" decoding="async"')+'>'
 # Preserve the source logo's existing transparency.
 logo = Image.open(ROOT/'src/assets/logo/original.gif').convert('RGBA')
 logo = logo.resize((300, 177), Image.Resampling.LANCZOS)
@@ -76,19 +80,21 @@ def gallery(olds,title):
    caption=CAPTIONS.get(key,'')
    detail=detail_text(olds,DETAILS[key]) if key in DETAILS else ''
    if detail and detail not in caption: caption=(caption+' '+detail).strip()
-   rendered=image(name,caption or title)
+   rendered=image(name,caption or title,priority=not result)
    show_caption=caption and caption != previous_caption
    w,h=Image.open(ROOT/'src/assets/img/images'/name).size
    result.append(f'<figure style="--photo-width:{w*1.5:g}px"><div class="gallery-image">{rendered}</div>'+ (f'<figcaption>{escape(caption)}</figcaption>' if show_caption else '')+'</figure>')
    previous_caption=caption
  return '<div class="gallery">'+''.join(result)+'</div>'
-def page(title,body,description,active=''):
+def page(title,body,description,active='',path='/'):
  service_links=''.join(f'<li><a href="/services/{slug}/"'+(' aria-current="page"' if title==label else '')+f'>{label}</a></li>\n' for slug,label,_ in SERVICES)
  nav=(f'<ul><li><a href="/"'+(' aria-current="page"' if active=='home' else '')+'>Home</a></li>\n'
       f'<li><a href="/#services"'+(' class="section-current"' if active=='services' else '')+'>Services</a><ul class="service-nav">'+service_links+'</ul></li>\n'
       +''.join(f'<li><a href="/{key}/"'+(' aria-current="page"' if active==key else '')+f'>{label}</a></li>\n' for key,label in [('shop','Shop'),('contact','Contact')])+'</ul>')
- schema={'@context':'https://schema.org','@type':'Organization','name':'B.M. Rebuilders, Inc.','url':'https://bmrebuildersinc.com/','address':{'@type':'PostalAddress','addressLocality':'Elyria','addressRegion':'Ohio'},'telephone':'440-365-2300','faxNumber':'440-366-9868','email':'bmrebuild@aol.com'}
- return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>{escape(title)} | B.M. Rebuilders, Inc.</title><meta name="description" content="{escape(description)}"><meta property="og:title" content="{escape(title)} | B.M. Rebuilders, Inc."><meta property="og:description" content="{escape(description)}"><meta property="og:type" content="website"><link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml"><link rel="preload" href="/assets/fonts/archivo-narrow-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/css/site.css?v=5"><script type="application/ld+json">{json.dumps(schema)}</script><script src="/assets/js/site.js?v=4" defer></script></head><body><a class="skip" href="#main">Skip to content</a><header class="header"><div class="wrap head"><a class="brand" href="/"><img src="/assets/img/logo.png" width="100" height="59" alt="B.M. Rebuilders, Inc."></a> <button class="menu" aria-expanded="false" aria-controls="nav">Menu</button><nav id="nav" aria-label="Main navigation">{nav}</nav><div class="rail-contact"><a href="tel:8886866237">888-686-6237</a> <a href="mailto:bmrebuild@aol.com">bmrebuild@aol.com</a></div></div></header><main id="main">{body}</main><footer><div class="wrap footer"><div><a class="brand" href="/"><img src="/assets/img/logo.png" width="100" height="59" alt="B.M. Rebuilders, Inc."></a><p>Elyria, Ohio</p></div><div><a href="tel:8886866237">888-686-6237</a><br><a href="tel:4403652300">440-365-2300</a><br><a href="mailto:bmrebuild@aol.com">bmrebuild@aol.com</a></div><div><a href="/shop/">Shop</a><br><a href="/contact/">Contact</a></div></div></footer></body></html>'''
+ schema={'@context':'https://schema.org','@type':'Organization','name':'B.M. Rebuilders, Inc.','url':'https://bmrebuildersinc.com/','address':{'@type':'PostalAddress','addressLocality':'Elyria','addressRegion':'Ohio'},'telephone':'440-365-2300','faxNumber':'440-366-9868','email':'bmrebuild@aol.com','logo':'https://bmrebuildersinc.com/assets/img/logo.png'}
+ if path != '/':
+  schema={'@context':'https://schema.org','@graph':[schema,{'@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'Home','item':'https://bmrebuildersinc.com/'},{'@type':'ListItem','position':2,'name':title,'item':'https://bmrebuildersinc.com'+path}]}]}
+ return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>{escape(title)} | B.M. Rebuilders, Inc.</title><meta name="description" content="{escape(description)}"><meta property="og:title" content="{escape(title)} | B.M. Rebuilders, Inc."><meta property="og:description" content="{escape(description)}"><meta property="og:type" content="website"><link rel="canonical" href="https://bmrebuildersinc.com{path}"><meta property="og:url" content="https://bmrebuildersinc.com{path}"><meta property="og:image" content="https://bmrebuildersinc.com/assets/img/logo.png"><link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml"><link rel="preload" href="/assets/fonts/archivo-narrow-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/css/site.css?v=5"><script type="application/ld+json">{json.dumps(schema)}</script><script src="/assets/js/site.js?v=4" defer></script></head><body><a class="skip" href="#main">Skip to content</a><header class="header"><div class="wrap head"><a class="brand" href="/"><img src="/assets/img/logo.png" width="100" height="59" alt="B.M. Rebuilders, Inc."></a> <button class="menu" aria-expanded="false" aria-controls="nav">Menu</button><nav id="nav" aria-label="Main navigation">{nav}</nav><div class="rail-contact"><a href="tel:8886866237">888-686-6237</a> <a href="mailto:bmrebuild@aol.com">bmrebuild@aol.com</a></div></div></header><main id="main">{body}</main><footer><div class="wrap footer"><div><a class="brand" href="/"><img src="/assets/img/logo.png" width="100" height="59" alt="B.M. Rebuilders, Inc."></a><p>Elyria, Ohio</p></div><div><a href="tel:8886866237">888-686-6237</a><br><a href="tel:4403652300">440-365-2300</a><br><a href="mailto:bmrebuild@aol.com">bmrebuild@aol.com</a></div><div><a href="/shop/">Shop</a><br><a href="/contact/">Contact</a></div></div></footer></body></html>'''
 def write(path,html):
  p=SITE/path/'index.html' if path else SITE/'index.html'; p.parent.mkdir(parents=True,exist_ok=True); p.write_text(html)
 cards=''
@@ -97,20 +103,20 @@ for slug,title,olds in SERVICES:
  names=[Path(i.get('src','')).name for i in soup.find_all('img') if re.match(r'^\d+\.', Path(i.get('src','')).name) and (ROOT/'src/assets/img/images'/Path(i.get('src','')).name).exists()]
  name=next((n for n in names if Image.open(ROOT/'src/assets/img/images'/n).width / Image.open(ROOT/'src/assets/img/images'/n).height > 1.25), names[0])
  cards+=f'<a class="card" href="/services/{slug}/"><div class="card-image">{image(name,title)}</div><div class="card-title"><h3>{title}</h3></div></a> '
-mosaic=''.join(f'<div class="mosaic-photo mosaic-photo-{i}">{image(name, alt)}</div>' for i,(name,alt) in enumerate([('001.jpg','Carlo Salvi cold header'),('006.jpg','National cold former during rebuilding'),('014.jpg','Broken crankshaft'),('038.jpg','Frame scraping')],1))
+mosaic=''.join(f'<div class="mosaic-photo mosaic-photo-{i}">{image(name, alt, priority=(i == 1))}</div>' for i,(name,alt) in enumerate([('001.jpg','Carlo Salvi cold header'),('006.jpg','National cold former during rebuilding'),('014.jpg','Broken crankshaft'),('038.jpg','Frame scraping')],1))
 home=f'''<section class="hero"><div class="hero-copy"><h1>Cold forming and wire drawing machinery rebuilding</h1><div class="actions"><a class="button" href="/contact/">Contact us about a machine</a> <a class="hero-link" href="/#services">Services</a></div></div>{mosaic}</section><section class="section wrap" id="services"><div class="section-heading"><h2>Services</h2></div><div class="cards">{cards}</div></section><section class="shop-band"><div class="wrap"><div class="shop-copy"><h2>Shop</h2><p>Our 20,000 square foot facility under crane has a fully equipped machine shop with horizontal boring mills up to 5" spindle, and lathes up to 30" diameter by 120" long.</p><p>We also have four stake bed trucks, each equipped with its own toolbox, fully loaded to handle the smallest repair to a mini or full rebuild on your floor.</p><a class="text-link" href="/shop/">Shop</a></div></div></section>''' 
 write('',page('Machinery rebuilding',home,'Rebuilding and repairing machinery used in the cold forming and wire drawing industry.','home'))
 for slug,title,olds in SERVICES:
  parts=intro(olds)+gallery(olds,title)+'<div class="service-cta"><a href="tel:8886866237">888-686-6237</a> <a class="button dark" href="/contact/">Contact us</a></div>'
  body=f'<section class="page-hero"><div class="wrap"><a class="back" href="/#services">All services</a><h1>{title}</h1><a class="button service-contact" href="/contact/">Contact us</a></div></section><div class="wrap service-content">{parts}</div>'
- write('services/'+slug,page(title,body,title+' from B.M. Rebuilders, Inc.','services'))
+ write('services/'+slug,page(title,body,title+' from B.M. Rebuilders, Inc.','services','/services/'+slug+'/'))
 shop='''<section class="page-hero"><div class="wrap"><a class="back" href="/">Home</a><h1>Shop</h1></div></section><section class="section wrap shop-layout"><div><h2>Machine shop</h2><p>Our 20,000 square foot facility under crane has a fully equipped machine shop with horizontal boring mills up to 5" spindle, and lathes up to 30" diameter by 120" long.</p></div><div><h2>Field service</h2><p>We have four stake bed trucks, each equipped with its own toolbox, to handle repairs and mini or full rebuilds on your floor.</p><a class="text-link" href="/contact/">Contact us</a></div></section>'''
-write('shop',page('Our shop',shop,'Our fully equipped machine shop and field service trucks.','shop'))
+write('shop',page('Our shop',shop,'Our 20,000 square foot facility under crane has a fully equipped machine shop.','shop','/shop/'))
 fields=[('name','Name','text','name',True),('company','Company','text','organization',False),('phone','Phone','tel','tel',False),('email','Email','email','email',True),('machine','Machine make/model','text','off',False),('service','Service needed','text','off',False)]
 inputs=''.join(f'<label for="{i}">{label}<input id="{i}" name="{label}" type="{typ}" autocomplete="{auto}"'+(' required' if req else '')+'></label>' for i,label,typ,auto,req in fields)
 contact=f'''<section class="page-hero"><div class="wrap"><a class="back" href="/">Home</a><h1>Contact</h1></div></section><section class="section wrap contact-layout"><div class="contact-details"><h2>Get in touch</h2><p>Toll free<br><a href="tel:8886866237">888-686-6237</a></p><p>Phone<br><a href="tel:4403652300">440-365-2300</a></p><p>Fax<br>440-366-9868</p><p>Email<br><a href="mailto:bmrebuild@aol.com">bmrebuild@aol.com</a></p></div><div><h2>Send an inquiry</h2><!-- Replace the mailto handler with a production form endpoint here. --><form id="inquiry"><div class="form-grid">{inputs}</div><label for="message">Message<textarea id="message" name="Message" rows="6" required></textarea></label><button class="button dark" type="submit">Send inquiry</button><p id="status" role="status"></p></form></div></section>'''
-write('contact',page('Contact',contact,'Contact B.M. Rebuilders, Inc. in Elyria, Ohio.','contact'))
-(SITE/'404.html').write_text(page('Page not found','<section class="page-hero"><div class="wrap"><a class="back" href="/">Home</a><h1>Page not found</h1><p><a href="/">Return home</a></p></div></section>','Page not found.'))
+write('contact',page('Contact',contact,'Contact B.M. Rebuilders, Inc. in Elyria, Ohio.','contact','/contact/'))
+(SITE/'404.html').write_text(page('Page not found','<section class="page-hero"><div class="wrap"><a class="back" href="/">Home</a><h1>Page not found</h1><p><a href="/">Return home</a></p></div></section>','Page not found.',path='/404.html'))
 (SITE/'assets/img/favicon.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#2b2d2f"/><text x="32" y="42" text-anchor="middle" font-family="sans-serif" font-size="25" font-weight="bold" fill="#ed5556">BM</text></svg>')
 redirects=['/index.html / 301']
 for slug,title,olds in SERVICES:
@@ -129,10 +135,10 @@ def add_preview_subscribe():
  import re
  from html import escape as esc
  site_dir=Path(__file__).resolve().parent.parent/'site'
- css=("a.preview-subscribe{position:fixed;right:max(20px,calc(env(safe-area-inset-right) + 12px));bottom:max(20px,calc(env(safe-area-inset-bottom) + 12px));z-index:19;display:inline-flex;align-items:center;min-height:66px;padding:0 27px;border-radius:999px;background:#a51e24;color:#fff;font:700 22.5px/1.1 'Archivo Narrow',sans-serif;letter-spacing:.01em;text-transform:none;text-decoration:none;white-space:nowrap;box-shadow:0 9px 27px rgba(0,0,0,.22);transition:background-color .15s,opacity .2s,visibility .2s}"
+ css=("a.preview-subscribe{position:fixed;right:max(20px,calc(env(safe-area-inset-right) + 12px));bottom:max(20px,calc(env(safe-area-inset-bottom) + 12px));z-index:30;display:inline-flex;align-items:center;min-height:66px;padding:0 27px;border-radius:999px;background:#a51e24;color:#fff;font:700 22.5px/1.1 'Archivo Narrow',sans-serif;letter-spacing:.01em;text-transform:none;text-decoration:none;white-space:nowrap;box-shadow:0 9px 27px rgba(0,0,0,.22);transition:background-color .15s,opacity .2s,visibility .2s}"
   "a.preview-subscribe:hover{background:#79151a;color:#fff;text-decoration:none}"
   "a.preview-subscribe:focus-visible{background:#a51e24;color:#fff;outline:3px solid #2b2d2f;outline-offset:3px;box-shadow:0 0 0 3px #fff,0 6px 18px rgba(0,0,0,.22)}"
-  "a.preview-subscribe.is-tucked,body:has(header [aria-expanded=\"true\"]) a.preview-subscribe{opacity:0;visibility:hidden}"
+  ""
   "@media (max-width:760px){a.preview-subscribe{right:max(12px,calc(env(safe-area-inset-right) + 8px));bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px));min-height:60px;padding:0 21px;font-size:21px}}"
   "footer:last-of-type::after{content:\"\";display:block;height:88px}"
   "@media (prefers-reduced-motion:reduce){a.preview-subscribe{transition:none}}")

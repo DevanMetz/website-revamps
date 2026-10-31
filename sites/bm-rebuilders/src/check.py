@@ -13,7 +13,7 @@ for p in pages:
   if any(not img.has_attr(x) for x in ('alt','width','height')): errors.append(f'{p}: image attributes')
  for tag in s.find_all(['a','link','script','img']):
   u=tag.get('href') or tag.get('src') or ''
-  if u.startswith(('http:','https:','//')) and u not in (PREVIEW_SUBSCRIBE_URL,KEEP_CODE_URL,STRIPE_PORTAL_URL): errors.append(f'{p}: external URL {u}')
+  if u.startswith(('http:','https:','//')) and u not in (PREVIEW_SUBSCRIBE_URL,KEEP_CODE_URL,STRIPE_PORTAL_URL) and not (tag.name == 'link' and tag.get('rel') == ['canonical'] and u.startswith('https://bmrebuildersinc.com/')): errors.append(f'{p}: external URL {u}')
   if u.startswith('/') and not u.startswith('//'):
    path=urlsplit(u).path; target=site/path.lstrip('/')
    if target.is_dir(): target=target/'index.html'
