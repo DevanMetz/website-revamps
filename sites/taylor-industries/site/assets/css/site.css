@@ -555,6 +555,10 @@ p { max-width: 68ch; }
   padding: 14px 0;
   border-top: 1px solid var(--line);
 }
+/* ECG features and options sit above the catalog, so keep them compact */
+.section.ecg-features { padding-bottom: 20px; }
+.ecg-features h3 { margin-bottom: 4px; }
+.ecg-features .checklist li { padding: 7px 0; font-size: .9375rem; }
 
 .detail-image {
   max-width: 100%;

@@ -23,7 +23,7 @@ def button(url,label): return link(url,label,'button')
 def link_list(items): return '<ul>'+''.join('<li>'+link(u,n)+'</li>' for n,u in items)+'</ul>'
 categories=[('ECG Electrodes','/electrodes/ecg/','ecg/2000ZT_Disposable_ECG_Electrode.jpg'),('TENS Electrodes','/electrodes/tens/','tens/971904152-TENS_Electrode.jpg'),('Tab Electrodes','/electrodes/tab/','misc/tab.jpg'),('Adhesive Strips','/electrodes/adhesive-strips/','strip/5FS-single_Adhesive_Strips.jpg'),('Custom Electrodes','/electrodes/custom/','misc/custom_electrodes.jpg')]
 features=['Low impedance Solid Gel providing excellent performance and easy clean up','Silver/Silver Chloride (Ag/AgCl) coated sensors','Stainless Steel industry standard snaps','Latex Free, Hypoallergenic medical grade foam','Private label packaging']
-options=['Latex Free, Hypoallergenic Cloth Material available on most shapes','Logo Tape to help market your product','Custom shapes and sizes','Packaging configuration flexibility to help maximize costs']
+options=['Latex Free, Hypoallergenic Cloth Material available on most shapes','Logo Tape to help market your product','<a href="/electrodes/custom/">Custom shapes and sizes</a>. We can work with you to develop a product unique to your company','Packaging configuration flexibility to help maximize costs']
 def bullets(items): return '<ul class="checklist">'+''.join('<li>'+x+'</li>' for x in items)+'</ul>'
 def cards(): return '<div class="category-grid">'+''.join(f'<a class="category-card" href="{u}"><div class="category-image">{img(p,n)}</div><span>{n}</span></a>' for n,u,p in categories)+'</div>'
 def video(): return f'<div class="video" id="video"><button type="button" class="video-load" aria-label="Play video: ECG Electrode Production Machine">{img("machines/video-thumb.jpg","", "", False)}<span class="play" aria-hidden="true">▶</span></button></div>'
@@ -69,8 +69,8 @@ def catalog_section(category):
 
 index_cards=cards()
 pages['/electrodes/']=('Electrodes',intro,'<div class="page-head"><div class="wrap"><h1>Electrodes</h1><p>'+intro+' We can also work with you to create your own custom electrodes unique to your company.</p></div></div>'+section('',index_cards+'<div class="reference-row">'+link('/assets/Electrode_Reference_Guide.pdf','Download electrode reference guide (PDF)','text-link')+'</div>'))
-ecg_features=section('Features & options',f'<div class="feature-columns"><div><h3>Features</h3>{bullets(features)}</div><div><h3>Options</h3>{bullets(options)}</div></div>')
-pages['/electrodes/ecg/']=('ECG Electrodes',ecgintro,pagehead('ECG Electrodes',ecgintro+' Our ECG electrodes are available in a wide variety of shapes and sizes to accommodate many different monitoring applications, and we can also work with you to create your own <a href="/electrodes/custom/">custom electrodes</a>.')+catalog_section('ECG')+ecg_features+related('/electrodes/ecg/'))
+ecg_features=section('',f'<div class="feature-columns"><div><h3>Features</h3>{bullets(features)}</div><div><h3>Options</h3>{bullets(options)}</div></div>','ecg-features')
+pages['/electrodes/ecg/']=('ECG Electrodes',ecgintro,pagehead('ECG Electrodes',ecgintro+' Our ECG electrodes are available in a wide variety of shapes and sizes to accommodate many different monitoring applications, and we can also work with you to create your own <a href="/electrodes/custom/">custom electrodes</a>.')+ecg_features+catalog_section('ECG')+related('/electrodes/ecg/'))
 tensintro='Prewired TENS electrodes available with a Black Carbon Film or a Tin conductive element.'
 pages['/electrodes/tens/']=('TENS Electrodes',tensintro,pagehead('TENS Electrodes',tensintro+' If you do not see a size or shape that you need, please <a href="/contact/?product=TENS%20electrodes">contact us</a>.')+catalog_section('TENS')+related('/electrodes/tens/'))
 pages['/electrodes/tab/']=('Tab Electrodes','Tab electrodes and grounding pads.',pagehead('Tab Electrodes')+catalog_section('Tab')+related('/electrodes/tab/'))
