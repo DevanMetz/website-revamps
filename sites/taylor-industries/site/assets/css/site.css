@@ -11,8 +11,7 @@
      7. Electrode catalog
      8. Production machines
      9. Forms
-    10. Contact band
-    11. Footer
+    10. Footer
    Media queries sit at the end of each section, widest first:
      861–1240px, 1001–1180px, 1001–1080px, ≤1000px, ≤860px, ≤600px, ≤380px, ≤359px.
    ========================================================================== */
@@ -224,7 +223,7 @@ p { max-width: 68ch; }
 
 .menu-toggle { display: none; }
 
-/* Phone and email stacked beside the quote button */
+/* Phone and email stacked beside the inquiry and quote buttons */
 .header-actions {
   display: flex;
   align-items: center;
@@ -249,6 +248,7 @@ p { max-width: 68ch; }
   text-decoration: underline;
 }
 .header-contact a,
+.header-inquiry,
 .header-quote { white-space: nowrap; }
 
 @media (min-width: 1001px) and (max-width: 1180px) {
@@ -267,7 +267,25 @@ p { max-width: 68ch; }
   .logo img { width: 212px; }
   .nav > ul { gap: 18px; }
   .header-actions { gap: 14px; }
+  .header-inquiry,
   .header-quote { padding: 11px 16px; }
+}
+@media (min-width: 1001px) and (max-width: 1240px) {
+  .nav a { white-space: nowrap; }
+  .header-inquiry,
+  .header-quote {
+    padding: 10px 14px;
+    font-size: .875rem;
+  }
+}
+@media (min-width: 1001px) and (max-width: 1120px) {
+  .logo img { width: 180px; }
+  .nav > ul { gap: 16px; }
+  .nav a { font-size: .9375rem; }
+  .header-email { display: none; }
+  .header-actions { gap: 10px; }
+  .header-inquiry,
+  .header-quote { padding: 10px 12px; }
 }
 
 /* ≤1000px: logo, contact and Menu button on one row; nav drops below */
@@ -281,6 +299,7 @@ p { max-width: 68ch; }
   .logo img { width: 220px; }
   .header-actions { order: 1; }
   .header-email,
+  .header-inquiry,
   .header-quote { display: none; }
   .header-phone { font-size: 0; }
   .header-phone:after {
@@ -920,43 +939,7 @@ legend {
 }
 
 
-/* 10. Contact band (bottom of home page)
-   ========================================================================== */
-
-.contact-band {
-  padding: 16px 0;
-  border-top: 1px solid var(--line);
-  background: var(--tray);
-}
-.band-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-}
-.band-inner h2 { margin: 0; }
-.band-contact {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.band-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-@media (max-width: 600px) {
-  .band-inner {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .band-actions { width: 100%; }
-  .band-actions .button { flex: 1; }
-}
-
-
-/* 11. Footer
+/* 10. Footer
    ========================================================================== */
 
 .footer {
