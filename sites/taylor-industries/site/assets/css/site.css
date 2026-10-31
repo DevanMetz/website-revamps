@@ -874,6 +874,8 @@ p { max-width: 68ch; }
 }
 @media (max-width: 600px) {
   .pack-row { grid-template-columns: 1fr; }
+  /* Footprint, width and length are already in the paragraphs above */
+  .machine-layout:has(.pack-row) .spec-row { display: none; }
 }
 
 /* Packaging systems */
