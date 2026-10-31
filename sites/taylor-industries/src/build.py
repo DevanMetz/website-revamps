@@ -1,11 +1,14 @@
 from pathlib import Path
 from html import escape
-from data import CATALOG
-import json
-S=Path('site'); A='/assets/img/'
-from PIL import Image
-import shutil
+from urllib.parse import quote
 import hashlib
+import json
+import re
+import shutil
+from PIL import Image
+from data import CATALOG, PREVIEW_SUBSCRIBE_URL
+from keep import build_keep
+S=Path('site'); A='/assets/img/'
 CSS_V=hashlib.sha256(Path('site/assets/css/site.css').read_bytes()).hexdigest()[:10]  # cache-bust: /assets/* is cached for a year
 
 def img(path,alt,cls='',eager=False):
@@ -34,15 +37,10 @@ intro='Taylor Industries Inc. is your contract manufacturing resource for ECG, T
 home=f'''<section class="hero"><div class="wrap hero-grid"><div><div class="hero-title"><h1>ECG, TENS and Tab Electrodes</h1><p class="usa-stamp"><span aria-hidden="true">★</span> Manufactured in the United States <span aria-hidden="true">★</span></p></div><div class="hero-copy"><p>Taylor Industries is your premier source for ECG / EKG, TENS and Tab electrodes. Ours are latex free, hypoallergenic and come in a wide variety of shapes, sizes and materials. We can also develop and manufacture <a href="/electrodes/custom/">custom electrodes</a> exclusive to your company.</p></div></div><a class="hero-tray" href="/assets/Electrode_Reference_Guide.pdf" title="Electrode reference guide (PDF)">{img('brand/electrodes-collage.webp','ECG electrodes, TENS electrodes and Tab electrodes: open the electrode reference guide (PDF)','hero-image',True)}</a></div></section><div class="wrap ecg-line" aria-hidden="true"><svg><defs><pattern id="ecg-beat" width="458" height="28" patternUnits="userSpaceOnUse"><path d="M0 14H20C23 14 24.5 11.2 27.5 11.2C30.5 11.2 32.5 14 36 14H47C48 14 48.6 15.1 49.4 15.1L53.3 3Q53.8 1.6 54.3 3L57.6 17.7Q58.2 18.8 58.9 17.6L61 13.9C64 13.75 69 13.6 73 11.97C77 10.35 80.5 9.5 82.5 9.5C85 9.5 87.5 14 93 14C97 14 98 13.5 101 13.5C104 13.5 105 14 109 14H172C175 14 176.5 11.4 179.5 11.4C182.5 11.4 184.5 14 188 14H199C200 14 200.6 15.2 201.4 15.2L205.3 2.6Q205.8 1.2 206.3 2.6L209.6 17.4Q210.2 18.5 210.9 17.3L213 13.9C216 13.75 221 13.6 225 11.88C229 10.17 232.5 9.3 234.5 9.3C237 9.3 239.5 14 245 14C249 14 250 13.55 253 13.55C256 13.55 257 14 261 14H330C333 14 334.5 11.1 337.5 11.1C340.5 11.1 342.5 14 346 14H357C358 14 358.6 15 359.4 15L363.3 3.4Q363.8 2 364.3 3.4L367.6 17.9Q368.2 19 368.9 17.8L371 13.9C374 13.75 379 13.6 383 12.02C387 10.44 390.5 9.6 392.5 9.6C395 9.6 397.5 14 403 14C407 14 408 13.45 411 13.45C414 13.45 415 14 419 14H458"/></pattern></defs><rect width="100%" height="28" fill="url(#ecg-beat)"/></svg></div>{section('',cards(),'home-electrodes')}<section class="section"><div class="wrap"><div class="section-heading"><div><h2>Electrode Production Machines</h2><p>Bring production in-house with an easy-to-operate electrode production machine from Taylor Industries, custom-built to address your specific needs.</p></div></div>{machine_cards()}</div></section>'''
 pages={'/':('Electrodes & Production Machines',intro,home)}
 ecgintro='Let Taylor Industries be your contract manufacturing resource for disposable ECG / EKG electrodes manufactured in the United States. All ECG electrodes are Latex Free, Hypoallergenic and exceed AAMI specifications.'
-from urllib.parse import quote
-
 def esc(v): return escape(str(v or ''), quote=True)
 def anchor(p): return p['code']
-def product_url(p): return '/electrodes/'+{'ECG':'ecg','TENS':'tens','Tab':'tab','Adhesive Strips':'adhesive-strips'}[p['category']]+'/#'+quote(anchor(p))
 def size_in(p):
  return p["size_in"] + ((" " + p["shape"]) if p["category"] == "TENS" else ("" if '"' in p["size_in"] or not p["size_in"] else '"'))
-def size_text(p):
- return size_in(p) + (f' ({p["size_mm"]})' if p["size_mm"] else "")
 def photo(p): return img(p['image'],p['code']+' electrode','catalog-photo') if p['image'] else ''
 def product(p):
  pack=' / '.join(f'{p[k]} per {k}' for k in ('card','pouch','box','case') if p.get(k))
@@ -57,7 +55,6 @@ def product(p):
  image_html=f'<div class="catalog-image">{photo(p)}{wire}</div>' if p['image'] else ''
  size_html=esc(size_in(p)) + (f' <span class="metric-size">({esc(p["size_mm"])})</span>' if p['size_mm'] else '')
  return f'<article id="{esc(anchor(p))}" class="product">{image_html}<div class="product-copy"><h3>{esc(p["code"])}</h3><dl><dt>Size</dt><dd>{size_html}</dd></dl>{material}{pack_html}{extra}</div></article>'
-def related(current): return ''
 def category_nav(current):
  names=['ECG','TENS','Tab','Adhesive strips','Custom']
  return '<nav class="category-nav wrap" aria-label="Electrode categories"><a href="/electrodes/">Electrodes</a><ul>'+''.join(f'<li><a href="{u}"'+(' aria-current="page"' if u==current else '')+f'>{n}</a></li>' for n,(_,u,_) in zip(names,categories))+'</ul></nav>'
@@ -66,17 +63,15 @@ def catalog_section(category):
  foot='<p class="footnote">*Standard pouch size of 8-1/4&quot; x 8-1/4&quot; with black monochromatic print. Standard shipping case 17&quot; long x 10&quot; wide x 9&quot; high. Pouches shipped bulk with no inside boxes. Other pouch sizes and quantities per pouch are available.</p>' if category=='ECG' else ''
  return '<section class="section pale catalog"><div class="wrap"><div class="catalog-toolbar">'+button('/contact/?product='+quote(category+' electrodes'),'Request a quote or samples')+link('/assets/Electrode_Reference_Guide.pdf','Reference guide (PDF)','text-link')+'</div>'+('<p class="catalog-note">Solid Gel - Foam Monitoring Electrodes. Cloth is available on most shapes. Unless noted: 30 per pouch / 1200 per case.*</p>' if category=='ECG' else ('<p class="catalog-note">Unless noted: 4 per pouch.</p>' if category=='TENS' else ''))+foot+'<div class="product-grid catalog-grid">'+''.join(product(p) for p in items)+'</div></div></section>'
 
-
-index_cards=cards()
-pages['/electrodes/']=('Electrodes',intro,'<div class="page-head"><div class="wrap"><h1>Electrodes</h1><p>'+intro+' We can also work with you to create your own custom electrodes unique to your company.</p></div></div>'+section('',index_cards+'<div class="reference-row">'+link('/assets/Electrode_Reference_Guide.pdf','Download electrode reference guide (PDF)','text-link')+'</div>'))
+pages['/electrodes/']=('Electrodes',intro,'<div class="page-head"><div class="wrap"><h1>Electrodes</h1><p>'+intro+' We can also work with you to create your own custom electrodes unique to your company.</p></div></div>'+section('',cards()+'<div class="reference-row">'+link('/assets/Electrode_Reference_Guide.pdf','Download electrode reference guide (PDF)','text-link')+'</div>'))
 ecg_features=section('',f'<div class="feature-columns"><div><h3>Features</h3>{bullets(features)}</div><div><h3>Options</h3>{bullets(options)}</div></div>','ecg-features')
-pages['/electrodes/ecg/']=('ECG Electrodes',ecgintro,pagehead('ECG Electrodes',ecgintro+' Our ECG electrodes are available in a wide variety of shapes and sizes to accommodate many different monitoring applications, and we can also work with you to create your own <a href="/electrodes/custom/">custom electrodes</a>.')+ecg_features+catalog_section('ECG')+related('/electrodes/ecg/'))
+pages['/electrodes/ecg/']=('ECG Electrodes',ecgintro,pagehead('ECG Electrodes',ecgintro+' Our ECG electrodes are available in a wide variety of shapes and sizes to accommodate many different monitoring applications, and we can also work with you to create your own <a href="/electrodes/custom/">custom electrodes</a>.')+ecg_features+catalog_section('ECG'))
 tensintro='Prewired TENS electrodes available with a Black Carbon Film or a Tin conductive element.'
-pages['/electrodes/tens/']=('TENS Electrodes',tensintro,pagehead('TENS Electrodes',tensintro+' If you do not see a size or shape that you need, please <a href="/contact/?product=TENS%20electrodes">contact us</a>.')+catalog_section('TENS')+related('/electrodes/tens/'))
-pages['/electrodes/tab/']=('Tab Electrodes','Tab electrodes and grounding pads.',pagehead('Tab Electrodes')+catalog_section('Tab')+related('/electrodes/tab/'))
+pages['/electrodes/tens/']=('TENS Electrodes',tensintro,pagehead('TENS Electrodes',tensintro+' If you do not see a size or shape that you need, please <a href="/contact/?product=TENS%20electrodes">contact us</a>.')+catalog_section('TENS'))
+pages['/electrodes/tab/']=('Tab Electrodes','Tab electrodes and grounding pads.',pagehead('Tab Electrodes')+catalog_section('Tab'))
 stripintro='These 3" x .5" adhesive strips are ideal for securing lead wires to a patient and are made using the same medical grade, Latex Free, Hypoallergenic materials used in our ECG electrodes.'
-pages['/electrodes/adhesive-strips/']=('Adhesive Strips','Adhesive strips for securing lead wires.',pagehead('Adhesive Strips',stripintro)+catalog_section('Adhesive Strips')+related('/electrodes/adhesive-strips/'))
-custom=pagehead('Custom Electrodes','Do you need a specific proprietary electrode to work with your device?</p><p>Do you see a unique need in the market that could be filled by an innovative electrode design?')+section('',f'<div class="split"><div><p>Taylor Industries has over 17 years of experience designing and manufacturing ECG monitoring electrodes. We can work with you to develop a product unique to your company.</p><p><a href="/contact/">Contact us today</a> and see how we can help you reach your goals.</p><div class="actions">{button("/contact/?product=Custom%20electrode","Request a custom electrode quote")}</div>{link("/assets/Electrode_Reference_Guide.pdf","Download reference guide (PDF)","text-link")}</div>{img("misc/custom_electrodes.jpg","Custom electrodes","detail-image")}</div>')+related('/electrodes/custom/')
+pages['/electrodes/adhesive-strips/']=('Adhesive Strips','Adhesive strips for securing lead wires.',pagehead('Adhesive Strips',stripintro)+catalog_section('Adhesive Strips'))
+custom=pagehead('Custom Electrodes','Do you need a specific proprietary electrode to work with your device?</p><p>Do you see a unique need in the market that could be filled by an innovative electrode design?')+section('',f'<div class="split"><div><p>Taylor Industries has over 17 years of experience designing and manufacturing ECG monitoring electrodes. We can work with you to develop a product unique to your company.</p><p><a href="/contact/">Contact us today</a> and see how we can help you reach your goals.</p><div class="actions">{button("/contact/?product=Custom%20electrode","Request a custom electrode quote")}</div>{link("/assets/Electrode_Reference_Guide.pdf","Download reference guide (PDF)","text-link")}</div>{img("misc/custom_electrodes.jpg","Custom electrodes","detail-image")}</div>')
 pages['/electrodes/custom/']=('Custom Electrodes','Taylor Industries can work with you to develop a product unique to your company.',custom)
 
 mintro='Bring production in-house to help increase your productivity and profits.'
@@ -103,33 +98,28 @@ pages['/machine-inquiry/']=('Machine Information Request','Request information a
 pages['/links/']=('Links','Links to Select Engineering and R&D Medical.',pagehead('Links')+section('','<ul class="links-list"><li><a href="http://www.selectengineering.com">Select Engineering ↗</a></li><li><a href="http://www.rdmedicalproducts.com">R&amp;D Medical ↗</a></li></ul>'))
 pages['/404.html']=('Page not found','Page not found.',pagehead('Page not found')+section('','<p>The page could not be found.</p>'+button('/','Return home')))
 nav=[('Electrodes','/electrodes/'),('Production Machines','/production-machines/'),('Contact','/contact/')]
-footerlinks=[('Home','/')]+[(n,u) for n,u,p in categories]+[('Electrodes','/electrodes/'),('Production Machines','/production-machines/'),('ECG Electrode Production Machine','/production-machines/ecg-electrode-machine/'),('Packaging Systems','/production-machines/packaging-systems/'),('Machine Inquiry','/machine-inquiry/'),('Contact','/contact/'),('Links','/links/'),('Electrode Reference Guide','/assets/Electrode_Reference_Guide.pdf')]
 org={'@context':'https://schema.org','@type':'Organization','name':'Taylor Industries Inc.','address':{'@type':'PostalAddress','streetAddress':'2704 Industrial Drive','addressLocality':'Jefferson City','addressRegion':'MO','postalCode':'65109'},'telephone':'573-893-5412','faxNumber':'573-893-3647','email':'sales@taylor-ind.com'}
+children={
+ '/electrodes/': [(n,item[1]) for n,item in zip(['ECG','TENS','Tab','Adhesive strips','Custom'],categories)],
+ '/production-machines/': [('ECG Electrode Production Machine','/production-machines/ecg-electrode-machine/'),('Packaging Systems','/production-machines/packaging-systems/')],
+}
+other={'/production-machines/ecg-electrode-machine/':('Packaging Systems','/production-machines/packaging-systems/'),'/production-machines/packaging-systems/':('ECG Electrode Production Machine','/production-machines/ecg-electrode-machine/')}
 for path,(title,desc,body) in pages.items():
- children={
-  '/electrodes/': [(n,item[1]) for n,item in zip(['ECG','TENS','Tab','Adhesive strips','Custom'],categories)],
-  '/production-machines/': [('ECG Electrode Production Machine','/production-machines/ecg-electrode-machine/'),('Packaging Systems','/production-machines/packaging-systems/')],
- }
  def nav_item(name,url):
   current=' aria-current="page"' if path==url else ''
   sub=children.get(url,[])
   nested='<ul>'+''.join(f'<li><a href="{u}"'+(' aria-current="page"' if path==u else '')+f'>{n}</a></li>' for n,u in sub)+'</ul>' if sub else ''
   return f'<li><a href="{url}"{current}>{name}</a>{nested}</li>'
- navhtml='<ul>'+''.join(nav_item(n,u) for n,u in nav)+'</ul>' 
+ navhtml='<ul>'+''.join(nav_item(n,u) for n,u in nav)+'</ul>'
  if path in [u for _,u,_ in categories]: body=category_nav(path)+body
- other={'/production-machines/ecg-electrode-machine/':('Packaging Systems','/production-machines/packaging-systems/'),'/production-machines/packaging-systems/':('ECG Electrode Production Machine','/production-machines/ecg-electrode-machine/')}
  if path in other: body='<nav class="detail-back wrap" aria-label="Other production machine"><a href="'+other[path][1]+'">'+other[path][0]+' <span aria-hidden="true">→</span></a></nav>'+body
  html=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>{escape(title)} | Taylor Industries Inc.</title><meta name="description" content="{escape(desc,quote=True)}"><meta property="og:title" content="{escape(title)} | Taylor Industries Inc."><meta property="og:description" content="{escape(desc,quote=True)}"><meta property="og:type" content="website">{'<link rel="preload" as="image" href="/assets/img/brand/electrodes-collage.webp" fetchpriority="high">' if path == "/" else ""}<link rel="preload" href="/assets/fonts/instrument-sans-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/assets/css/site.css?v={CSS_V}"><script type="application/ld+json">{json.dumps(org)}</script><script defer src="/assets/js/site.js"></script></head><body><a class="skip" href="#main">Skip to content</a><header class="header"><div class="wrap header-inner"><a href="/" class="logo" aria-label="Taylor Industries home">{img('brand/logo-tagline.png','Taylor Industries Inc.',eager=True)}</a><button class="menu-toggle" aria-expanded="false" aria-controls="nav"><span class="menu-label">Menu</span></button><nav id="nav" class="nav" aria-label="Main navigation">{navhtml}</nav><div class="header-actions"><div class="header-contact"><a class="header-phone" href="tel:+15738935412" title="Copy phone number">573-893-5412</a><a class="header-email" href="mailto:sales@taylor-ind.com" title="Copy email address">sales@taylor-ind.com</a></div><a class="button button-outline header-inquiry" href="/machine-inquiry/">Machine inquiry</a><a class="button header-quote" href="/contact/">Request a quote</a></div></div></header><main id="main">{body}</main><footer class="footer"><div class="wrap footer-grid"><div><h2>Taylor Industries Inc.</h2><p>2704 Industrial Drive<br>Jefferson City, MO 65109</p><p><a href="tel:+15738935412">573-893-5412</a><br>Fax 573-893-3647<br><a href="mailto:sales@taylor-ind.com">sales@taylor-ind.com</a></p></div><div class="footer-links"><div class="footer-ref"><h2><a href="/assets/Electrode_Reference_Guide.pdf">Reference guide</a></h2>{link_list([('Custom Electrodes','/electrodes/custom/')])}</div><div><h2><a href="/electrodes/">Electrodes</a></h2>{link_list([(n,u) for n,u,p in categories if u!='/electrodes/custom/'])}</div><div><h2><a href="/production-machines/">Production Machines</a></h2>{link_list([('ECG Electrode Production Machine','/production-machines/ecg-electrode-machine/'),('Packaging Systems','/production-machines/packaging-systems/'),('Machine Inquiry','/machine-inquiry/')])}</div><div><h2>Company</h2>{link_list([('Home','/'),('Contact','/contact/'),('Links','/links/')])}</div></div></div><div class="wrap footer-bottom">© Taylor Industries Inc.</div></footer></body></html>'''
  html=html.replace('</a><a', '</a>\n<a').replace('</a><button', '</a>\n<button').replace('</button><a', '</button>\n<a')
  target=S/('index.html' if path=='/' else path.strip('/')+('' if path.endswith('.html') else '/index.html')); target.parent.mkdir(parents=True,exist_ok=True); target.write_text(html)
 
-
 # Preview-only "Keep this site" subscribe button, added to every page after the build.
-# Set PREVIEW_SUBSCRIBE_URL = '' in src/data.py and rebuild to remove it.
-from data import PREVIEW_SUBSCRIBE_URL
+# Set PREVIEW_SUBSCRIBE_URL = '' in src/data.py and rebuild to remove it (and /keep/).
 def add_preview_subscribe():
- import re
- from html import escape as esc
  site_dir=Path(__file__).resolve().parent.parent/'site'
  css=("a.preview-subscribe{position:fixed;right:max(20px,calc(env(safe-area-inset-right) + 12px));bottom:max(20px,calc(env(safe-area-inset-bottom) + 12px));z-index:19;display:inline-flex;align-items:center;min-height:66px;padding:0 27px;border-radius:999px;background:#000098;color:#fff;font:600 22.5px/1.1 'Instrument Sans',sans-serif;letter-spacing:.01em;text-transform:none;text-decoration:none;white-space:nowrap;box-shadow:0 9px 27px rgba(0,0,0,.22);transition:background-color .15s,opacity .2s,visibility .2s}"
   "a.preview-subscribe:hover{background:#00006e;color:#fff;text-decoration:none}"
@@ -138,14 +128,12 @@ def add_preview_subscribe():
   "@media (max-width:760px){a.preview-subscribe{right:max(12px,calc(env(safe-area-inset-right) + 8px));bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px));min-height:60px;padding:0 21px;font-size:21px}}"
   "footer:last-of-type::after{content:\"\";display:block;height:88px}"
   "@media (prefers-reduced-motion:reduce){a.preview-subscribe{transition:none}}")
- js=""
- from keep import build_keep
  build_keep(site_dir,PREVIEW_SUBSCRIBE_URL)
  for page in site_dir.rglob('*.html'):
   if page==site_dir/'keep'/'index.html': continue
   html=re.sub(r'<!-- preview-subscribe -->.*?<!-- /preview-subscribe -->','',page.read_text(),flags=re.S)
   if PREVIEW_SUBSCRIBE_URL:
    html=html.replace('</head>','<!-- preview-subscribe --><style>'+css+'</style><!-- /preview-subscribe --></head>',1)
-   html=html.replace('</body>','<!-- preview-subscribe --><a class="preview-subscribe" href="/keep/" aria-label="Upgrade my website: see how to switch to this new site">Upgrade my website</a><script>'+js+'</script><!-- /preview-subscribe --></body>',1)
+   html=html.replace('</body>','<!-- preview-subscribe --><a class="preview-subscribe" href="/keep/" aria-label="Upgrade my website: see how to switch to this new site">Upgrade my website</a><!-- /preview-subscribe --></body>',1)
   page.write_text(html)
 add_preview_subscribe()

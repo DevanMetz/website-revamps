@@ -24,12 +24,10 @@ for category,slug in [('ECG','ecg'),('TENS','tens'),('Tab','tab'),('Adhesive Str
  page=Page(); page.feed((root/'electrodes'/slug/'index.html').read_text())
  for p in CATALOG:
   if p['category']==category and p['code'] not in page.ids: errors.append(f'{slug}: missing {p["code"]}')
-# Preview subscribe button: one per page while PREVIEW_SUBSCRIBE_URL is set, none once it is ''.
 from data import PREVIEW_SUBSCRIBE_URL, STRIPE_PORTAL_URL
-from keep import KEEP_CODE_URL
-from html import escape as _escape
-# /keep/ funnel: exists with the exact Stripe link while PREVIEW_SUBSCRIBE_URL is set, absent once it is ''.
 from keep import KEEP_CODE_URL as _code
+from html import escape as _escape
+# Preview subscribe button: one per page while PREVIEW_SUBSCRIBE_URL is set, none once it is ''.
 _keep=Path(__file__).resolve().parent.parent/'site'/'keep'/'index.html'
 for _f in (Path(__file__).resolve().parent.parent/'site').rglob('*.html'):
  _h=_f.read_text(); _n=_h.count('class="preview-subscribe"')
@@ -38,6 +36,7 @@ for _f in (Path(__file__).resolve().parent.parent/'site').rglob('*.html'):
   continue
  if _n!=(1 if PREVIEW_SUBSCRIBE_URL else 0): errors.append(f'{_f}: {_n} preview subscribe buttons')
  elif PREVIEW_SUBSCRIBE_URL and '<a class="preview-subscribe" href="/keep/" aria-label="Upgrade my website: see how to switch to this new site">Upgrade my website</a>' not in _h: errors.append(f'{_f}: preview subscribe link')
+# /keep/ funnel: exists with the exact Stripe link while PREVIEW_SUBSCRIBE_URL is set, absent once it is ''.
 if PREVIEW_SUBSCRIBE_URL:
  if not _keep.exists(): errors.append('/keep/ missing')
  else:
@@ -49,7 +48,7 @@ if PREVIEW_SUBSCRIBE_URL:
   if _h.count('href="'+_escape(STRIPE_PORTAL_URL)+'"')!=1 or '<a href="'+_escape(STRIPE_PORTAL_URL)+'" target="_blank" rel="noopener" aria-label="Manage or cancel your subscription (opens in a new tab)">Manage or cancel your subscription here</a>' not in _h: errors.append('/keep/: Stripe portal link missing')
   if _h.count('target="_blank"')!=2: errors.append('/keep/: only the code and portal links may open a new tab')
 elif _keep.parent.exists(): errors.append('/keep/ built while PREVIEW_SUBSCRIBE_URL is empty')
-for _x in ('sitemap.xml',):
- if (_keep.parent.parent/_x).exists() and '/keep/' in (_keep.parent.parent/_x).read_text(): errors.append('/keep/ in sitemap')
+_sitemap=_keep.parent.parent/'sitemap.xml'
+if _sitemap.exists() and '/keep/' in _sitemap.read_text(): errors.append('/keep/ in sitemap')
 print('\n'.join(errors) if errors else 'All internal assets, product anchors and noindex tags pass.')
 sys.exit(bool(errors))

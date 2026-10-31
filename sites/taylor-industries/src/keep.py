@@ -1,21 +1,18 @@
 # Preview-only "/keep/" page: how to switch to this new site, ending in the Stripe checkout.
 # Built from the contact page's header and footer, only while PREVIEW_SUBSCRIBE_URL is set.
-import re, shutil
+import re
+import shutil
 from html import escape as esc
 from data import STRIPE_PORTAL_URL
-SITE_CFG = {"name": "Taylor Industries Inc.", "domain": "taylor-ind.com", "accent": "var(--navy)", "ink": "var(--ink)", "line": "var(--line)", "surface": "var(--tray)", "radius": "3px", "container": "wrap", "slug": "taylor-industries"}
+SITE_CFG = {"name": "Taylor Industries Inc.", "domain": "taylor-ind.com", "accent": "var(--navy)", "ink": "var(--ink)", "line": "var(--line)", "radius": "3px", "container": "wrap", "slug": "taylor-industries"}
 KEEP_CODE_URL = 'https://github.com/DevanMetz/website-revamps/tree/main/sites/' + SITE_CFG['slug']
 I = lambda d: '<svg class="keep-ico" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>'
 ICONS = {
  'code': I('<path d="m8 8-4 4 4 4M16 8l4 4-4 4M13.5 5l-3 14"/>'),
  'care': I('<path d="M12 3 5 6v5c0 4.4 3 8.3 7 10 4-1.7 7-5.6 7-10V6z"/><path d="m9 12 2 2 4-4"/>'),
- 'card': I('<rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h4"/>'),
- 'dns': I('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/>'),
- 'off': I('<circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/>'),
- 'live': I('<circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.7 2.7L16.5 9.5"/>'),
 }
 def _css(c):
- a,ink,line,surf=c['accent'],c['ink'],c['line'],c['surface']
+ a,ink,line=c['accent'],c['ink'],c['line']
  return ('.keep{padding:clamp(20px,3.2vh,40px) 0 clamp(24px,4vh,48px)}'
   '.keep h1{font-size:clamp(2.2rem,4vw,3rem);margin:0 0 6px;max-width:none}'
   '.keep h2{font-size:clamp(1.25rem,1.8vw,1.5rem);margin:0;line-height:1.15;max-width:none}'
