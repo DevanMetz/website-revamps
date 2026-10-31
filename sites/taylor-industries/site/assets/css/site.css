@@ -510,7 +510,7 @@ p { max-width: 68ch; }
   padding: 0;
 }
 .category-nav > a,
-.detail-back a { font-weight: 600; }
+.detail-back a { font-weight: 600; gap: 6px; }
 .category-nav li a,
 .category-nav > a,
 .detail-back a {
