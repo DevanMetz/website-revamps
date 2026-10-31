@@ -7,6 +7,8 @@ import re, json, shutil, csv
 from data import PAGES, IMAGES, PRODUCT_IMAGES, LITERATURE
 from content.products import ORBITAL_INTRO, PNEUMATIC, HYDRAULIC, SERVO, PRODUCTS
 ROOT=Path(__file__).resolve().parent.parent; SITE=ROOT/'site'; REF=ROOT/'src/assets'
+for asset in ('css/site.css', 'js/site.js'):
+ out=SITE/'assets'/asset; out.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(REF/asset, out)
 for key,path in IMAGES.items():
  im=Image.open(REF/'img'/path); im.seek(0); im=im.convert('RGB' if im.format=='JPEG' else 'RGBA'); out=SITE/'assets/img'/f'{key}.png'; im.save(out,optimize=True)
  if key=='orbitfeed':
@@ -14,12 +16,19 @@ for key,path in IMAGES.items():
   import numpy as _np; _a=_np.asarray(im.convert('RGB')).astype(int); _m=(_a.max(2)-_a.min(2))>60
   _r=_np.where(_m.mean(1)>0.5)[0]; _c=_np.where(_m.mean(0)>0.5)[0]
   im.crop((_c.min()+1,_r.min()+1,int(_c.min()+(_c.max()-_c.min())*.62),_r.max())).save(out,optimize=True)
+# Keep product cutouts in source control and serve lossless WebP versions.
+for cutout in (REF/'img/cutouts').glob('*.png'):
+ shutil.copyfile(cutout, SITE/'assets/img'/cutout.name)
+for image_path in (SITE/'assets/img').glob('*.png'):
+ if image_path.stem != 'wordmark':
+  with Image.open(image_path) as image:
+   image.save(image_path.with_suffix('.webp'), 'WEBP', lossless=True, method=6)
 # Use the traced primary header wordmark.
 shutil.copyfile(ROOT/'src/wordmark.svg', SITE/'assets/img/header-wordmark.svg')
 def img(key,alt):
- name=f'{key}-transparent.png' if key in {'bench','impact','inspector','kit','power','press','servo'} else f'{key}.png'; im=Image.open(SITE/'assets/img'/name); return f'<img src="/assets/img/{name}" alt="{escape(alt)}" width="{im.width}" height="{im.height}" loading="lazy">'
+ name=f'{key}-transparent.webp' if key in {'bench','impact','inspector','kit','power','press','servo'} else f'{key}.webp'; im=Image.open(SITE/'assets/img'/name); return f'<img src="/assets/img/{name}" alt="{escape(alt)}" width="{im.width}" height="{im.height}" loading="lazy" decoding="async">'
 def tile_img(key,alt):
- name=f'{key}-transparent.png' if key in {'bench','impact','inspector','kit','power','press','servo'} else f'{key}.png'
+ name=f'{key}-transparent.webp' if key in {'bench','impact','inspector','kit','power','press','servo'} else f'{key}.webp'
  im=Image.open(SITE/'assets/img'/name)
  return img(key,alt).replace('<img ', f'<img class="photo-{key}" style="width:{im.width * 1.25:g}px" ')
 def link(label,url): return f'<a href="{url}">{escape(label)} <span aria-hidden="true">→</span></a>'
@@ -27,8 +36,20 @@ def cards(items): return '<div class="cards">'+''.join(f'<a class="card" href="{
 nav=[('Riveters','/riveters/'),('Presses','/presses/'),('Riveting kits','/riveting-kits/'),('Automation','/automation/'),('Services','/services/'),('Literature','/literature/')]
 def layout(title,desc,body,path):
  links='\n'.join(f'<a href="{u}"'+(' aria-current="page"' if path==u.strip('/') or (u=='/riveters/' and path.startswith('riveters/')) else '')+f'>{t}</a>' for t,u in nav)
- data={'@context':'https://schema.org','@type':'Organization','name':'Grant Riveters','url':'https://www.grantriveters.com/','telephone':['800-227-2150','203-366-4557'],'faxNumber':'203-366-0370','email':'sales@grantriveters.com','address':{'@type':'PostalAddress','streetAddress':'90 Silliman Avenue, P.O. Box 3350','addressLocality':'Bridgeport','addressRegion':'Connecticut','postalCode':'06605','addressCountry':'USA'}}
- return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>{escape(title)} | Grant Riveters</title><meta name="description" content="{escape(desc,quote=True)}"><meta property="og:title" content="{escape(title)} | Grant Riveters"><meta property="og:description" content="{escape(desc,quote=True)}"><meta property="og:type" content="website"><meta property="og:url" content="https://www.grantriveters.com/{path}/"><link rel="icon" href="/assets/img/favicon.svg"><link rel="preload" href="/assets/fonts/barlow-semi-800-italic.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/css/site.css"><script type="application/ld+json">{json.dumps(data)}</script><script src="/assets/js/site.js" defer></script></head><body><a class="skip" href="#main">Skip to content</a><header><div class="masthead wrap"><a class="brand" href="/" aria-label="Grant Riveters home"><img src="/assets/img/header-wordmark.svg" alt="Grant Riveters" width="700" height="92"></a><a class="header-phone" href="tel:8002272150">800-227-2150</a><a class="button header-quote" href="/request-a-quote/">Request a quote</a><button class="menu" aria-expanded="false" aria-controls="navigation">Menu</button></div><div class="nav-row"><nav class="wrap" id="navigation" aria-label="Main navigation">{links}<a class="nav-quote" href="/request-a-quote/">Request a quote</a></nav></div></header><main id="main">{body}</main><footer><div class="wrap footer-grid"><div><a class="brand footer-brand" href="/"><img src="/assets/img/header-wordmark.svg" alt="Grant Riveters" width="700" height="92"></a><p>A Woman Owned Company</p><p>90 Silliman Avenue<br>P.O. Box 3350<br>Bridgeport, Connecticut 06605, USA</p></div><div><h2>Contact</h2><p><a href="tel:8002272150">800-227-2150</a> · Sales ext. 101<br><a href="tel:2033664557">203-366-4557</a><br>Fax 203-366-0370<br><a href="mailto:sales@grantriveters.com">sales@grantriveters.com</a></p></div><div><h2>Explore</h2><a href="/riveting-methods/">Riveting methods</a><a href="/process-inspector/">Process Inspector</a><a href="/history/">History</a><a href="/sales-representatives/">Sales representatives</a><a href="/contact/">Contact</a></div></div></footer></body></html>'''
+ canonical='https://www.grantriveters.com/'+(path+'/' if path else '')
+ data={'@context':'https://schema.org','@type':'Organization','name':'Grant Riveters','url':'https://www.grantriveters.com/','logo':'https://www.grantriveters.com/assets/img/header-wordmark.svg','telephone':['800-227-2150','203-366-4557'],'faxNumber':'203-366-0370','email':'sales@grantriveters.com','address':{'@type':'PostalAddress','streetAddress':'90 Silliman Avenue, P.O. Box 3350','addressLocality':'Bridgeport','addressRegion':'Connecticut','postalCode':'06605','addressCountry':'USA'}}
+ if path and path != '404':
+  segments=path.split('/')
+  crumbs=[{'@type':'ListItem','position':1,'name':'Home','item':'https://www.grantriveters.com/'}]
+  for i in range(len(segments)):
+   partial='/'.join(segments[:i+1])
+   if partial not in PAGES and i < len(segments)-1: continue
+   label=PAGES[partial][0] if partial in PAGES else title
+   crumbs.append({'@type':'ListItem','position':len(crumbs)+1,'name':label,'item':'https://www.grantriveters.com/'+partial+'/'})
+  data={'@context':'https://schema.org','@graph':[data,{'@type':'BreadcrumbList','itemListElement':crumbs}]}
+ # The first product image is visible near the top of image-led pages.
+ body=body.replace('loading="lazy" decoding="async"','fetchpriority="high" decoding="async"',1)
+ return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>{escape(title)} | Grant Riveters</title><meta name="description" content="{escape(desc,quote=True)}"><meta property="og:title" content="{escape(title)} | Grant Riveters"><meta property="og:description" content="{escape(desc,quote=True)}"><meta property="og:type" content="website"><meta property="og:image" content="https://www.grantriveters.com/assets/img/header-wordmark.svg"><meta property="og:url" content="{canonical}"><link rel="canonical" href="{canonical}"><link rel="icon" href="/assets/img/favicon.svg"><link rel="preload" href="/assets/fonts/barlow-semi-800-italic.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="/assets/css/site.css"><script type="application/ld+json">{json.dumps(data)}</script><script src="/assets/js/site.js" defer></script></head><body><a class="skip" href="#main">Skip to content</a><header><div class="masthead wrap"><a class="brand" href="/" aria-label="Grant Riveters home"><img src="/assets/img/header-wordmark.svg" alt="Grant Riveters" width="700" height="92"></a><a class="header-phone" href="tel:8002272150">800-227-2150</a><a class="button header-quote" href="/request-a-quote/">Request a quote</a><button class="menu" aria-expanded="false" aria-controls="navigation">Menu</button></div><div class="nav-row"><nav class="wrap" id="navigation" aria-label="Main navigation">{links}<a class="nav-quote" href="/request-a-quote/">Request a quote</a></nav></div></header><main id="main">{body}</main><footer><div class="wrap footer-grid"><div><a class="brand footer-brand" href="/"><img src="/assets/img/header-wordmark.svg" alt="Grant Riveters" width="700" height="92"></a><p>A Woman Owned Company</p><p>90 Silliman Avenue<br>P.O. Box 3350<br>Bridgeport, Connecticut 06605, USA</p></div><div><h2>Contact</h2><p><a href="tel:8002272150">800-227-2150</a> · Sales ext. 101<br><a href="tel:2033664557">203-366-4557</a><br>Fax 203-366-0370<br><a href="mailto:sales@grantriveters.com">sales@grantriveters.com</a></p></div><div><h2>Explore</h2><a href="/riveting-methods/">Riveting methods</a><a href="/process-inspector/">Process Inspector</a><a href="/history/">History</a><a href="/sales-representatives/">Sales representatives</a><a href="/contact/">Contact</a></div></div></footer></body></html>'''
 def hero(title,desc): return f'<section class="page-hero"><div class="wrap"><h1>{escape(title)}</h1></div></section>'
 def source_content(files):
  parts=[]; seen=set()
@@ -197,7 +218,7 @@ def write(path,title,desc,body):
 write('','Riveting machines and assembly systems','Orbital, spin, impact and squeeze riveting machines, presses and automated systems.',home)
 for path,(title,desc,files,items) in PAGES.items():
  body=hero(title,desc)+'<section class="section wrap content">'
- if items and path=='riveters': body+='<div class="product-grid family-grid">'+''.join(f'<a class="product" href="{u}"><div class="image-well image-{k}">{tile_img(k,t)}</div><h3>{t}</h3></a>' for t,u,k in family[:6])+'</div>'
+ if items and path=='riveters': body+='<div class="product-grid family-grid">'+''.join(f'<a class="product" href="{u}"><div class="image-well image-{k}">{tile_img(k,t)}</div><h2>{t}</h2></a>' for t,u,k in family[:6])+'</div>'
  elif items: body+=cards(items)
  if path=='process-inspector': body+='<div class="feature">'+img('inspector','Process Inspector screen')+'<div><h2>Force and distance control</h2><p>Grant Riveters has implemented the Process Inspector™ controller in its riveter product line. The controller provides real-time force and distance data and alerts the operator to non-conforming parts.</p><p>The PLC/HMI features a color touch-screen control with a digital readout for setting force and distance triggers. Programs are generated from high and low distance and force data and saved under a preferred name.</p></div></div>'
  if path=='process-inspector': body+='<h2>Specifications</h2><p>The Process Inspector V570 combines a PLC and HMI with a 5.7-inch QVGA 256-color touch panel. It monitors force, distance and time for presses and riveters, with configurable measurement and force ranges. It stores up to 49 recipes and has 24 inputs and 23 outputs, expandable. Sensors include strain gage, piezoelectric and potentiometric sensors.</p>'
@@ -215,7 +236,7 @@ for path,(title,desc,files,items) in PAGES.items():
  write(path,title,desc,body)
 for path,title in [('contact','Contact'),('request-a-quote','Request a quote')]:
  body=hero(title,'Contact Grant Riveters about your application.')+'<section class="section wrap contact-layout"><div><h2>Grant Riveters</h2><p>90 Silliman Avenue<br>P.O. Box 3350<br>Bridgeport, Connecticut 06605, USA</p><p><a href="tel:8002272150">800-227-2150</a> (sales: ext. 101)<br><a href="tel:2033664557">203-366-4557</a><br>Fax 203-366-0370<br><a href="mailto:sales@grantriveters.com">sales@grantriveters.com</a></p></div><div>'+fields(path=='request-a-quote')+'</div></section>'
- write(path,title,'Contact Grant Riveters about your application.',body)
+ write(path,title,('90 Silliman Avenue, P.O. Box 3350, Bridgeport, Connecticut 06605, USA.' if path=='contact' else 'Contact Grant Riveters about your application.'),body)
 docs=list((SITE/'assets/docs').iterdir()); body=hero('Product literature','Grant Riveters product literature and specifications.')+'<section class="section wrap"><div class="docs">'+''.join(f'<a href="/assets/docs/{quote(p.name)}"><span>{escape(doc_label(p.name))}</span><b>↓</b></a>' for p in sorted(docs))+'</div></section>';write('literature','Product literature','Grant Riveters product literature and specifications.',body)
 (SITE/'404.html').write_text(separate_actions(layout('Page not found','The requested page could not be found.',hero('Page not found','The requested page could not be found.')+'<section class="section wrap"><a href="/">Return home</a></section>','404')))
 # Redirect each crawled path, including unsuccessful paths.
@@ -247,7 +268,7 @@ def add_preview_subscribe():
  css=("a.preview-subscribe{position:fixed;right:max(20px,calc(env(safe-area-inset-right) + 12px));bottom:max(20px,calc(env(safe-area-inset-bottom) + 12px));z-index:19;display:inline-flex;align-items:center;min-height:66px;padding:0 27px;border-radius:999px;background:#b51d23;color:#fff;font:600 22.5px/1.1 Barlow,sans-serif;letter-spacing:.01em;text-transform:none;text-decoration:none;white-space:nowrap;box-shadow:0 9px 27px rgba(0,0,0,.22);transition:background-color .15s,opacity .2s,visibility .2s}"
   "a.preview-subscribe:hover{background:#8d151b;color:#fff;text-decoration:none}"
   "a.preview-subscribe:focus-visible{background:#b51d23;color:#fff;outline:3px solid #a71920;outline-offset:3px;box-shadow:0 0 0 3px #fff,0 6px 18px rgba(0,0,0,.22)}"
-  "a.preview-subscribe.is-tucked,body:has(header [aria-expanded=\"true\"]) a.preview-subscribe{opacity:0;visibility:hidden}"
+  
   "@media (max-width:760px){a.preview-subscribe{right:max(12px,calc(env(safe-area-inset-right) + 8px));bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px));min-height:60px;padding:0 21px;font-size:21px}}"
   "footer:last-of-type::after{content:\"\";display:block;height:88px}"
   "@media (prefers-reduced-motion:reduce){a.preview-subscribe{transition:none}}")
