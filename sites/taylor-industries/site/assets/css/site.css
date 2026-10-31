@@ -1009,7 +1009,7 @@ legend {
 .footer p { margin-bottom: 12px; }
 .footer-links {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: auto repeat(3, 1fr);
   gap: 24px;
 }
 .footer-links ul {
@@ -1082,4 +1082,11 @@ legend {
 }
 @media (max-width: 359px) {
   .hero .usa-stamp { font-size: .625rem; letter-spacing: 0; }
+}
+
+/* Reference guide sits alone between the address and Electrodes */
+.footer-links .footer-ref h2 a { color: var(--navy); }
+@media (max-width: 600px) {
+  .footer-links .footer-ref { grid-column: 1 / -1; }
+  .footer-links .footer-ref h2 { margin-bottom: 0; }
 }
