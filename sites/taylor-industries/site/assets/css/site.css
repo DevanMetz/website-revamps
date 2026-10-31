@@ -215,3 +215,8 @@ h2{font-size:clamp(1.9rem,2.8vw,2.6rem)}
 .hero-grid>div:first-child{width:auto}
 @media(max-width:1000px){.hero-copy p{margin-left:auto;margin-right:auto}}
 @media(max-width:600px){.hero .usa-stamp{font-size:.74rem;letter-spacing:.04em;padding:9px 10px;gap:6px}.hero .usa-stamp span{font-size:.85rem}}
+/* Hero: equal-share columns that can't be crushed; stack before the image gets small. */
+.hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media(min-width:861px) and (max-width:1000px){.hero-grid>div:first-child{justify-self:start}.hero-grid>div:first-child h1{text-align:left}.hero-copy p{margin-left:0}}
+@media(max-width:860px){.hero-grid{grid-template-columns:1fr;gap:20px}.hero-tray{max-width:640px;width:100%;justify-self:center}}
+.hero .usa-stamp{max-width:100%}@media(min-width:861px) and (max-width:1240px){.hero .usa-stamp{font-size:.78rem;letter-spacing:.05em;padding:9px 12px;gap:8px}.hero .usa-stamp span{font-size:.9rem}}
