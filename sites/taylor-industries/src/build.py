@@ -64,7 +64,7 @@ def category_nav(current):
 def catalog_section(category):
  items=[p for p in CATALOG if p['category']==category]
  foot='<p class="footnote">*Standard pouch size of 8-1/4&quot; x 8-1/4&quot; with black monochromatic print. Standard shipping case 17&quot; long x 10&quot; wide x 9&quot; high. Pouches shipped bulk with no inside boxes. Other pouch sizes and quantities per pouch are available.</p>' if category=='ECG' else ''
- return '<section class="section pale catalog"><div class="wrap"><div class="catalog-toolbar">'+button('/contact/?product='+quote(category+' electrodes'),'Request a quote or samples')+link('/assets/Electrode_Reference_Guide.pdf','Reference guide (PDF)','text-link')+'</div>'+('<p class="catalog-note">Solid Gel - Foam Monitoring Electrodes. Cloth is available on most shapes. Unless noted: 30 per pouch / 1200 per case.*</p>' if category=='ECG' else ('<p class="catalog-note">Unless noted: 4 per pouch.</p>' if category=='TENS' else ''))+'<div class="product-grid catalog-grid">'+''.join(product(p) for p in items)+'</div>'+foot+'</div></section>'
+ return '<section class="section pale catalog"><div class="wrap"><div class="catalog-toolbar">'+button('/contact/?product='+quote(category+' electrodes'),'Request a quote or samples')+link('/assets/Electrode_Reference_Guide.pdf','Reference guide (PDF)','text-link')+'</div>'+('<p class="catalog-note">Solid Gel - Foam Monitoring Electrodes. Cloth is available on most shapes. Unless noted: 30 per pouch / 1200 per case.*</p>' if category=='ECG' else ('<p class="catalog-note">Unless noted: 4 per pouch.</p>' if category=='TENS' else ''))+foot+'<div class="product-grid catalog-grid">'+''.join(product(p) for p in items)+'</div></div></section>'
 
 
 index_cards=cards()

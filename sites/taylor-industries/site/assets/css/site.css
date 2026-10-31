@@ -716,8 +716,9 @@ p { max-width: 68ch; }
   white-space: nowrap;
 }
 
+.catalog-note:has(+ .footnote) { margin-bottom: 4px; }
 .footnote {
-  margin-top: 18px;
+  margin: 0 0 18px;
   color: var(--muted);
   font-size: .875rem;
 }
