@@ -23,6 +23,10 @@ FILES = sorted(str(p.relative_to(SRC)) for d in ('ecg', 'tens', 'strip') for p i
 # Per-image overrides. gp96's coiled lead wire leaves many tiny white gaps, so inside
 # key_box the alpha is keyed from colour contrast instead (the wire is dark teal).
 TUNE = {'misc/gp96.jpg': dict(key_box=(131, 0, 351, 263), key_ref=150)}
+# Photos shot sideways on the original site; turned 90 degrees counterclockwise.
+ROTATE_CCW = {f'ecg/{c}_Disposable_ECG_Electrode.jpg' for c in (
+    '1000ZT', '1100ZT', '1200ZT', '2000ZT', '2300ZT', '2500ZT', '2600ZT', '3000ZT',
+    '4000ZT', '4500ZT', '4500RZT', '4600ZT', '5000ZT')}
 
 
 def cutout(path, t_lo=10, t_hole=6, min_hole=None, key_box=None, key_ref=150):
@@ -91,6 +95,8 @@ def main(only=None):
         if only and rel not in only:
             continue
         im = cutout(SRC / rel, **TUNE.get(rel, {}))
+        if rel in ROTATE_CCW:
+            im = im.rotate(90, expand=True)
         dst = OUT / Path(rel).with_suffix('.webp')
         dst.parent.mkdir(parents=True, exist_ok=True)
         im.save(dst, 'WEBP', quality=92, alpha_quality=100, method=6, exact=False)
