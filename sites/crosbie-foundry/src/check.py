@@ -14,6 +14,10 @@ for p in pages:
  for tag in s.find_all(['a','img','script','link']):
   value=tag.get('href') or tag.get('src')
   if not value or value.startswith(('#','mailto:','tel:')): continue
+  if tag.name == 'link' and tag.get('rel') == ['canonical']:
+   expected = 'https://www.crosbiefoundry.com' + ('/' if p == site/'index.html' else '/' + str(p.relative_to(site)).removesuffix('index.html'))
+   if value != expected: errors.append(f'{p}: incorrect canonical {value}')
+   continue
   if value in (PREVIEW_SUBSCRIBE_URL,KEEP_CODE_URL,STRIPE_PORTAL_URL): continue
   if value.startswith(('http:','https:','//')): errors.append(f'{p}: external resource {value}'); continue
   path=unquote(urlsplit(value).path)
