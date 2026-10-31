@@ -287,14 +287,8 @@ p { max-width: 68ch; }
   .logo { margin-right: auto; }
   .logo img { width: 220px; }
   .header-actions { order: 1; }
-  .header-email,
   .header-inquiry,
   .header-quote { display: none; }
-  .header-phone { font-size: 0; }
-  .header-phone:after {
-    content: 'Call';
-    font-size: 1rem;
-  }
   .menu-toggle {
     display: block;
     order: 2;
@@ -1053,4 +1047,19 @@ legend {
   }
   .footer-links { grid-template-columns: 1fr 1fr; }
   .footer-links a { min-height: 44px; }
+}
+
+/* Phones: smaller logo so the stacked phone and email fit beside Menu */
+@media (max-width: 600px) {
+  .header-inner { gap: 10px; }
+  .logo img { width: min(150px, 38vw); }
+  .header-contact { gap: 1px; }
+  .header-phone { font-size: .875rem; }
+  .header-email { font-size: .75rem; }
+  .menu-toggle { padding: 0 8px; font-size: .9375rem; }
+}
+@media (max-width: 400px) {
+  .header-inner { gap: 8px; }
+  .logo img { width: min(150px, calc(100vw - 236px)); }
+  .header-email { font-size: .6875rem; }
 }
