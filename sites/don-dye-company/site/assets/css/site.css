@@ -24,3 +24,9 @@
 @media(max-width:600px){.siblings a{font-size:16px}}
 
 .footer-brand img{width:150px;height:auto}.footer-brand{margin-bottom:12px}
+
+@media(max-width:600px){.siblings ul{flex-wrap:wrap}.siblings a{margin:0;border-radius:4px!important}.siblings ul{gap:4px}}
+.copy-toast{position:fixed;right:12px;bottom:90px;z-index:30;max-width:calc(100vw - 24px);padding:10px 16px;border-radius:4px;background:#1a1c1a;color:#fff;box-shadow:0 4px 14px #0003;overflow-wrap:anywhere}.copy-toast:empty{display:none}
+
+/* Keep long contact details and headings inside narrow screens. */
+body{overflow-wrap:break-word}.header nav a,.preview-subscribe{overflow-wrap:normal}
