@@ -42,7 +42,7 @@
   --tray: #eef2f6;
   --line: #dce3ea;
   --muted: #505b6c;
-  --white: #fcfdfd;
+  --white: #ffffff;
 }
 
 * { box-sizing: border-box; }
@@ -411,14 +411,12 @@ p { max-width: 68ch; }
 .hero-tray {
   display: grid;
   place-items: center;
-  min-height: 220px;
-  padding: 14px;
-  border-radius: 4px;
-  background: var(--tray);
+  min-height: 0;
+  padding: 0;
 }
 .hero-image {
   width: 100%;
-  max-height: 240px;
+  max-height: 200px;
   object-fit: contain;
 }
 
@@ -466,8 +464,8 @@ p { max-width: 68ch; }
     letter-spacing: .04em;
   }
   .hero .usa-stamp span { font-size: .85rem; }
-  .hero-tray { min-height: 150px; }
-  .hero-image { max-height: 170px; }
+  .hero-tray { min-height: 0; }
+  .hero-image { max-height: 160px; }
 }
 @media (max-width: 380px) {
   .hero .usa-stamp {
@@ -592,8 +590,6 @@ p { max-width: 68ch; }
   padding: 12px;
   margin-bottom: 6px;
   overflow: hidden;
-  border-radius: 4px;
-  background: var(--tray);
 }
 
 /* Card images always stay inside their card */
@@ -693,8 +689,6 @@ p { max-width: 68ch; }
   padding: 10px;
   margin-bottom: 10px;
   overflow: hidden;
-  border-radius: 4px;
-  background: var(--tray);
 }
 /* TL225: product photo plus lead-wire photo side by side */
 .catalog-image:has(img + img) img { max-width: 48%; }
@@ -764,7 +758,6 @@ p { max-width: 68ch; }
   height: 190px;
   padding: 10px;
   object-fit: contain;
-  background: var(--tray);
 }
 .machine-card div {
   display: flex;
