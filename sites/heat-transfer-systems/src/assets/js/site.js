@@ -1,6 +1,10 @@
 const toggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('#navigation');
 const header = document.querySelector('.site-header');
+// Keep the scrollable menu inside the viewport as the logo and contact row resize.
+new ResizeObserver(() => {
+  header.style.setProperty('--header-height', `${header.getBoundingClientRect().height}px`);
+}).observe(header);
 function setMenu(open) {
   nav.classList.toggle('open', open);
   header.classList.toggle('menu-open', open);
@@ -15,6 +19,9 @@ document.addEventListener('keydown', event => {
     setMenu(false);
     toggle.focus();
   }
+});
+header.addEventListener('focusout', event => {
+  if (event.relatedTarget && !header.contains(event.relatedTarget)) setMenu(false);
 });
 const form = document.querySelector('#contact-form');
 if (form) form.addEventListener('submit', event => {
@@ -34,13 +41,22 @@ document.addEventListener('click', async event => {
     if (!navigator.clipboard || !window.isSecureContext) throw new Error('Clipboard unavailable');
     await navigator.clipboard.writeText(value);
   } catch (_) {
+    const focused = document.activeElement;
     const field = document.createElement('textarea');
     field.value = value;
+    field.readOnly = true;
     field.style.cssText = 'position:fixed;left:-9999px;top:0';
     document.body.appendChild(field);
     field.select();
-    const copied = document.execCommand('copy');
-    field.remove();
+    let copied = false;
+    try {
+      copied = document.execCommand('copy');
+    } catch (_) {
+      // Browsers can reject the legacy clipboard API as well.
+    } finally {
+      field.remove();
+      focused?.focus({ preventScroll: true });
+    }
     if (!copied) return;
   }
   let toast = document.querySelector('.copy-toast');

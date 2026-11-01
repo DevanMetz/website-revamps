@@ -4,6 +4,9 @@ import json, shutil
 from PIL import Image
 from data import CLIENTS, PRODUCTS, MATERIALS, INDUSTRIES
 ROOT=Path(__file__).resolve().parents[1]; SITE=ROOT/'site'
+shutil.copytree(ROOT/'src/static', SITE, dirs_exist_ok=True)
+# Retire the unused placeholder icon; the real logo symbol is the favicon.
+(SITE/'favicon.svg').unlink(missing_ok=True)
 (SITE/'assets/img').mkdir(parents=True,exist_ok=True)
 shutil.copytree(ROOT/'src/fonts', SITE/'assets/fonts', dirs_exist_ok=True)
 for folder in ('css', 'js'):
@@ -81,6 +84,7 @@ s=s.replace('<link rel="canonical" href="https://heattransfersys.com/">', '')
 s=s.replace('<meta property="og:url" content="https://heattransfersys.com/">', '')
 s=s.replace('Custom design and fabrication of ASME Code pressure vessels and heat transfer equipment.', 'The page you requested could not be found.')
 s=s.replace('<title>Heat Transfer Systems, Inc. | Heat Transfer Systems</title>','<title>Page not found | Heat Transfer Systems</title>')
+s=s.replace('<meta property="og:title" content="Heat Transfer Systems, Inc. | Heat Transfer Systems">','<meta property="og:title" content="Page not found | Heat Transfer Systems">')
 (SITE/'404.html').write_text(s)
 
 
