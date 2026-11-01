@@ -1,27 +1,56 @@
 from pathlib import Path
 from html.parser import HTMLParser
-from urllib.parse import urlsplit
-import csv,re
+from urllib.parse import unquote, urlsplit
+import csv,json,re
 root=Path(__file__).resolve().parent.parent; site=root/'site'; errors=[]
 class Check(HTMLParser):
- def __init__(self,p): super().__init__(); self.p=p; self.h1=0
+ def __init__(self,p):
+  super().__init__(); self.p=p; self.h1=0; self.ids=set(); self.references=[]; self.controls=[]
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
+  if 'id' in a:
+   if a['id'] in self.ids: errors.append(f'{self.p}: duplicate id {a["id"]}')
+   self.ids.add(a['id'])
+  for attribute in ('aria-controls','aria-labelledby','aria-describedby','for'):
+   self.controls.extend(a.get(attribute,'').split())
   if tag=='h1': self.h1+=1
   if tag=='img' and not all(k in a for k in ('alt','width','height')): errors.append(f'{self.p}: incomplete image')
+  self.references.extend(a[k] for k in ('href','src') if k in a)
+  self.references.extend(candidate.strip().split()[0] for candidate in a.get('srcset','').split(',') if candidate.strip())
   for k in ('href','src'):
    v=a.get(k,''); u=urlsplit(v)
    if u.scheme in ('http','https') and tag not in ('a',) and not (tag=='link' and a.get('rel')=='canonical'): errors.append(f'{self.p}: external request {v}')
    if v.startswith('/') and not v.startswith('//'):
     target=site/u.path.lstrip('/'); target=target/'index.html' if u.path.endswith('/') else target
     if not target.is_file(): errors.append(f'{self.p}: missing {v}')
+pages={}
 for p in site.rglob('*.html'):
  html=p.read_text()
  for pattern in (r'\+\s*img\s*\(', r'\{\{', r'[\"\']\s*\+\s*(?:[\"\']|[a-zA-Z_]\w*\s*\()', r'\+\s*[\"\']'):
   if re.search(pattern, html): errors.append(f'{p}: leaked template code ({pattern})')
  c=Check(p); c.feed(html);
+ pages[p]=c
  if c.h1!=1: errors.append(f'{p}: {c.h1} h1s')
+ if '<meta name="robots" content="noindex">' not in html: errors.append(f'{p}: preview noindex missing')
+ for data in re.findall(r'<script type="application/ld\+json">(.*?)</script>',html,re.S):
+  try: json.loads(data)
+  except json.JSONDecodeError: errors.append(f'{p}: invalid JSON-LD')
+for p,c in pages.items():
+ for identifier in c.controls:
+  if identifier not in c.ids: errors.append(f'{p}: missing referenced id {identifier}')
+ for reference in c.references:
+  u=urlsplit(reference)
+  if u.scheme or u.netloc: continue
+  target=site/unquote(u.path).lstrip('/') if u.path.startswith('/') else p.parent/unquote(u.path) if u.path else p
+  if target.is_dir(): target=target/'index.html'
+  target=target.resolve()
+  if not target.is_file(): errors.append(f'{p}: missing resource {reference}')
+  elif u.fragment and target in pages and unquote(u.fragment) not in pages[target].ids: errors.append(f'{p}: missing anchor {reference}')
 css=(site/'assets/css/site.css').read_text(); js=(site/'assets/js/site.js').read_text()
+for reference in re.findall(r'url\([\"\']?([^\"\')]+)',css):
+ if reference.startswith('/') and not (site/reference.lstrip('/')).is_file(): errors.append(f'CSS: missing {reference}')
+if 'X-Robots-Tag: noindex' not in (site/'_headers').read_text(): errors.append('preview X-Robots-Tag missing')
+if 'Disallow: /' not in (site/'robots.txt').read_text().splitlines(): errors.append('preview robots.txt must disallow crawling')
 if re.search(r'url\(["\']?https?://|@import',css): errors.append('external CSS request')
 if len(css.encode())>25000 or len(js.encode())>6000: errors.append('asset size exceeded')
 redirects={}
@@ -29,6 +58,10 @@ for line in (site/'_redirects').read_text().splitlines():
  parts=line.split()
  if len(parts)!=3 or parts[2]!='301' or parts[0]==parts[1]: errors.append('bad redirect: '+line)
  else: redirects[parts[0]]=parts[1]
+for source,destination in redirects.items():
+ target=site/destination.lstrip('/')
+ if destination.endswith('/'): target=target/'index.html'
+ if not target.is_file(): errors.append(f'redirect {source}: missing {destination}')
 with (root/'src/assets/pages.tsv').open() as f:
  for row in csv.DictReader(f,delimiter='\t'):
   if row['old_path']!='/' and row['old_path'] not in redirects: errors.append('missing redirect '+row['old_path'])

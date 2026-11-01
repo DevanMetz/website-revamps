@@ -16,7 +16,7 @@ Upload the contents of `site/` to any static web host. No server-side code or da
 
 To host on Cloudflare instead, run `npx wrangler deploy` in this folder. Change `name` in `wrangler.jsonc` first if you want a different Worker name.
 
-While this is a preview, every page carries a `noindex` tag so search engines skip it. That tag should come out before the site goes live on your own domain.
+While this is a preview, every page carries a `noindex` tag, `site/_headers` sets `X-Robots-Tag: noindex`, and `robots.txt` disallows crawling. Before a production launch, update the generators in `src/build.py` and `src/keep.py` and the hand-edited `site/_headers` together. The sitemap uses the real company domain.
 
 The floating "Upgrade my website" button and the `/keep/` page it opens are preview-only: set `PREVIEW_SUBSCRIBE_URL = ''` in `src/data.py` and rebuild to remove both.
 
@@ -30,6 +30,10 @@ python3 src/check.py
 ```
 
 This needs Python 3 with Pillow, plus `pdfimages` from poppler-utils. The updated site is written to `site/`.
+
+Page templates and most page copy live in `src/build.py`; specification tables live in `src/valve_tables.py`. Edit styles and scripts in `src/assets/`, then rebuild. Do not edit generated HTML or the copies of CSS and JavaScript under `site/`.
+
+The build preserves these hand-maintained files: `site/_headers`, `site/_redirects`, `site/assets/favicon.svg`, `site/assets/fonts/`, `site/assets/docs/pcv.pdf`, and `site/assets/img/collins-logo.png`. CSS and JavaScript revalidate on each visit so returning visitors receive updates; images, fonts and the PDF use a long cache lifetime.
 
 ## License
 
