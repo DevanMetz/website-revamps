@@ -8,6 +8,7 @@ Live preview: https://has-mor-industries-redesign.metzdevan.workers.dev
 
 - `site/` is the finished website: plain HTML, CSS, images and JavaScript, ready to host as is.
 - `src/` is the build: `data.py` holds the content, `build.py` generates `site/`, and `check.py` checks the result. `src/assets/` holds the original images and text from the current website that the build draws on.
+- `src/static/` holds fonts, PDFs, the favicon, redirects and preview indexing/cache rules, copied into `site/` on every build.
 - `wrangler.jsonc` is the Cloudflare configuration used for the preview.
 
 ## Hosting it yourself

@@ -3,23 +3,60 @@ from html.parser import HTMLParser
 from urllib.parse import urlsplit, unquote
 import re, sys
 root=Path(__file__).resolve().parents[1]; site=root/'site'; errors=[]
+void_tags={'area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr'}
+documents={}; fragments=[]
 class Check(HTMLParser):
- def __init__(self,path): super().__init__(); self.path=path; self.h=0
+ def __init__(self,path):
+  super().__init__(); self.path=path; self.h=0; self.ids=set(); self.stack=[]; self.labels=[]; self.controls=set(); self.noindex=False
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
+  if tag not in void_tags: self.stack.append(tag)
+  if 'id' in a:
+   if a['id'] in self.ids: errors.append(f'{self.path}: duplicate id {a["id"]}')
+   self.ids.add(a['id'])
+  if tag=='label' and 'for' in a: self.labels.append(a['for'])
+  if tag in ('input','select','textarea'): self.controls.add(a.get('id'))
+  if tag=='meta' and a.get('name')=='robots' and 'noindex' in a.get('content',''): self.noindex=True
   if tag=='h1': self.h+=1
   if tag=='img' and not all(k in a for k in ('alt','width','height')): errors.append(f'{self.path}: incomplete image')
   for key in ('href','src'):
    v=a.get(key,''); p=urlsplit(v)
    if key=='src' and p.scheme in ('http','https'): errors.append(f'{self.path}: external request {v}')
-   if v.startswith('/') and not v.startswith('//'):
-    target=site/unquote(p.path).lstrip('/')
+   if (v.startswith('/') and not v.startswith('//')) or v.startswith('#'):
+    target=site/unquote(p.path).lstrip('/') if p.path else self.path
     if target.is_dir(): target=target/'index.html'
     if not target.exists(): errors.append(f'{self.path}: missing {v}')
+    elif p.fragment and target.suffix=='.html': fragments.append((self.path,target,unquote(p.fragment)))
+ def handle_startendtag(self,tag,attrs):
+  self.handle_starttag(tag,attrs)
+  if tag not in void_tags: self.handle_endtag(tag)
+ def handle_endtag(self,tag):
+  if not self.stack or self.stack[-1]!=tag: errors.append(f'{self.path}: misnested closing {tag}')
+  if tag in self.stack:
+   while self.stack.pop()!=tag: pass
 for file in site.rglob('*.html'):
- c=Check(file); c.feed(file.read_text());
+ c=Check(file); c.feed(file.read_text()); c.close(); documents[file]=c
  if c.h!=1: errors.append(f'{file}: {c.h} h1s')
+ if c.stack: errors.append(f'{file}: unclosed tags {c.stack}')
+ if not c.noindex: errors.append(f'{file}: missing preview noindex')
+ for control in c.controls:
+  if not control or control not in c.labels: errors.append(f'{file}: unlabelled form control {control}')
+ for label in c.labels:
+  if label not in c.controls: errors.append(f'{file}: label without a control {label}')
+for source,target,fragment in fragments:
+ if fragment not in documents[target].ids: errors.append(f'{source}: missing anchor {target}#{fragment}')
 css=(site/'assets/css/site.css').read_text(); js=(site/'assets/js/site.js').read_text()
+for asset in re.findall(r'url\(["\']?(/[^)"\']+)',css):
+ if not (site/asset.lstrip('/')).is_file(): errors.append(f'CSS asset missing: {asset}')
+for source in (root/'src/static').rglob('*'):
+ if source.is_file():
+  target=site/source.relative_to(root/'src/static')
+  if not target.is_file() or source.read_bytes()!=target.read_bytes(): errors.append(f'static asset not copied: {source}')
+if 'X-Robots-Tag: noindex' not in (site/'_headers').read_text(): errors.append('missing preview X-Robots-Tag')
+if not re.search(r'^Disallow: /$',(site/'robots.txt').read_text(),re.M): errors.append('missing preview robots exclusion')
+from xml.etree import ElementTree
+for location in ElementTree.parse(site/'sitemap.xml').iter('{http://www.sitemaps.org/schemas/sitemap/0.9}loc'):
+ if not location.text.startswith('https://has-mor.com/'): errors.append(f'wrong sitemap domain: {location.text}')
 if re.search(r'url\(["\']?https?://|@import',css): errors.append('external CSS request')
 if len(css.encode())>25000 or len(js.encode())>6000: errors.append('asset size limit')
 redirects={}

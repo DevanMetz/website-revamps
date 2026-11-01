@@ -6,6 +6,18 @@ toggle.addEventListener('click',()=>{const open=menu.classList.toggle('open');to
 menu.querySelector('.menu-close').addEventListener('click',()=>{closeMenu();toggle.focus()});
 document.addEventListener('keydown',event=>{if(event.key==='Escape' && menu.classList.contains('open')){closeMenu();toggle.focus()}});
 menu.addEventListener('click',event=>{if(event.target.closest('a')) closeMenu()});
+menu.addEventListener('focusout',event=>{
+  if (!menu.contains(event.relatedTarget) && event.relatedTarget !== toggle) closeMenu();
+});
+document.addEventListener('click',event=>{
+  if (!menu.contains(event.target) && !toggle.contains(event.target)) closeMenu();
+});
+window.matchMedia('(min-width:1001px)').addEventListener('change',event=>{
+  if (!event.matches) return;
+  const hiddenFocus = menu.contains(document.activeElement) || document.activeElement === toggle;
+  closeMenu();
+  if (hiddenFocus) document.querySelector('.brand').focus();
+});
 
 let copyToastTimer;
 document.addEventListener('click', async event => {
@@ -15,15 +27,19 @@ document.addEventListener('click', async event => {
   const value = decodeURIComponent(link.getAttribute('href').replace(/^(tel:|mailto:)/i, '').split('?')[0]);
   const display = link.textContent.trim() || value;
   const fallback = () => {
+    const focused = document.activeElement;
     const field = document.createElement('textarea');
     field.value = value;
     field.setAttribute('readonly', '');
     field.style.cssText = 'position:fixed;left:-9999px;top:0';
     document.body.appendChild(field);
-    field.select();
-    const copied = document.execCommand('copy');
-    field.remove();
-    return copied;
+    try {
+      field.select();
+      return document.execCommand('copy');
+    } finally {
+      field.remove();
+      focused?.focus({preventScroll: true});
+    }
   };
   let copied = false;
   try {
