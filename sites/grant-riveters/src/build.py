@@ -253,7 +253,7 @@ for p in docs:
  for prefix in ['/','/docs/','/pdf/']:
   redirects[prefix+quote(p.name)]='/assets/docs/'+quote(p.name)
 (SITE/'_redirects').write_text(''.join(f'{k} {v} 301\n' for k,v in redirects.items()))
-(SITE/'_headers').write_text('/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n  X-Robots-Tag: noindex\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n')
+(SITE/'_headers').write_text('/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n  X-Robots-Tag: noindex\n/assets/css/*\n  Cache-Control: public, max-age=0, must-revalidate\n/assets/js/*\n  Cache-Control: public, max-age=0, must-revalidate\n/assets/docs/*\n  Cache-Control: public, max-age=31536000, immutable\n/assets/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/assets/img/*\n  Cache-Control: public, max-age=31536000, immutable\n')
 (SITE/'robots.txt').write_text('User-agent: *\nDisallow: /\nSitemap: https://www.grantriveters.com/sitemap.xml\n')
 paths=['']+list(PAGES)+['contact','request-a-quote','literature'];(SITE/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join('<url><loc>https://www.grantriveters.com/'+p+('/' if p else '')+'</loc></url>' for p in paths)+'</urlset>')
 # Crop the traced initial for a recognizable favicon.

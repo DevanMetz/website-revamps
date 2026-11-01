@@ -8,14 +8,21 @@ for p in pages:
  if re.search(r'</a><(?:a|button)\b', html): errors.append(f'{p}: adjacent actions lack whitespace')
  s=BeautifulSoup(html,'html.parser')
  if len(s.find_all('h1'))!=1: errors.append(f'{p}: h1 count')
+ ids=[el['id'] for el in s.select('[id]')]
+ if len(ids)!=len(set(ids)): errors.append(f'{p}: duplicate ids')
+ for el in s.select('[aria-controls]'):
+  if any(target not in ids for target in el['aria-controls'].split()): errors.append(f'{p}: missing aria-controls target')
  for im in s.find_all('img'):
   if any(not im.has_attr(x) for x in ['alt','width','height']): errors.append(f'{p}: image attributes')
  for el in s.select('[href], [src]'):
   u=el.get('href') or el.get('src'); parsed=urlparse(u)
-  if parsed.scheme or u.startswith('#'): continue
-  target=site/unquote(parsed.path).lstrip('/') if u.startswith('/') else p.parent/unquote(parsed.path)
+  if parsed.scheme or parsed.netloc: continue
+  target=site/unquote(parsed.path).lstrip('/') if u.startswith('/') else p.parent/unquote(parsed.path) if parsed.path else p
   if target.is_dir(): target=target/'index.html'
   if not target.exists(): errors.append(f'{p}: missing {u}')
+  elif parsed.fragment and target.suffix=='.html':
+   target_soup=s if target==p else BeautifulSoup(target.read_text(),'html.parser')
+   if not target_soup.find(id=unquote(parsed.fragment)): errors.append(f'{p}: missing anchor {u}')
  for el in s.select('script[src], link[rel="stylesheet"], img[src]'):
   if (el.get('src') or el.get('href','')).startswith(('http:','https:','//')): errors.append(f'{p}: external request')
 redirects={}
