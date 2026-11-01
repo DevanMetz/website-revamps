@@ -1,42 +1,71 @@
 from pathlib import Path
 from html.parser import HTMLParser
 from urllib.parse import urlsplit, unquote
+from hashlib import sha256
 import csv,re
 from data import PREVIEW_SUBSCRIBE_URL, STRIPE_PORTAL_URL
 from keep import KEEP_CODE_URL
 root=Path(__file__).resolve().parent.parent; site=root/'site'; errors=[]
+asset_versions={'/assets/'+asset:sha256((site/'assets'/asset).read_bytes()).hexdigest()[:12] for asset in ('css/site.css','js/site.js')}
+page_ids={}; references=[]
 class Check(HTMLParser):
- def __init__(self,path): super().__init__(); self.path=path; self.h1=0
+ def __init__(self,path): super().__init__(); self.path=path; self.h1=0; self.ids=set()
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
+  if 'id' in a:
+   if a['id'] in self.ids: errors.append(f'{self.path}: duplicate id {a["id"]}')
+   self.ids.add(a['id'])
+  for key in ('aria-controls','aria-labelledby','aria-describedby'):
+   for identifier in a.get(key,'').split(): references.append((self.path,self.path,identifier))
   if tag=='h1': self.h1+=1
   if tag=='img':
    for k in ('alt','width','height'):
     if k not in a: errors.append(f'{self.path}: image missing {k}')
   for k in ('href','src'):
    v=a.get(k,'')
-   if not v or v.startswith(('#','mailto:','tel:','data:')): continue
+   if not v or v.startswith(('mailto:','tel:','data:')): continue
    if tag=='link' and a.get('rel')=='canonical':
     expected='https://stevenswire.com'+('/' if self.path==site/'index.html' else '/'+str(self.path.relative_to(site)).removesuffix('index.html'))
     if v!=expected: errors.append(f'{self.path}: incorrect canonical {v}')
     continue
    if v in (PREVIEW_SUBSCRIBE_URL,KEEP_CODE_URL,STRIPE_PORTAL_URL): continue
    if v.startswith(('http:','https:','//')): errors.append(f'{self.path}: external {k} {v}'); continue
-   p=unquote(urlsplit(v).path)
-   target=site/p.lstrip('/') if p.startswith('/') else self.path.parent/p
+   url=urlsplit(v); p=unquote(url.path)
+   if p in asset_versions and url.query!='v='+asset_versions[p]: errors.append(f'{self.path}: stale asset version {v}')
+   target=(site/p.lstrip('/') if p.startswith('/') else self.path.parent/p) if p else self.path
    if target.is_dir(): target=target/'index.html'
    if not target.is_file(): errors.append(f'{self.path}: missing {v}')
+   if url.fragment and target.suffix=='.html': references.append((self.path,target,unquote(url.fragment)))
 pages=list(site.rglob('*.html'))
 for p in pages:
  c=Check(p); c.feed(p.read_text());
+ page_ids[p]=c.ids
  if c.h1!=1: errors.append(f'{p}: {c.h1} h1 elements')
+for source,target,identifier in references:
+ if identifier not in page_ids.get(target,set()): errors.append(f'{source}: missing target {target}#{identifier}')
 css=(site/'assets/css/site.css').read_text()
 if re.search(r'url\(["\']?(?:https?:)?//',css): errors.append('external CSS request')
+for asset in re.findall(r'url\(["\']?(/[^)"\']+)',css):
+ if not (site/asset.lstrip('/')).is_file(): errors.append('missing CSS asset '+asset)
+headers={}; rule=None
+for line in (site/'_headers').read_text().splitlines():
+ if line and not line.startswith(' '): rule=line; headers[rule]={}
+ elif ':' in line:
+  name,value=line.strip().split(':',1); headers[rule][name.lower()]=value.strip()
+if '/assets/*' in headers: errors.append('broad asset cache rule overlaps CSS and JavaScript')
+for folder in ('css','js','img','fonts','docs'):
+ expected='public, max-age=0, must-revalidate' if folder in ('css','js') else 'public, max-age=31536000, immutable'
+ if headers.get(f'/assets/{folder}/*',{}).get('cache-control')!=expected: errors.append('incorrect cache policy for '+folder)
+if headers.get('/*',{}).get('x-robots-tag')!='noindex': errors.append('missing preview noindex header')
 redirects={}
 for line in (site/'_redirects').read_text().splitlines():
  parts=line.split()
  if len(parts)!=3 or parts[2]!='301' or not parts[0].startswith('/') or not parts[1].startswith('/') or parts[0]==parts[1]: errors.append('bad redirect: '+line)
  else: redirects[parts[0]]=parts[1]
+for source,destination in redirects.items():
+ target=site/destination.lstrip('/')
+ if target.is_dir(): target=target/'index.html'
+ if not target.is_file(): errors.append(f'{source}: missing redirect destination {destination}')
 with (root/'src/assets/pages.tsv').open() as f:
  for row in csv.DictReader(f,delimiter='\t'):
   if row['old_path']!='/' and row['old_path'] not in redirects: errors.append('missing redirect '+row['old_path'])
