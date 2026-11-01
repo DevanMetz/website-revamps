@@ -28,6 +28,7 @@ document.addEventListener('click', async event => {
     }
   } catch (_) { /* Try the fallback below. */ }
   if (!copied) {
+    const focused = document.activeElement;
     const textarea = document.createElement('textarea');
     textarea.value = value;
     textarea.setAttribute('readonly', '');
@@ -37,6 +38,7 @@ document.addEventListener('click', async event => {
     textarea.select();
     try { copied = document.execCommand('copy'); } catch (_) { /* Report failure below. */ }
     textarea.remove();
+    if (focused instanceof HTMLElement) focused.focus({ preventScroll: true });
   }
   let toast = document.querySelector('.copy-toast');
   if (!toast) {

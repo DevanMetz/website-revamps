@@ -1,6 +1,6 @@
 # Fontana Machine & Engineering Co. website redesign
 
-A redesigned website for Fontana Machine & Engineering Co..
+A redesigned website for Fontana Machine & Engineering Co.
 
 Live preview: https://fontana-machine-redesign.metzdevan.workers.dev
 
@@ -8,6 +8,7 @@ Live preview: https://fontana-machine-redesign.metzdevan.workers.dev
 
 - `site/` is the finished website: plain HTML, CSS, images and JavaScript, ready to host as is.
 - `src/` is the build: `data.py` holds the content, `build.py` generates `site/`, and `check.py` checks the result. `src/assets/` holds the original images and text from the current website that the build draws on.
+- `src/static/` holds the favicon, redirects, sitemap and preview crawling/cache rules, copied into `site/` on every build.
 - `wrangler.jsonc` is the Cloudflare configuration used for the preview.
 
 ## Hosting it yourself
@@ -22,7 +23,7 @@ The floating "Upgrade my website" button and the `/keep/` page it opens are prev
 
 ## Editing content
 
-Edit `src/data.py`, then run this from the folder:
+Edit page markup and copy in `src/build.py`, directions and preview settings in `src/data.py`, styles and interactions in `src/assets/`, and hosting files in `src/static/`. Then run this from the folder:
 
 ```
 python3 src/build.py
@@ -33,7 +34,7 @@ This needs Python 3 with Pillow. The updated site is written to `site/`.
 
 ## License
 
-The code is MIT licensed; see [LICENSE](../../LICENSE). The company's own text, logo, photos and trademarks remain the property of Fontana Machine & Engineering Co..
+The code is MIT licensed; see [LICENSE](../../LICENSE). The company's own text, logo, photos and trademarks remain the property of Fontana Machine & Engineering Co.
 
 ## Contact
 

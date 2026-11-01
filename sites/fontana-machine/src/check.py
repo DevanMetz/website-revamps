@@ -1,34 +1,53 @@
 from pathlib import Path
 from html.parser import HTMLParser
 from urllib.parse import urlsplit, unquote
+from PIL import Image
 import re, csv
 root = Path(__file__).resolve().parent.parent
 site = root/'site'
 errors=[]
+page_ids={}
+fragments=[]
 class Check(HTMLParser):
- def __init__(self, file): super().__init__(); self.file=file; self.h1=0
+ def __init__(self, file): super().__init__(); self.file=file; self.h1=0; self.ids=set()
  def handle_starttag(self, tag, attrs):
   a=dict(attrs)
+  if 'id' in a:
+   if a['id'] in self.ids: errors.append(f'{self.file}: duplicate id {a["id"]}')
+   self.ids.add(a['id'])
   if tag=='h1': self.h1+=1
   if tag=='img':
    for key in ('alt','width','height'):
     if key not in a: errors.append(f'{self.file}: img missing {key}')
+   image_path=site/a.get('src','').lstrip('/')
+   if image_path.is_file():
+    with Image.open(image_path) as im:
+     if (a.get('width'), a.get('height')) != tuple(map(str, im.size)):
+      errors.append(f'{self.file}: incorrect image dimensions for {a.get("src")}')
   for key in ('href','src'):
    value=a.get(key,'')
-   if not value or value.startswith(('#','mailto:','tel:')): continue
+   if not value or value.startswith(('mailto:','tel:')): continue
    if value.startswith(('https://','http://')):
     if tag in ('img','script') or (tag == 'link' and not (a.get('rel') == 'canonical' and value.startswith('https://www.fontanamachine.com/'))): errors.append(f'{self.file}: external resource {value}')
     continue
    path=unquote(urlsplit(value).path)
-   target=(site/path.lstrip('/')) if path.startswith('/') else (self.file.parent/path)
+   target=((site/path.lstrip('/')) if path.startswith('/') else (self.file.parent/path)) if path else self.file
    if target.is_dir(): target=target/'index.html'
    if not target.exists(): errors.append(f'{self.file}: missing {value}')
+   fragment=unquote(urlsplit(value).fragment)
+   if fragment and target.suffix=='.html': fragments.append((self.file,target,fragment))
 files=list(site.rglob('*.html'))
 for f in files:
  p=Check(f); p.feed(f.read_text());
+ page_ids[f.resolve()]=p.ids
  if p.h1!=1: errors.append(f'{f}: {p.h1} h1s')
+for source,target,fragment in fragments:
+ if fragment not in page_ids.get(target.resolve(),set()): errors.append(f'{source}: missing anchor {target}#{fragment}')
 css=(site/'assets/css/site.css').read_text()
 if re.search(r'url\([\'"]?https?://|@import',css): errors.append('external CSS resource')
+for url in re.findall(r'url\([\'"]?([^\)\'\"]+)',css):
+ target=site/url.lstrip('/') if url.startswith('/') else site/'assets/css'/url
+ if not target.is_file(): errors.append(f'missing CSS asset: {url}')
 redirects={}
 for line in (site/'_redirects').read_text().splitlines():
  parts=line.split()

@@ -6,6 +6,7 @@ import shutil
 from data import ROUTES
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'site'
+shutil.copytree(ROOT / 'src/static', OUT, dirs_exist_ok=True)
 (OUT / 'assets/fonts').mkdir(parents=True, exist_ok=True)
 for folder in ('css', 'js'):
     (OUT / 'assets' / folder).mkdir(parents=True, exist_ok=True)
