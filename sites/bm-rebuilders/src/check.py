@@ -1,6 +1,8 @@
 from pathlib import Path
 from bs4 import BeautifulSoup
 from urllib.parse import urlsplit
+from collections import Counter
+from fnmatch import fnmatch
 import re
 from data import PREVIEW_SUBSCRIBE_URL, STRIPE_PORTAL_URL
 from keep import KEEP_CODE_URL
@@ -9,6 +11,12 @@ pages=list(site.rglob('*.html'))
 for p in pages:
  s=BeautifulSoup(p.read_text(),'html.parser')
  if len(s.find_all('h1'))!=1: errors.append(f'{p}: h1 count')
+ ids=Counter(tag['id'] for tag in s.find_all(id=True))
+ for id,count in ids.items():
+  if count>1: errors.append(f'{p}: duplicate id {id}')
+ for tag in s.find_all(attrs={'aria-controls':True}):
+  for id in tag['aria-controls'].split():
+   if id not in ids: errors.append(f'{p}: missing aria-controls target {id}')
  for img in s.find_all('img'):
   if any(not img.has_attr(x) for x in ('alt','width','height')): errors.append(f'{p}: image attributes')
  for tag in s.find_all(['a','link','script','img']):
@@ -18,6 +26,26 @@ for p in pages:
    path=urlsplit(u).path; target=site/path.lstrip('/')
    if target.is_dir(): target=target/'index.html'
    if not target.exists(): errors.append(f'{p}: missing {u}')
+  parsed=urlsplit(u)
+  if parsed.fragment and not parsed.scheme and not parsed.netloc:
+   target=site/parsed.path.lstrip('/') if parsed.path.startswith('/') else p.parent/parsed.path if parsed.path else p
+   if target.is_dir(): target=target/'index.html'
+   if target.exists() and target.suffix=='.html':
+    target_soup=s if target==p else BeautifulSoup(target.read_text(),'html.parser')
+    if not target_soup.find(id=parsed.fragment): errors.append(f'{p}: missing anchor {u}')
+# Match all applicable rules: overlapping asset rules can combine cache directives.
+cache_rules=[]
+for line in (site/'_headers').read_text().splitlines():
+ if line.startswith('/'):
+  pattern=line.strip()
+ elif line.strip().lower().startswith('cache-control:'):
+  cache_rules.append((pattern,line.split(':',1)[1].strip()))
+for asset in (site/'assets').rglob('*'):
+ if not asset.is_file(): continue
+ url='/'+asset.relative_to(site).as_posix()
+ actual=[value for pattern,value in cache_rules if fnmatch(url,pattern)]
+ expected='public, max-age=0, must-revalidate' if asset.suffix in ('.css','.js') else 'public, max-age=31536000, immutable'
+ if actual!=[expected]: errors.append(f'{asset}: incorrect cache policy {actual}')
 redirects=(site/'_redirects').read_text().splitlines(); mapping={}
 for line in redirects:
  parts=line.split()

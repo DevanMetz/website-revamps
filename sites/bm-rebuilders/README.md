@@ -16,13 +16,13 @@ Upload the contents of `site/` to any static web host. No server-side code or da
 
 To host on Cloudflare instead, run `npx wrangler deploy` in this folder. Change `name` in `wrangler.jsonc` first if you want a different Worker name.
 
-While this is a preview, every page carries a `noindex` tag so search engines skip it. That tag should come out before the site goes live on your own domain.
+While this is a preview, every page carries a `noindex` tag so search engines skip it. Before launching on the real domain, remove the preview noindex meta tag and `X-Robots-Tag` header, and replace the `robots.txt` crawl block. These are generated in `src/build.py`.
 
 The floating "Upgrade my website" button and the `/keep/` page it opens are preview-only: set `PREVIEW_SUBSCRIBE_URL = ''` in `src/data.py` and rebuild to remove both.
 
 ## Editing content
 
-Edit `src/data.py`, then run this from the folder:
+Edit content and templates in `src/data.py` and `src/build.py`, and styles or scripts in `src/assets/`. Do not edit generated files in `site/`. Then run this from the folder:
 
 ```
 python3 src/build.py
