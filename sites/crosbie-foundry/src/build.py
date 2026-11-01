@@ -30,7 +30,7 @@ def img(name,alt,priority=False):
 nav=[('Products','/products/'),('Services','/services/'),('Alloys','/alloys/'),('About','/about/'),('History','/history/'),('Contact','/contact/')]
 def shell(title,description,body,path):
  subnav='<ul class="mobile-products">' + ' '.join(f'<li><a href="/products/{slug}/"'+(' aria-current="page"' if path==f'/products/{slug}/' else '')+f'>{escape(family_title)}</a></li>' for slug,(family_title,_,_) in FAMILIES.items()) + '</ul>'
- links='<ul class="nav-list">' + ' '.join(f'<li><a href="{url}"'+(' aria-current="page"' if path==url or (url=='/products/' and path.startswith(url)) else '')+f'>{label}</a>'+(subnav if url=='/products/' else '')+'</li>' for label,url in nav) + '</ul>'
+ links='<ul class="nav-list">' + ' '.join(f'<li><a href="{url}"'+(' aria-current="page"' if path==url else '')+f'>{label}</a>'+(subnav if url=='/products/' else '')+'</li>' for label,url in nav) + '</ul>'
  footer_products=''.join(f'<li><a href="/products/{slug}/">{escape(title)}</a></li>' for slug,(title,_,_) in FAMILIES.items())
  footer_company=''.join(f'<li><a href="{url}">{label}</a></li>' for label,url in nav if label != 'Products')
  org={'@context':'https://schema.org','@type':'Organization','name':'Crosbie Foundry','url':'https://www.crosbiefoundry.com/','telephone':'800-419-0402','faxNumber':'574-262-1503','email':'crosbiefoundry@aol.com','address':{'@type':'PostalAddress','streetAddress':'1600 Mishawaka St.','addressLocality':'Elkhart','addressRegion':'IN','postalCode':'46514'}}
@@ -64,7 +64,7 @@ products=intro('Products')+'<section class="section"><div class="wrap">'+cards(T
 write('/products/','Products','Brass, bronze and aluminum sand castings.',products)
 for slug,(title,desc,names) in FAMILIES.items():
  siblings='<nav class="siblings" aria-label="Product families"><a href="/products/">All products</a><ul>' + ' '.join(f'<li><a href="/products/{other}/"'+(' aria-current="page"' if other==slug else '')+f'>{escape(other_title)}</a></li>' for other,(other_title,_,_) in FAMILIES.items()) + '</ul></nav>'
- gallery=' '.join(f'<a class="gallery-item" href="/assets/img/{images[n][0]}">{img(n,title)}</a>' for n in names if n in images)
+ gallery=' '.join(f'<a class="gallery-item" href="/assets/img/{images[n][0]}">{img(n,title,priority=index==0)}</a>' for index,n in enumerate(names) if n in images)
  write('/products/'+slug+'/',title,desc,intro(title)+'<section class="product-section"><div class="wrap product-layout">'+siblings+'<div class="product-content"><p>'+escape(desc)+'</p>'+product_quote+'<div class="gallery">'+gallery+'</div></div></div></section>')
 write('/services/','Services','Our services include pattern making, prototyping, machining, coring, polishing, and plating.',intro('Services')+'''<section class="section"><div class="wrap split"><div><h2>From pattern to casting</h2><p>Our services include pattern making, prototyping, machining, coring, polishing, and plating. We provide test bars and certifications for any production alloy.</p><p>Tooling services are available for your product. Grinding and polishing are readily available, and design consultation is available upon request.</p></div><div class="capabilities"><h2>Production</h2><p>Short-run and prototype parts are readily handled alongside large production orders.</p><p>Local pick-up and delivery are available. Please call for more information.</p></div></div></section>'''+quote_band)
 rows=''.join('<tr>'+''.join(('<th scope="row">'+escape(c)+'</th>' if i==0 else '<td>'+escape(c)+'</td>') for i,c in enumerate(row))+'</tr>' for row in ALLOYS)
@@ -80,7 +80,7 @@ for slug,(_,_,names) in FAMILIES.items():
  for n in names:
   if n not in ('example1','example3'): mapping[n]='/products/'+slug+'/'
 (SITE/'_redirects').write_text(''.join(f'/{k}.html {v} 301\n' for k,v in mapping.items()))
-(SITE/'_headers').write_text('/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n  X-Robots-Tag: noindex\n\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n')
+(SITE/'_headers').write_text('/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n  X-Robots-Tag: noindex\n\n/assets/css/*\n  Cache-Control: public, max-age=0, must-revalidate\n/assets/js/*\n  Cache-Control: public, max-age=0, must-revalidate\n/assets/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n/assets/img/*\n  Cache-Control: public, max-age=31536000, immutable\n')
 (SITE/'robots.txt').write_text('User-agent: *\nDisallow: /\nSitemap: https://www.crosbiefoundry.com/sitemap.xml\n')
 paths=['/','/products/','/services/','/alloys/','/about/','/history/','/contact/']+['/products/'+s+'/' for s in FAMILIES]
 (SITE/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join('<url><loc>https://www.crosbiefoundry.com'+p+'</loc></url>' for p in paths)+'</urlset>')

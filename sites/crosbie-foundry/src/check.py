@@ -1,16 +1,40 @@
 from pathlib import Path
 from bs4 import BeautifulSoup
 from urllib.parse import urlsplit, unquote
-import re
+import re, json
 from data import PREVIEW_SUBSCRIBE_URL, STRIPE_PORTAL_URL
 from keep import KEEP_CODE_URL
 root=Path(__file__).resolve().parents[1]; site=root/'site'; errors=[]
 pages=list(site.rglob('*.html'))
+documents={p: BeautifulSoup(p.read_text(),'html.parser') for p in pages}
 for p in pages:
- s=BeautifulSoup(p.read_text(),'html.parser')
+ s=documents[p]
  if len(s.find_all('h1'))!=1: errors.append(f'{p}: h1 count')
+ ids=[tag['id'] for tag in s.select('[id]')]
+ if len(ids)!=len(set(ids)): errors.append(f'{p}: duplicate ids')
+ if len(s.find_all('main'))!=1: errors.append(f'{p}: main landmark count')
+ if not s.select_one('meta[name="robots"][content="noindex"]'): errors.append(f'{p}: preview noindex missing')
+ for script in s.select('script[type="application/ld+json"]'):
+  try: json.loads(script.string or '')
+  except (ValueError, TypeError): errors.append(f'{p}: invalid JSON-LD')
+ for control in s.select('[aria-controls]'):
+  if any(target not in ids for target in control['aria-controls'].split()): errors.append(f'{p}: missing controlled element')
+ for a in s.select('a[href]'):
+  url=urlsplit(a['href'])
+  if url.scheme or url.netloc: continue
+  dest=(site/url.path.lstrip('/') if url.path.startswith('/') else p.parent/url.path) if url.path else p
+  if dest.is_dir(): dest=dest/'index.html'
+  if url.fragment and (dest not in documents or not documents[dest].find(id=unquote(url.fragment))): errors.append(f'{p}: missing anchor {a["href"]}')
+ for a in s.select('#navigation [aria-current="page"]'):
+  expected='/' if p==site/'index.html' else '/'+str(p.relative_to(site)).removesuffix('index.html')
+  if a.get('href')!=expected: errors.append(f'{p}: incorrect current-page link')
  for im in s.find_all('img'):
   if any(not im.has_attr(a) for a in ('alt','width','height')): errors.append(f'{p}: image attributes')
+  for candidate in im.get('srcset','').split(','):
+   if candidate.strip() and not (site/candidate.split()[0].lstrip('/')).is_file(): errors.append(f'{p}: missing responsive image {candidate}')
+  if im.get('fetchpriority')=='high' and im.get('loading')=='lazy': errors.append(f'{p}: priority image is lazy loaded')
+ gallery_image=s.select_one('.gallery img')
+ if gallery_image and (gallery_image.get('loading')=='lazy' or gallery_image.get('fetchpriority')!='high'): errors.append(f'{p}: first product image must load eagerly')
  for tag in s.find_all(['a','img','script','link']):
   value=tag.get('href') or tag.get('src')
   if not value or value.startswith(('#','mailto:','tel:')): continue
@@ -26,6 +50,12 @@ for p in pages:
   if not dest.exists(): errors.append(f'{p}: missing {value}')
 css=(site/'assets/css/site.css').read_text()
 if re.search(r'url\([\'"]?(?:https?:)?//|@import',css): errors.append('external CSS request')
+for asset in re.findall(r'url\([\'"]?(/[^\)\'\"]+)',css):
+ if not (site/asset.lstrip('/')).is_file(): errors.append('missing CSS asset '+asset)
+headers=(site/'_headers').read_text()
+if 'X-Robots-Tag: noindex' not in headers: errors.append('preview robots header missing')
+if re.search(r'/assets/(?:\*|css/\*|js/\*)\n[^/]*immutable',headers): errors.append('unversioned CSS/JS must revalidate')
+if 'Disallow: /\n' not in (site/'robots.txt').read_text(): errors.append('preview robots restriction missing')
 redirects={}
 for line in (site/'_redirects').read_text().splitlines():
  parts=line.split()

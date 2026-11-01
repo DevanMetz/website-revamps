@@ -7,7 +7,7 @@ Live preview: https://crosbie-foundry-redesign.metzdevan.workers.dev
 ## What's in this folder
 
 - `site/` is the finished website: plain HTML, CSS, images and JavaScript, ready to host as is.
-- `src/` is the build: `data.py` holds the content, `build.py` generates `site/`, and `check.py` checks the result. `src/assets/` holds the original images and text from the current website that the build draws on.
+- `src/` is the build: `data.py` holds product and alloy data, `build.py` contains the page templates and other copy and generates `site/`, and `check.py` checks the result. `src/assets/` holds the shared CSS, JavaScript, fonts, and original images and text that the build draws on. `keep.py` generates the preview upgrade page.
 - `wrangler.jsonc` is the Cloudflare configuration used for the preview.
 
 ## Hosting it yourself
@@ -22,7 +22,7 @@ The floating "Upgrade my website" button and the `/keep/` page it opens are prev
 
 ## Editing content
 
-Edit `src/data.py`, then run this from the folder:
+Edit content in `src/data.py` or `src/build.py`, styles in `src/assets/css/site.css`, and interactions in `src/assets/js/site.js`. Do not edit generated files in `site/`. Then run this from the folder:
 
 ```
 python3 src/build.py
