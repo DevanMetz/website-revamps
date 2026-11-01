@@ -9,7 +9,7 @@ from PIL import Image
 from data import CATALOG, PREVIEW_SUBSCRIBE_URL, SITE_ORIGIN
 from keep import build_keep
 S=Path('site'); A='/assets/img/'
-CSS_V=hashlib.sha256(Path('site/assets/css/site.css').read_bytes()).hexdigest()[:10]  # cache-bust: /assets/* is cached for a year
+CSS_V=hashlib.sha256(Path('site/assets/css/site.css').read_bytes()).hexdigest()[:10]  # cache-bust the shared stylesheet
 JS_V=hashlib.sha256(Path('site/assets/js/site.js').read_bytes()).hexdigest()[:10]
 
 def img(path,alt,cls='',eager=False):
@@ -135,10 +135,10 @@ for path,(title,desc,body) in pages.items():
 # Set PREVIEW_SUBSCRIBE_URL = '' in src/data.py and rebuild to remove it (and /keep/).
 def add_preview_subscribe():
  site_dir=Path(__file__).resolve().parent.parent/'site'
- css=("a.preview-subscribe{position:fixed;right:max(20px,calc(env(safe-area-inset-right) + 12px));bottom:max(20px,calc(env(safe-area-inset-bottom) + 12px));z-index:19;display:inline-flex;align-items:center;min-height:66px;padding:0 27px;border-radius:999px;background:#000098;color:#fff;font:600 22.5px/1.1 'Instrument Sans',sans-serif;letter-spacing:.01em;text-transform:none;text-decoration:none;white-space:nowrap;box-shadow:0 9px 27px rgba(0,0,0,.22);transition:background-color .15s,opacity .2s,visibility .2s}"
+ css=("a.preview-subscribe{position:fixed;right:max(20px,calc(env(safe-area-inset-right) + 12px));bottom:max(20px,calc(env(safe-area-inset-bottom) + 12px));z-index:21;display:inline-flex;align-items:center;min-height:66px;padding:0 27px;border-radius:999px;background:#000098;color:#fff;font:600 22.5px/1.1 'Instrument Sans',sans-serif;letter-spacing:.01em;text-transform:none;text-decoration:none;white-space:nowrap;box-shadow:0 9px 27px rgba(0,0,0,.22);transition:background-color .15s}"
   "a.preview-subscribe:hover{background:#00006e;color:#fff;text-decoration:none}"
   "a.preview-subscribe:focus-visible{background:#000098;color:#fff;outline:3px solid #000098;outline-offset:3px;box-shadow:0 0 0 3px #fff,0 6px 18px rgba(0,0,0,.22)}"
-  "a.preview-subscribe.is-tucked,body:has(header [aria-expanded=\"true\"]) a.preview-subscribe{opacity:0;visibility:hidden}"
+  "@media (max-width:1000px){body:has(a.preview-subscribe) .nav.open{max-height:calc(100dvh - 168px)}}"
   "@media (max-width:760px){a.preview-subscribe{right:max(12px,calc(env(safe-area-inset-right) + 8px));bottom:max(12px,calc(env(safe-area-inset-bottom) + 8px));min-height:60px;padding:0 21px;font-size:21px}}"
   "footer:last-of-type::after{content:\"\";display:block;height:88px}"
   "@media (prefers-reduced-motion:reduce){a.preview-subscribe{transition:none}}")
@@ -151,3 +151,6 @@ def add_preview_subscribe():
    html=html.replace('</body>','<!-- preview-subscribe --><a class="preview-subscribe" href="/keep/" aria-label="Upgrade my website: see how to switch to this new site">Upgrade my website</a><!-- /preview-subscribe --></body>',1)
   page.write_text(html)
 add_preview_subscribe()
+
+# Keep the preview crawl restriction reproducible alongside its generated pages.
+(S/'robots.txt').write_text('User-agent: *\nDisallow: /\nSitemap: https://www.taylor-ind.com/sitemap.xml\n')

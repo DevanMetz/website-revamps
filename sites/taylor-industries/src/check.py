@@ -1,25 +1,47 @@
 from pathlib import Path
 from html.parser import HTMLParser
-from urllib.parse import urlsplit, unquote
+from urllib.parse import urlsplit, urljoin, unquote
+from urllib.robotparser import RobotFileParser
 import sys
 from data import CATALOG
 root=Path('site')
 errors=[]
 class Page(HTMLParser):
- def __init__(self): super().__init__(); self.ids=set(); self.links=[]; self.noindex=False
+ def __init__(self): super().__init__(); self.ids=set(); self.links=[]; self.noindex=False; self.issues=[]
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
-  if 'id' in a: self.ids.add(a['id'])
+  if 'id' in a:
+   if a['id'] in self.ids: self.issues.append(f'duplicate id {a["id"]}')
+   self.ids.add(a['id'])
+  if tag=='img':
+   if 'alt' not in a: self.issues.append(f'missing alt for {a.get("src")}')
+   for dimension in ('width','height'):
+    if not (a.get(dimension,'').isdigit() and int(a[dimension])>0):
+     self.issues.append(f'missing or invalid {dimension} for {a.get("src")}')
   if tag=='meta' and a.get('name')=='robots' and a.get('content')=='noindex': self.noindex=True
   for key in ('href','src'):
-   if a.get(key,'').startswith('/') and not a[key].startswith('//'): self.links.append(a[key])
+   url=a.get(key,''); parts=urlsplit(url)
+   if url and not parts.scheme and not parts.netloc: self.links.append(url)
+parsed={}
 for file in root.rglob('*.html'):
  page=Page(); page.feed(file.read_text())
+ parsed[file]=page
+ errors.extend(f'{file}: {issue}' for issue in page.issues)
  if not page.noindex: errors.append(f'{file}: missing noindex')
+for file,page in parsed.items():
  for url in page.links:
-  path=unquote(urlsplit(url).path); target=root/path.lstrip('/')
+  parts=urlsplit(urljoin('/'+file.relative_to(root).as_posix(),url))
+  path=unquote(parts.path); target=root/path.lstrip('/')
   if target.is_dir(): target=target/'index.html'
   if not target.exists(): errors.append(f'{file}: missing {url}')
+  elif parts.fragment and target in parsed and unquote(parts.fragment) not in parsed[target].ids:
+   errors.append(f'{file}: missing anchor {url}')
+robots=RobotFileParser()
+robots.parse((root/'robots.txt').read_text().splitlines())
+if any(robots.can_fetch('*',url) for url in ('/','/electrodes/ecg/','/keep/')):
+ errors.append('robots.txt: preview must disallow all crawling')
+if 'X-Robots-Tag: noindex' not in (root/'_headers').read_text():
+ errors.append('_headers: missing preview noindex header')
 for category,slug in [('ECG','ecg'),('TENS','tens'),('Tab','tab'),('Adhesive Strips','adhesive-strips')]:
  page=Page(); page.feed((root/'electrodes'/slug/'index.html').read_text())
  for p in CATALOG:
@@ -50,5 +72,5 @@ if PREVIEW_SUBSCRIBE_URL:
 elif _keep.parent.exists(): errors.append('/keep/ built while PREVIEW_SUBSCRIBE_URL is empty')
 _sitemap=_keep.parent.parent/'sitemap.xml'
 if _sitemap.exists() and '/keep/' in _sitemap.read_text(): errors.append('/keep/ in sitemap')
-print('\n'.join(errors) if errors else 'All internal assets, product anchors and noindex tags pass.')
+print('\n'.join(errors) if errors else 'All internal links, anchors, image attributes, unique IDs and preview indexing checks pass.')
 sys.exit(bool(errors))
