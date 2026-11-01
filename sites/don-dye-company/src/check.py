@@ -3,26 +3,46 @@ from html.parser import HTMLParser
 from urllib.parse import urlsplit, unquote
 import re
 root=Path(__file__).resolve().parent.parent; site=root/'site'; errors=[]
+documents={}; local_links=[]
 class Check(HTMLParser):
- def __init__(self,path): super().__init__(); self.path=path; self.h1=0
+ def __init__(self,path): super().__init__(); self.path=path; self.h1=0; self.ids=set(); self.aria_refs=[]
  def handle_starttag(self,tag,attrs):
   a=dict(attrs)
+  if 'id' in a:
+   if a['id'] in self.ids: errors.append(f'{self.path}: duplicate id {a["id"]}')
+   self.ids.add(a['id'])
+  for key in ('aria-controls','aria-labelledby','aria-describedby'):
+   self.aria_refs.extend(a.get(key,'').split())
   if tag=='h1': self.h1+=1
   if tag=='img' and any(k not in a for k in ('alt','width','height')): errors.append(f'{self.path}: incomplete image')
   for k in ('href','src'):
    v=a.get(k,''); u=urlsplit(v)
+   if v and not u.scheme and not u.netloc: local_links.append((self.path,v))
    if u.scheme in ('http','https') and tag not in ('a',) and not (tag=='link' and a.get('rel')=='canonical'): errors.append(f'{self.path}: external resource {v}')
    if v.startswith('/') and not v.startswith('//'):
     p=site/unquote(u.path).lstrip('/'); p=p/'index.html' if u.path.endswith('/') else p
     if not p.is_file(): errors.append(f'{self.path}: missing {v}')
 for p in site.rglob('*.html'):
  c=Check(p); c.feed(p.read_text());
+ documents[p]=c
  if c.h1!=1: errors.append(f'{p}: {c.h1} h1s')
+ for target in c.aria_refs:
+  if target not in c.ids: errors.append(f'{p}: missing ARIA target {target}')
+def check_local_link(source,value):
+ u=urlsplit(value)
+ target=(site/unquote(u.path).lstrip('/') if u.path.startswith('/') else source.parent/unquote(u.path)) if u.path else source
+ if target.is_dir(): target=target/'index.html'
+ target=target.resolve()
+ if not target.is_file(): errors.append(f'{source}: missing {value}')
+ elif u.fragment and target in documents and unquote(u.fragment) not in documents[target].ids:
+  errors.append(f'{source}: missing anchor {value}')
+for source,value in local_links: check_local_link(source,value)
 redirects={}
 for line in (site/'_redirects').read_text().splitlines():
  parts=line.split()
  if len(parts)!=3 or parts[2]!='301' or not parts[0].startswith('/') or not parts[1].startswith('/') or parts[0]==parts[1]: errors.append('Bad redirect: '+line)
  else: redirects[parts[0]]=parts[1]
+for target in redirects.values(): check_local_link(site/'_redirects',target)
 for line in (root/'src/assets/pages.tsv').read_text().splitlines()[1:]:
  p=line.split('\t')[0]
  if p!='/' and p not in redirects: errors.append('Missing redirect '+p)
