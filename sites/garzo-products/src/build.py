@@ -26,7 +26,7 @@ def img(name, alt=None, priority=False):
     else:
         im=Image.open(p); im.seek(0); im=im.convert('RGB' if out.endswith('.jpg') else 'RGBA'); im.save(I/out, quality=82, optimize=True)
     used.add(out); w,h=im.size
-    return f'<img src="/assets/img/{out}" alt="{html.escape(alt or name.rsplit(".",1)[0])}" width="{w}" height="{h}" '+('fetchpriority="high"' if priority else 'loading="lazy" decoding="async"')+'>'
+    return f'<img src="/assets/img/{out}" alt="{html.escape(alt or name.rsplit(".",1)[0])}" width="{w}" height="{h}" '+('loading="eager" fetchpriority="high"' if priority else 'loading="lazy" decoding="async"')+'>'
 def cards():
     return '<div class="cards">'+''.join(f'<a class="card" href="{u}"><div class="card-image">{img(n,t)}</div><div class="card-caption"><h2>{t}</h2></div></a>' for i,(t,u,n) in enumerate(products,1))+'</div>'
 def layout(title, body, path, desc=None):
@@ -100,7 +100,7 @@ for model,path,old,photo in items:
     if model=='211': extra='<p><a href="/products/lubricator-box-controls/213/">Model 213</a></p>'
     actions=('<a href="/products/oil-level-regulators/108/installation/">Installation guide</a>' if model=='108' else '') + ' ' + ('<a href="#ordering">How to order</a>' if model in ('101','108') else '<a href="#diagram">Diagram</a>' if model=='300B' else '') + ' <a href="/contact/">Contact</a>'
     content=product_content(lines,model,photo,title)
-    body=banner(title)+siblings('/products/'+path+'/')+f'<section class="section wrap product-detail {"detail-108" if model == "108" else ""}"><div class="detail-intro"><aside class="detail-photo">{img(photo,title)}</aside><div><div class="detail-actions">{actions}</div>{paras(lines[:1])}</div></div><div class="detail-body"><div class="product-copy">{content}</div><div class="detail-extra">{extra}</div></div></section>'
+    body=banner(title)+siblings('/products/'+path+'/')+f'<section class="section wrap product-detail"><div class="detail-intro"><aside class="detail-photo">{img(photo,title,priority=True)}</aside><div><div class="detail-actions">{actions}</div>{paras(lines[:1])}</div></div><div class="detail-body"><div class="product-copy">{content}</div><div class="detail-extra">{extra}</div></div></section>'
     write('/products/'+path+'/',title,body)
 write('/products/lubricator-box-controls/213/','Lubricator box control 213',banner('Lubricator box control 213')+siblings('/products/lubricator-box-controls/213/')+'<section class="section wrap"><p>Contact Garzo Products for information on Model 213.</p><a class="button dark" href="/contact/">Contact us</a></section>')
 lines=source('install.html')[1:]
@@ -111,7 +111,7 @@ for i, line in enumerate(lines[1:], 1):
     steps.append('<li>'+content+'</li>')
 write('/products/oil-level-regulators/108/installation/','108B installation guide',banner('108B installation guide', back_url='/products/oil-level-regulators/108/', back_label='Oil level regulator 108B')+'<section class="section wrap narrow product-detail"><h2>Basic installation</h2><ol class="installation-steps">'+''.join(steps)+'</ol></section>')
 lines=source('diap.html')[1:]
-body=banner('Linear diaphragm operators')+siblings('/products/linear-diaphragm-operators/')+'<section class="section wrap product-detail"><div class="modelnav">'+' '.join(f'<a href="#model-501-{n}">501-{n}</a>' for n in (4,6,12,18,25))+'</div><div class="detail-intro"><aside class="detail-photo">'+img('501gp.jpg','Linear diaphragm operators')+'</aside><div><div class="detail-actions"><a href="/contact/">Contact</a> <a href="#ordering">How to order</a></div>'+paras(lines[:1])+'</div></div><div class="product"><div class="product-copy">'+checklist(lines[4:12])+'<h2>Construction</h2>'+paras(lines[1:2])+'<h2>Spring rates</h2>'+paras(lines[2:3])+checklist(lines[13:],'Specifications')+'</div></div>'
+body=banner('Linear diaphragm operators')+siblings('/products/linear-diaphragm-operators/')+'<section class="section wrap product-detail"><div class="modelnav">'+' '.join(f'<a href="#model-501-{n}">501-{n}</a>' for n in (4,6,12,18,25))+'</div><div class="detail-intro"><aside class="detail-photo">'+img('501gp.jpg','Linear diaphragm operators',priority=True)+'</aside><div><div class="detail-actions"><a href="/contact/">Contact</a> <a href="#ordering">How to order</a></div>'+paras(lines[:1])+'</div></div><div class="product"><div class="product-copy">'+checklist(lines[4:12])+'<h2>Construction</h2>'+paras(lines[1:2])+'<h2>Spring rates</h2>'+paras(lines[2:3])+checklist(lines[13:],'Specifications')+'</div></div>'
 for n in (4,6,12,18,25):
     body+=f'<section class="model" id="model-501-{n}"><h2>Model 501-{n}</h2><div class="model-images">'+img(f'501{n}.jpg',f'Model 501-{n}')
     for name in {4:['0932.jpg'],6:['0114.jpg','mount5016.jpg'],12:['0115.jpg','mount5012.jpg'],18:[],25:['0116.jpg']}[n]: body+=img(name,f'Model 501-{n} diagram')
@@ -146,7 +146,7 @@ paths=['/','/products/','/products/oil-level-regulators/101/','/products/oil-lev
 redirect={'index.html':'/','sitemap.html':'/products/','products.html':'/products/','register.html':'/product-registration/','contact.html':'/contact/','108.html':'/products/oil-level-regulators/108/','101.html':'/products/oil-level-regulators/101/','install.html':'/products/oil-level-regulators/108/installation/','meter.html':'/products/low-flow-meters/','211.html':'/products/lubricator-box-controls/211/','213.html':'/products/lubricator-box-controls/213/','other.html':'/products/','main.html':'/'}
 for old,n in [('diap',4),('5014',4),('5016',6),('50112',12),('50118',18),('50125',25)]: redirect[old+'.html']=f'/products/linear-diaphragm-operators/#model-501-{n}'
 (S/'_redirects').write_text(''.join(f'/{a} {b} 301\n' for a,b in redirect.items()))
-(S/'_headers').write_text('/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n  X-Robots-Tag: noindex\n\n/assets/*\n  Cache-Control: public, max-age=31536000, immutable\n')
+(S/'_headers').write_text('/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n  X-Robots-Tag: noindex\n\n/assets/css/*\n  Cache-Control: public, max-age=0, must-revalidate\n\n/assets/js/*\n  Cache-Control: public, max-age=0, must-revalidate\n\n/assets/img/*\n  Cache-Control: public, max-age=31536000, immutable\n\n/assets/fonts/*\n  Cache-Control: public, max-age=31536000, immutable\n')
 
 
 # Preview-only "Keep this site" subscribe button, added to every page after the build.
