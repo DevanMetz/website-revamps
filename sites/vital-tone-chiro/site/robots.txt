@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /
+Sitemap: https://vital-tone-chiro-redesign.metzdevan.workers.dev/sitemap.xml
