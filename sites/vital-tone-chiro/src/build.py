@@ -82,7 +82,7 @@ def cta(label=d.CTA, style=''):
 
 
 def contact_links():
-    return (f'<p><a href="mailto:{d.EMAIL}">{d.EMAIL}</a><br>'
+    return (f'<p class="contact-links"><a href="mailto:{d.EMAIL}">{d.EMAIL}</a><br>'
             f'<a href="{d.TEL}">{d.PHONE}</a></p>')
 
 
